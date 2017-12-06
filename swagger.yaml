@@ -7,12 +7,31 @@ host: cloud.stylifier.com
 basePath: /
 
 schemes:
-  - http
   - https
 
 paths:
   /users:
     x-swagger-router-controller: users
+    post:
+      description: create
+      operationId: post
+      parameters:
+        - name: userInfo
+          in: body
+          schema:
+            $ref: '#/definitions/userToCreate'
+      responses:
+        "204":
+          description: created
+        "401":
+          description: fail to create
+          schema:
+            $ref: '#/definitions/failUserCreatedResponse'
+          examples:
+            application/json; charset=utf-8:
+              {
+                message: 'failed to create user'
+              }
     get:
       description: get
       operationId: get
@@ -32,13 +51,12 @@ paths:
           description: query value to search for, type specified with `in` parameter
           type: string
           x-example: "tom"
-        - name: language
+        - name: styles
           in: query
-          description: language most used by the user in the public repositories
-          required: true
+          description: syles that they include
           type: string
-          x-example: "javascript"
-          default: "javascript"
+          x-example: "black tie"
+          default: "black tie"
       responses:
         "200":
           description: return `allow [ tags ]`
@@ -52,21 +70,360 @@ paths:
                 followers: 1,
                 avatar: 'https://avatars.githubusercontent.com/u/1?v=3'
               }]
+  /login:
+    x-swagger-router-controller: login
+    post:
+      description: login
+      operationId: post
+      responses:
+        "200":
+          description: return jwt if succesfull
+          schema:
+            $ref: '#/definitions/loginResponse'
+          examples:
+            application/json; charset=utf-8:
+              [{
+                jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhMzZjMzA0OWIzNjI0OWEzYzlmODg5MWNiMTI3MjQzYyIsImV4cCI6MTQ0MjQzMDA1NCwibmJmIjoxNDQyNDI2NDU0LCJpYXQiOjE0NDI0MjY0NTR9.AhumfY35GFLuEEjrOXiaADo7Ae6gt_8VLwX7qffhQN4'
+              }]
+              
+  '/users/{userId}':
+    x-swagger-router-controller: user
+    get:
+      description: get all user images
+      operationId: get
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+      responses:
+        "200":
+          description: array of users
+          schema:
+            $ref: '#/definitions/userSearchResponse'
+          examples:
+            application/json; charset=utf-8:
+              [{
+              }]
+              
+  '/users/{userId}/images':
+    x-swagger-router-controller: images
+    get:
+      description: get all user images
+      operationId: get
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+          
+      responses:
+        "200":
+          description: array of links to images
+          schema:
+            $ref: '#/definitions/imagesResponse'
+          examples:
+            application/json; charset=utf-8:
+              [{
+                link: 'https://content.stylifier.com/image/82736482'
+              }]
+    put:
+      description: upload new image
+      operationId: put
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+          
+      responses:
+        "200":
+          description: Object of the image
+          schema:
+            $ref: '#/definitions/image'
+          examples:
+            application/json; charset=utf-8:
+              [{
+              }]
+
+  '/users/{userId}/threads':
+    x-swagger-router-controller: threads
+    get:
+      description: get all user's threads
+      operationId: get
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+          
+      responses:
+        "200":
+          description: array of threads
+          schema:
+            $ref: '#/definitions/threadsResponse'
+          examples:
+            application/json; charset=utf-8:
+              [{
+              }]
+    put:
+      description: create a new thread
+      operationId: put
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/thread'
+          
+      responses:
+        "200":
+          description: array of threads
+          schema:
+            $ref: '#/definitions/threadsResponse'
+          examples:
+            application/json; charset=utf-8:
+              [{
+              }]
+              
+  '/users/{userId}/images/{imageId}':
+    x-swagger-router-controller: images
+    get:
+      description: get all user images
+      operationId: get
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+        - name: imageId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '1210dce8-25da-4275-a73a-1383b9774255'
+          
+      responses:
+        "200":
+          description: array of links to images
+          schema:
+            $ref: '#/definitions/image'
+          examples:
+            application/json; charset=utf-8:
+              {
+                link: 'https://content.stylifier.com/image/82736482'
+              }
+              
+  '/threads/{threadId}':
+    x-swagger-router-controller: threads
+    get:
+      description: get
+      operationId: get
+      parameters:
+        - name: threadId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+          
+      responses:
+        "200":
+          description: successfully created
+          schema:
+            $ref: '#/definitions/thread'
+          examples:
+            application/json; charset=utf-8:
+              {
+              }
+              
+  '/threads/{threadId}/assert/{imageId}':
+    x-swagger-router-controller: threadsAsserts
+    put:
+      description: create a new asset
+      operationId: put
+      parameters:
+        - name: threadId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+        - name: imageId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+          
+      responses:
+        "204":
+          description: successfully created
+              
+  '/threads/{threadId}/messages':
+    x-swagger-router-controller: threadsMessages
+    put:
+      description: create a message
+      operationId: put
+      parameters:
+        - name: threadId
+          in: path
+          required: true
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/message"
+          
+      responses:
+        "204":
+          description: successfully created
 
   /swagger:
     x-swagger-pipe: swagger_raw
 
 definitions:
+  userToCreate:
+    type: object 
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+        
+  style:
+    type: object
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+        
+  user:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+      firstName:
+        type: string
+      story:
+        type: string
+      lastName:
+        type: string
+      avatar:
+        type: string
+      rating:
+        type: number
+      followers:
+        type: number
+      styles:
+        type: array
+        items: 
+          $ref: '#/definitions/style'
+        
   userSearchResponse:
     type: array
     items:
-      type: object
-      properties:
-        username:
-          type: string
-        name:
-          type: string
-        follower:
-          type: number
-        avatar:
-          type: string
+      $ref: '#/definitions/user'
+  
+  message:
+    type: object
+    properties:
+      date:
+        type: string
+      text:
+        type: string
+      status:
+        type: string
+      id:
+        type: string
+        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+      threadId: 
+        type: string
+        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+      
+  thread:
+    type: object
+    properties:
+      id:
+        type: string
+      status:
+        type: string
+      from:
+        type: string
+        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+      to:
+        type: string
+        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+      assets:
+        type: array
+        items:
+          $ref: '#/definitions/image'
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/message'
+    required:
+      - to
+      
+  threadsResponse:
+    type: array
+    items:
+      $ref: '#/definitions/thread'
+        
+  failUserCreatedResponse: 
+    type: object
+    properties:
+      message:
+        type: string
+  
+  image:
+    type: object
+    properties:
+      thumbnailLink:
+        type: string
+      link:
+        type: string
+      scope:
+        type: string
+          
+      
+  imagesResponse:
+    type: array
+    items:
+      $ref: '#/definitions/image'
+        
+  loginResponse:
+    type: object
+    properties:
+      jwt:
+        type: string
