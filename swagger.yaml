@@ -10,7 +10,7 @@ schemes:
   - https
 
 paths:
-  /users:
+  /register:
     x-swagger-router-controller: users
     post:
       description: create
@@ -32,6 +32,8 @@ paths:
               {
                 message: 'failed to create user'
               }
+  /users:
+    x-swagger-router-controller: users
     get:
       description: get
       operationId: get
