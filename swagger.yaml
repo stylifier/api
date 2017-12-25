@@ -128,6 +128,18 @@ paths:
           examples:
             application/json; charset=utf-8:
               {
+                "username": "MockUser",
+                "firstName": "mock",
+                "lastName": "user",
+                "story": "i am cool",
+                "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpg",
+                "rating": 1,
+                "followers": 10,
+                "styles": ["casual", "formal"],
+                "sponsors": {
+                  "name": "acme",
+                  "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpg"
+                }
               }
   '/feeds':
     x-swagger-router-controller: feeds
@@ -343,22 +355,13 @@ definitions:
      - email
 
   style:
-    type: object
-    properties:
-      description:
-        type: string
-      id:
-        type: string
+    type: string
 
   sponsors:
     type: object
     properties:
-      description:
+      name:
         type: string
-      id:
-        type: string
-        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
       image:
         type: string
         pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
