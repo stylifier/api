@@ -168,14 +168,9 @@ paths:
           examples:
             application/json; charset=utf-8:
               [{
-                id: ''
-                createdAt: ''
-                isPublic: ''
-              },
-              {
-                id: ''
-                createdAt: ''
-                isPublic: ''
+                "id": "",
+                "createdAt": "",
+                "isPublic": ""
               }]
 
   '/images':
