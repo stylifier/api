@@ -32,45 +32,82 @@ paths:
               {
                 message: 'failed to create user'
               }
+
+  /brands:
+    x-swagger-router-controller: brands
+    get:
+      description: get
+      operationId: get
+      parameters:
+        - name: q
+          in: query
+          description: query value to search for, type specified with `in` parameter
+          type: string
+          x-example: "acme"
+        - name: from
+          in: query
+          description: feeds from date
+          required: false
+          type: string
+          default: '2017-12-30T11:15:25.038Z'
+      responses:
+        "200":
+          description: return `allow [ tags ]`
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/brand'
+          examples:
+            application/json; charset=utf-8:
+              [{
+                "name": "acme",
+                "description": "",
+                "followersCount": 1000,
+                "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Logo_acme.svg/1000px-Logo_acme.svg.png",
+              }]
+  
   /users:
     x-swagger-router-controller: users
     get:
       description: get
       operationId: get
       parameters:
-        - name: in
-          in: query
-          description: search user by one of login, email, full name; default is email
-          required: false
-          type: string
-          enum:
-            - fullname
-            - email
-            - login
-          default: email
         - name: q
           in: query
           description: query value to search for, type specified with `in` parameter
           type: string
           x-example: "tom"
-        - name: styles
+        - name: from
           in: query
-          description: syles that they include
+          description: feeds from date
+          required: false
           type: string
-          x-example: "black tie"
-          default: "black tie"
+          default: '2017-12-30T11:15:25.038Z'
       responses:
         "200":
           description: return `allow [ tags ]`
           schema:
-            $ref: '#/definitions/userSearchResponse'
+            type: array
+            items:
+              $ref: '#/definitions/userBrief'
           examples:
             application/json; charset=utf-8:
               [{
-                username: 'test',
-                name: 'test',
-                followers: 1,
-                avatar: 'https://avatars.githubusercontent.com/u/1?v=3'
+                "username": "MockUser",
+                "firstName": "mock",
+                "lastName": "user",
+                "followersCount": 1,
+                "createdAt": "2017-12-26T18:54:24.921Z",
+                "story": "Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
+                
+Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
+                "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                "rating": 4,
+                "styles": ["formal"],
+                "sponsors": {
+                  "name": "acme",
+                  "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                }
               }]
   /login:
     x-swagger-router-controller: login
@@ -93,18 +130,16 @@ paths:
                 jwt: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJGTHpoZVhFUUc1MVBPeWphV2wwSEllUTVvNWxKYk5mQSJ9.wSqyHgqfwhFey7CirsxCdu9JVMlN8qxLK1oxepFWWfo'
               }
 
-  '/users/{userId}':
+  '/users/{username}':
     x-swagger-router-controller: user
     get:
       description: get all user images
       operationId: get
       parameters:
-        - name: userId
+        - name: username
           in: path
           required: true
           type: string
-          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
       responses:
         "200":
           description: array of users
@@ -112,7 +147,76 @@ paths:
             $ref: '#/definitions/user'
           examples:
             application/json; charset=utf-8:
+              {
+                "username": "MockUser",
+                "firstName": "mock",
+                "lastName": "user",
+                "followersCount": 1,
+                "createdAt": "2017-12-26T18:54:24.921Z",
+                "story": "mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
+                
+Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
+                "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                "rating": 1,
+                "followers": [{
+                  "username": "MockUser",
+                  "firstName": "mock",
+                  "lastName": "user",
+                  "followersCount": 1,
+                  "createdAt": "2017-12-26T18:54:24.921Z",
+                  "story": "Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
+                  
+Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
+                  "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                  "rating": 4,
+                  "styles": ["formal"],
+                  "sponsors": {
+                    "name": "acme",
+                    "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                  }
+                }],
+                "styles": ["casual", "formal"],
+                "sponsors": [{
+                  "name": "acme",
+                  "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                }]
+              }
+  
+  '/users/{username}/images':
+    x-swagger-router-controller: feeds
+    get:
+      description: get user recent feeds
+      operationId: get
+      parameters:
+        - name: from
+          in: query
+          description: feeds from date
+          required: false
+          type: string
+          default: '2017-12-30T11:15:25.038Z'
+        - name: username
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: array of links to images
+          schema:
+            $ref: '#/definitions/imagesResponse'
+          examples:
+            application/json; charset=utf-8:
               [{
+                "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                "createdAt": "2017-12-26T18:54:24.921Z",
+                "isPublic": true,
+                "owner": "anna"
+              },
+              {
+                "id": "8e0e5bea-f914-492a-8a2b-011bdbae7ae7",
+                "createdAt": "2017-12-26T18:54:24.921Z",
+                "isPublic": true,
+                "owner": "anna"
               }]
 
   '/user-info':
@@ -131,15 +235,35 @@ paths:
                 "username": "MockUser",
                 "firstName": "mock",
                 "lastName": "user",
-                "story": "i am cool",
-                "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpg",
+                "followersCount": 1,
+                "createdAt": "2017-12-26T18:54:24.921Z",
+                "story": "mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
+                
+Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
+                "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
                 "rating": 1,
-                "followers": 10,
+                "followers": [{
+                  "username": "MockUser",
+                  "firstName": "mock",
+                  "lastName": "user",
+                  "followersCount": 1,
+                  "createdAt": "2017-12-26T18:54:24.921Z",
+                  "story": "Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
+                  
+Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
+                  "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                  "rating": 4,
+                  "styles": ["formal"],
+                  "sponsors": {
+                    "name": "acme",
+                    "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                  }
+                }],
                 "styles": ["casual", "formal"],
-                "sponsors": {
+                "sponsors": [{
                   "name": "acme",
-                  "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpg"
-                }
+                  "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                }]
               }
   '/feeds':
     x-swagger-router-controller: feeds
@@ -152,13 +276,7 @@ paths:
           description: feeds from date
           required: false
           type: string
-          default: 'new Date() - 24 hour'
-        - name: to
-          in: query
-          description: feeds to date
-          required: false
-          type: string
-          default: 'new Date()'
+          default: '2017-12-30T11:15:25.038Z'
 
       responses:
         "200":
@@ -168,9 +286,26 @@ paths:
           examples:
             application/json; charset=utf-8:
               [{
-                "id": "",
-                "createdAt": "",
-                "isPublic": ""
+                "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                "createdAt": "2017-12-26T18:54:24.921Z",
+                "isPublic": true,
+                "owner": "anna"
+              },{
+                "id": "f5d1b877-3d37-4edf-913b-b0e6c9a21e84",
+                "createdAt": "2017-12-26T17:54:24.921Z",
+                "isPublic": true,
+                "owner": "tim"
+              },{
+                "id": "d42e0091-2c67-437b-987c-296661c0dc3e",
+                "createdAt": "2017-12-26T15:54:24.921Z",
+                "isPublic": true,
+                "owner": "tim"
+              },
+              {
+                "id": "8e0e5bea-f914-492a-8a2b-011bdbae7ae7",
+                "createdAt": "2017-12-26T18:54:24.921Z",
+                "isPublic": true,
+                "owner": "anna"
               }]
 
   '/images':
@@ -178,7 +313,13 @@ paths:
     get:
       description: get all user images
       operationId: get
-
+      parameters:
+        - name: from
+          in: query
+          description: feeds from date
+          required: false
+          type: string
+          default: '2017-12-30T11:15:25.038Z'
       responses:
         "200":
           description: array of links to images
@@ -191,7 +332,7 @@ paths:
               }]
     post:
       description: upload new image
-      operationId: put
+      operationId: post
       parameters:
         - name: X-Is-Public
           in: header
@@ -213,8 +354,9 @@ paths:
             $ref: '#/definitions/image'
           examples:
             application/json; charset=utf-8:
-              [{
-              }]
+              { 
+                "success": true
+              }
 
   '/images/{imageId}':
     x-swagger-router-controller: images
@@ -239,7 +381,19 @@ paths:
     get:
       description: get all user's threads
       operationId: get
-
+      parameters:
+        - name: from
+          in: query
+          description: threads from date
+          required: false
+          type: string
+          default: '2017-12-30T11:15:25.038Z'
+        - name: to
+          in: query
+          description: threads to date
+          required: false
+          type: string
+          default: '2017-12-30T11:15:25.038Z'
       responses:
         "200":
           description: array of threads
@@ -248,6 +402,24 @@ paths:
           examples:
             application/json; charset=utf-8:
               [{
+                "id": "9210dce8-25da-4275-a73a-1383b9774255",
+                "status": "OPEN",
+                "from": "MockUser",
+                "to": "anna",
+                assets: [{
+                  "id": "d42e0091-2c67-437b-987c-296661c0dc3e",
+                  "createdAt": "2017-12-26T15:54:24.921Z",
+                  "threadId": "9210dce8-25da-4275-a73a-1383b9774255",
+                  "isPublic": false,
+                  "owner": "tim"
+                },
+                {
+                  "id": "8e0e5bea-f914-492a-8a2b-011bdbae7ae7",
+                  "threadId": "9210dce8-25da-4275-a73a-1383b9774255",
+                  "createdAt": "2017-12-26T18:54:24.921Z",
+                  "isPublic": false,
+                  "owner": "anna"
+                }]
               }]
     post:
       description: create a new thread
@@ -266,13 +438,15 @@ paths:
             $ref: '#/definitions/threadsResponse'
           examples:
             application/json; charset=utf-8:
-              [{
-              }]
+              {
+                "id": "9210dce8-25da-4275-a73a-1383b9774255",
+                "success": true
+              }
 
-  '/threads/{threadId}':
-    x-swagger-router-controller: threads
+  '/threads/{threadId}/messages':
+    x-swagger-router-controller: threadsMessages
     get:
-      description: get
+      description: get a thread messages
       operationId: get
       parameters:
         - name: threadId
@@ -281,19 +455,40 @@ paths:
           type: string
           pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
           x-example: '9210dce8-25da-4275-a73a-1383b9774255'
-
+        - name: from
+          in: query
+          description: messages from date
+          required: false
+          type: string
+          default: '2017-12-30T11:15:25.038Z'
+        - name: to
+          in: query
+          description: messages to date
+          required: false
+          type: string
+          default: '2017-12-30T11:15:25.038Z'
       responses:
         "200":
-          description: successfully created
+          description: array of threads
           schema:
-            $ref: '#/definitions/thread'
+            $ref: '#/definitions/threadsResponse'
           examples:
             application/json; charset=utf-8:
-              {
-              }
-
-  '/threads/{threadId}/messages':
-    x-swagger-router-controller: threadsMessages
+              [{
+                "createdAt": "",
+                "text": "",
+                "status": "DELIVERED",
+                "id": "9210dce8-25da-4275-a73a-1383b9774255",
+                "threadId": "9210dce8-25da-4275-a73a-1383b9774255",
+                assets: [{
+                  "id": "d42e0091-2c67-437b-987c-296661c0dc3e",
+                  "createdAt": "2017-12-26T15:54:24.921Z",
+                  "threadId": "9210dce8-25da-4275-a73a-1383b9774255",
+                  "messageId": "9210dce8-25da-4275-a73a-1383b9774255",
+                  "isPublic": false,
+                  "owner": "tim"
+                }]
+              }]
     put:
       description: create a message
       operationId: put
@@ -329,7 +524,18 @@ definitions:
      - username
      - password
 
-
+  brand:
+    type: object
+    properties:
+      name: 
+        type: string
+      description:
+        type: string
+      followersCount:
+        type: number
+      avatar:
+        type: string
+  
   userToCreate:
     type: object
     properties:
@@ -361,8 +567,8 @@ definitions:
         type: string
         pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
         x-example: '9210dce8-25da-4275-a73a-1383b9774255'
-
-  user:
+        
+  userBrief:
     type: object
     properties:
       username:
@@ -373,12 +579,46 @@ definitions:
         type: string
       story:
         type: string
+      createdAt:
+        type: string
+      followersCount:
+        type: number
       avatar:
         type: string
       rating:
         type: number
-      followers:
+      styles:
+        type: array
+        items:
+          $ref: '#/definitions/style'
+      sponsors:
+        type: array
+        items:
+          $ref: '#/definitions/sponsors'
+
+  user:
+    type: object
+    properties:
+      username:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      createdAt:
+        type: string
+      story:
+        type: string
+      avatar:
+        type: string
+      rating:
         type: number
+      followersCount:
+        type: number
+      followers:
+        type: array
+        items:
+          $ref: '#/definitions/userBrief'
       styles:
         type: array
         items:
@@ -396,12 +636,16 @@ definitions:
   message:
     type: object
     properties:
-      date:
+      createdAt:
         type: string
       text:
         type: string
       status:
         type: string
+        enum:
+          - DELIVERED
+          - SENT
+          - SEEN
       id:
         type: string
         pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
@@ -424,6 +668,11 @@ definitions:
         x-example: '9210dce8-25da-4275-a73a-1383b9774255'
       status:
         type: string
+        enum:
+          - REQUESTED
+          - OPENED
+          - RATING
+          - CLOSED
       from:
         type: string
         pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
@@ -436,10 +685,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/image'
-      messages:
-        type: array
-        items:
-          $ref: '#/definitions/message'
+      createdAt:
+        type: string
     required:
       - to
 
