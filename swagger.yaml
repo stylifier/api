@@ -3,7 +3,7 @@ info:
   version: "0.0.1"
   title: stylifier-api
 
-host: cloud.stylifier.com
+host: mock.stylifier.com
 basePath: /
 
 schemes:
