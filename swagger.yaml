@@ -14,7 +14,7 @@ paths:
     x-swagger-router-controller: users
     post:
       description: create
-      operationId: post
+      operationId: registerUser
       parameters:
         - name: userInfo
           in: body
@@ -37,7 +37,7 @@ paths:
     x-swagger-router-controller: brands
     get:
       description: get
-      operationId: get
+      operationId: getBrands
       parameters:
         - name: q
           in: query
@@ -70,7 +70,7 @@ paths:
     x-swagger-router-controller: users
     get:
       description: get
-      operationId: get
+      operationId: getUsers
       parameters:
         - name: q
           in: query
@@ -113,7 +113,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
     x-swagger-router-controller: login
     post:
       description: login
-      operationId: post
+      operationId: login
       parameters:
         - name: loginInfo
           in: body
@@ -134,7 +134,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
     x-swagger-router-controller: user
     get:
       description: get all user images
-      operationId: get
+      operationId: getUserByUsername
       parameters:
         - name: username
           in: path
@@ -186,7 +186,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
     x-swagger-router-controller: feeds
     get:
       description: get user recent feeds
-      operationId: get
+      operationId: getUserImages
       parameters:
         - name: from
           in: query
@@ -219,11 +219,11 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
                 "owner": "anna"
               }]
 
-  '/user-info':
+  '/user/self':
     x-swagger-router-controller: user
     get:
       description: get all user images
-      operationId: get
+      operationId: getSelfUser
       responses:
         "200":
           description: array of users
@@ -269,7 +269,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
     x-swagger-router-controller: feeds
     get:
       description: get user recent feeds
-      operationId: get
+      operationId: getFeeds
       parameters:
         - name: from
           in: query
@@ -312,7 +312,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
     x-swagger-router-controller: images
     get:
       description: get all user images
-      operationId: get
+      operationId: getSelfImages
       parameters:
         - name: from
           in: query
@@ -332,7 +332,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
               }]
     post:
       description: upload new image
-      operationId: post
+      operationId: createImage
       parameters:
         - name: X-Is-Public
           in: header
@@ -362,7 +362,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
     x-swagger-router-controller: images
     get:
       description: get all user images
-      operationId: get
+      operationId: getImageById
       parameters:
         - name: imageId
           in: path
@@ -380,7 +380,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
     x-swagger-router-controller: threads
     get:
       description: get all user's threads
-      operationId: get
+      operationId: getSelfThreads
       parameters:
         - name: from
           in: query
@@ -423,7 +423,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
               }]
     post:
       description: create a new thread
-      operationId: put
+      operationId: createThread
       parameters:
         - name: body
           in: body
@@ -447,7 +447,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
     x-swagger-router-controller: threadsMessages
     get:
       description: get a thread messages
-      operationId: get
+      operationId: getMessages
       parameters:
         - name: threadId
           in: path
@@ -491,7 +491,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
               }]
     put:
       description: create a message
-      operationId: put
+      operationId: createMessage
       parameters:
         - name: threadId
           in: path
