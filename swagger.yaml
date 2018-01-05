@@ -30,7 +30,7 @@ paths:
                 }
 
   /login:
-    x-swagger-router-controller: login
+    x-swagger-router-controller: users
     post:
       description: login
       operationId: login
@@ -50,7 +50,7 @@ paths:
 
 
   /brands:
-    x-swagger-router-controller: brands
+    x-swagger-router-controller: users
     get:
       description: get
       operationId: getBrands
@@ -113,7 +113,7 @@ paths:
               }
               
   '/users/{username}':
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     get:
       description: get all user images
       operationId: getUserByUsername
@@ -156,10 +156,10 @@ paths:
                 "created_time": "1515094955466"
               }
   '/users/{username}/followers':
-    x-swagger-router-controller: users
+    x-swagger-router-controller: followers
     get:
       description: get
-      operationId: getUsers
+      operationId: getUsersFollowers
       parameters:
         - name: username
           in: path
@@ -287,7 +287,7 @@ paths:
               
 
   '/user/self':
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     get:
       description: get all user images
       operationId: getSelfUser
@@ -481,7 +481,7 @@ paths:
               }
     post:
       description: upload new image
-      operationId: createImage
+      operationId: createMedia
       responses:
         "200":
           description: Object of the image
@@ -567,7 +567,7 @@ paths:
               }
 
   '/threads/{thread_id}/messages':
-    x-swagger-router-controller: threadsMessages
+    x-swagger-router-controller: messages
     get:
       description: get a thread messages
       operationId: getMessages
