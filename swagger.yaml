@@ -19,19 +19,35 @@ paths:
         - name: userInfo
           in: body
           schema:
-            $ref: '#/definitions/userToCreate'
+            $ref: '#/definitions/user_to_create'
       responses:
-        "204":
-          description: created
-        "401":
-          description: fail to create
+        "200":
+          description: user created
+          examples:
+              application/json; charset=utf-8:
+                {
+                  jwt: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJGTHpoZVhFUUc1MVBPeWphV2wwSEllUTVvNWxKYk5mQSJ9.wSqyHgqfwhFey7CirsxCdu9JVMlN8qxLK1oxepFWWfo',
+                }
+
+  /login:
+    x-swagger-router-controller: login
+    post:
+      description: login
+      operationId: login
+      parameters:
+        - name: loginInfo
+          in: body
           schema:
-            $ref: '#/definitions/failUserCreatedResponse'
+            $ref: '#/definitions/login_info'
+      responses:
+        "200":
+          description: return jwt if succesfull
           examples:
             application/json; charset=utf-8:
               {
-                message: 'failed to create user'
+                jwt: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJGTHpoZVhFUUc1MVBPeWphV2wwSEllUTVvNWxKYk5mQSJ9.wSqyHgqfwhFey7CirsxCdu9JVMlN8qxLK1oxepFWWfo',
               }
+
 
   /brands:
     x-swagger-router-controller: brands
@@ -44,27 +60,24 @@ paths:
           description: query value to search for, type specified with `in` parameter
           type: string
           x-example: "acme"
-        - name: from
-          in: query
-          description: feeds from date
-          required: false
-          type: string
-          default: '2017-12-30T11:15:25.038Z'
       responses:
         "200":
           description: return `allow [ tags ]`
           schema:
             type: array
             items:
-              $ref: '#/definitions/brand'
+              $ref: '#/definitions/users'
           examples:
             application/json; charset=utf-8:
-              [{
-                "name": "acme",
-                "description": "",
-                "followersCount": 1000,
-                "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Logo_acme.svg/1000px-Logo_acme.svg.png",
-              }]
+              {
+                pagination: "",
+                "data": [{
+                  "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                  "username": "acme",
+                  "full_name": "acme",
+                  "profile_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Logo_acme.svg/1000px-Logo_acme.svg.png",
+                }]
+              }
   
   /users:
     x-swagger-router-controller: users
@@ -77,59 +90,28 @@ paths:
           description: query value to search for, type specified with `in` parameter
           type: string
           x-example: "tom"
-        - name: from
+        - name: pagination
           in: query
-          description: feeds from date
-          required: false
           type: string
-          default: '2017-12-30T11:15:25.038Z'
       responses:
         "200":
-          description: return `allow [ tags ]`
+          description: return list of users
           schema:
             type: array
             items:
-              $ref: '#/definitions/userBrief'
-          examples:
-            application/json; charset=utf-8:
-              [{
-                "username": "MockUser",
-                "firstName": "mock",
-                "lastName": "user",
-                "followersCount": 1,
-                "createdAt": "2017-12-26T18:54:24.921Z",
-                "story": "Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
-                
-Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
-                "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
-                "rating": 4,
-                "styles": ["formal"],
-                "sponsors": {
-                  "name": "acme",
-                  "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
-                }
-              }]
-  /login:
-    x-swagger-router-controller: login
-    post:
-      description: login
-      operationId: login
-      parameters:
-        - name: loginInfo
-          in: body
-          schema:
-            $ref: '#/definitions/loginInfo'
-      responses:
-        "200":
-          description: return jwt if succesfull
-          schema:
-            $ref: '#/definitions/loginResponse'
+              $ref: '#/definitions/user_short'
           examples:
             application/json; charset=utf-8:
               {
-                jwt: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJGTHpoZVhFUUc1MVBPeWphV2wwSEllUTVvNWxKYk5mQSJ9.wSqyHgqfwhFey7CirsxCdu9JVMlN8qxLK1oxepFWWfo'
+                pagination: "",
+                "data": [{
+                  "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                  "username": "mockuser",
+                  "full_name": "mock user",
+                  "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                }]
               }
-
+              
   '/users/{username}':
     x-swagger-router-controller: user
     get:
@@ -148,76 +130,161 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
           examples:
             application/json; charset=utf-8:
               {
-                "username": "MockUser",
-                "firstName": "mock",
-                "lastName": "user",
-                "followersCount": 1,
-                "createdAt": "2017-12-26T18:54:24.921Z",
-                "story": "mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
-                
-Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
-                "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
-                "rating": 1,
-                "followers": [{
-                  "username": "MockUser",
-                  "firstName": "mock",
-                  "lastName": "user",
-                  "followersCount": 1,
-                  "createdAt": "2017-12-26T18:54:24.921Z",
-                  "story": "Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
-                  
-Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
-                  "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
-                  "rating": 4,
-                  "styles": ["formal"],
-                  "sponsors": {
-                    "name": "acme",
-                    "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
-                  }
-                }],
-                "styles": ["casual", "formal"],
+                "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                "username": "mockuser",
+                "full_name": "mock user",
+                "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                "bio": "Praesent mauris mauris ipsum.",
+                "counts": {
+                  "follows": 10,
+                  "followed_by": 2,
+                  "media": 2,
+                  "thread_asked_by": 1,
+                  "thread_asked_by_open": 0,
+                  "sponsored": 0
+                },
+                "rating": 4,
+                "is_instagram_user": false,
+                "is_brand": false,
+                "styles": ["formal"],
                 "sponsors": [{
-                  "name": "acme",
-                  "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
-                }]
+                  "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                  "username": "acme",
+                  "full_name": "acme",
+                  "profile_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Logo_acme.svg/1000px-Logo_acme.svg.png"
+                }],
+                "created_time": "1515094955466"
               }
-  
-  '/users/{username}/images':
-    x-swagger-router-controller: feeds
+  '/users/{username}/followers':
+    x-swagger-router-controller: users
     get:
-      description: get user recent feeds
-      operationId: getUserImages
+      description: get
+      operationId: getUsers
       parameters:
-        - name: from
-          in: query
-          description: feeds from date
-          required: false
-          type: string
-          default: '2017-12-30T11:15:25.038Z'
         - name: username
           in: path
           required: true
+          type: string
+        - name: pagination
+          in: query
+          type: string
+      responses:
+        "200":
+          description: return list of users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/user_short'
+          examples:
+            application/json; charset=utf-8:
+              {
+                pagination: "",
+                "data": [{
+                  "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                  "username": "mockuser",
+                  "full_name": "mock user",
+                  "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                }]
+              }
+  
+  '/users/{username}/media':
+    x-swagger-router-controller: media
+    get:
+      description: get user recent media
+      operationId: getUserMedia
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: pagination
+          in: query
           type: string
 
       responses:
         "200":
           description: array of links to images
           schema:
-            $ref: '#/definitions/imagesResponse'
+            $ref: '#/definitions/images'
           examples:
             application/json; charset=utf-8:
-              [{
-                "id": "9210dce8-25da-4275-a73a-1383b9774253",
-                "createdAt": "2017-12-26T18:54:24.921Z",
-                "isPublic": true,
-                "owner": "anna"
-              },
               {
-                "id": "8e0e5bea-f914-492a-8a2b-011bdbae7ae7",
-                "createdAt": "2017-12-26T18:54:24.921Z",
-                "isPublic": true,
-                "owner": "anna"
-              }]
+                "pagination": "",
+                "data": [{
+                  "id": "d42e0091-2c67-437b-987c-296661c0dc3e",
+                  "user": {
+                    "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                    "username": "acme",
+                    "full_name": "acme",
+                    "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                  },
+                  "images": {
+                    "thumbnail" : {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    },
+                    "low_resolution": {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    },
+                    "standard_resolution": {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    }
+                  },
+                  "user_has_liked": false,
+                  "likes": 10,
+                  "type": image,
+                  "users_in_photo": [],
+                  "created_time": "2017-12-26T15:54:24.921Z",
+                  "location": {
+                    "latitude": 60.167,
+                    "longitude": 24.955,
+                    "name": "Market Square, Helsinki",
+                    "id": "504979721",
+                  }
+                },{
+                  "id": "8e0e5bea-f914-492a-8a2b-011bdbae7ae7",
+                  "user": {
+                    "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                    "username": "acme",
+                    "full_name": "acme",
+                    "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                  },
+                  "images": {
+                    "thumbnail" : {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    },
+                    "low_resolution": {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    },
+                    "standard_resolution": {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    }
+                  },
+                  "user_has_liked": false,
+                  "likes": 10,
+                  "type": image,
+                  "users_in_photo": [],
+                  "created_time": "2017-12-26T15:54:24.921Z",
+                  "location": {
+                    "latitude": 60.167,
+                    "longitude": 24.955,
+                    "name": "Market Square, Helsinki",
+                    "id": "504979721",
+                  }
+                }]
+              }
+              
 
   '/user/self':
     x-swagger-router-controller: user
@@ -232,38 +299,32 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
           examples:
             application/json; charset=utf-8:
               {
-                "username": "MockUser",
-                "firstName": "mock",
-                "lastName": "user",
-                "followersCount": 1,
-                "createdAt": "2017-12-26T18:54:24.921Z",
-                "story": "mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
+                "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                "username": "mockuser",
+                "full_name": "mock user",
+                "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                "bio": "Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
                 
-Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
-                "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
-                "rating": 1,
-                "followers": [{
-                  "username": "MockUser",
-                  "firstName": "mock",
-                  "lastName": "user",
-                  "followersCount": 1,
-                  "createdAt": "2017-12-26T18:54:24.921Z",
-                  "story": "Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
-                  
-Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
-                  "avatar": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
-                  "rating": 4,
-                  "styles": ["formal"],
-                  "sponsors": {
-                    "name": "acme",
-                    "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
-                  }
-                }],
-                "styles": ["casual", "formal"],
+                Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
+                "counts": {
+                  "follows": 10,
+                  "followed_by": 2,
+                  "media": 2,
+                  "thread_asked_by": 1,
+                  "thread_asked_by_open": 0,
+                  "sponsored": 0
+                },
+                "rating": 4,
+                "is_instagram_user": false,
+                "is_brand": false,
+                "styles": ["formal"],
                 "sponsors": [{
-                  "name": "acme",
-                  "image": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
-                }]
+                  "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                  "username": "acme",
+                  "full_name": "acme",
+                  "profile_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Logo_acme.svg/1000px-Logo_acme.svg.png"
+                }],
+                "created_time": "1515094955466"
               }
   '/feeds':
     x-swagger-router-controller: feeds
@@ -282,71 +343,145 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
         "200":
           description: array of links to images
           schema:
-            $ref: '#/definitions/imagesResponse'
+            $ref: '#/definitions/media_list'
           examples:
             application/json; charset=utf-8:
-              [{
-                "id": "9210dce8-25da-4275-a73a-1383b9774253",
-                "createdAt": "2017-12-26T18:54:24.921Z",
-                "isPublic": true,
-                "owner": "anna"
-              },{
-                "id": "f5d1b877-3d37-4edf-913b-b0e6c9a21e84",
-                "createdAt": "2017-12-26T17:54:24.921Z",
-                "isPublic": true,
-                "owner": "tim"
-              },{
-                "id": "d42e0091-2c67-437b-987c-296661c0dc3e",
-                "createdAt": "2017-12-26T15:54:24.921Z",
-                "isPublic": true,
-                "owner": "tim"
-              },
               {
-                "id": "8e0e5bea-f914-492a-8a2b-011bdbae7ae7",
-                "createdAt": "2017-12-26T18:54:24.921Z",
-                "isPublic": true,
-                "owner": "anna"
-              }]
+                "pagination": "123456",
+                "data": [{
+                  "id": "d42e0091-2c67-437b-987c-296661c0dc3e",
+                  "user": {
+                    "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                    "username": "acme",
+                    "full_name": "acme",
+                    "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                  },
+                  "images": {
+                    "thumbnail" : {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    },
+                    "low_resolution": {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    },
+                    "standard_resolution": {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    }
+                  },
+                  "user_has_liked": false,
+                  "likes": 10,
+                  "type": image,
+                  "users_in_photo": [],
+                  "created_time": "2017-12-26T15:54:24.921Z",
+                  "location": {
+                    "latitude": 60.167,
+                    "longitude": 24.955,
+                    "name": "Market Square, Helsinki",
+                    "id": "504979721",
+                  }
+                },{
+                  "id": "8e0e5bea-f914-492a-8a2b-011bdbae7ae7",
+                  "user": {
+                    "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                    "username": "acme",
+                    "full_name": "acme",
+                    "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                  },
+                  "images": {
+                    "thumbnail" : {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    },
+                    "low_resolution": {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    },
+                    "standard_resolution": {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    }
+                  },
+                  "user_has_liked": false,
+                  "likes": 10,
+                  "type": image,
+                  "users_in_photo": [],
+                  "created_time": "2017-12-26T15:54:24.921Z",
+                  "location": {
+                    "latitude": 60.167,
+                    "longitude": 24.955,
+                    "name": "Market Square, Helsinki",
+                    "id": "504979721",
+                  }
+                }]
+              }
 
-  '/images':
-    x-swagger-router-controller: images
+  '/media':
+    x-swagger-router-controller: media
     get:
-      description: get all user images
-      operationId: getSelfImages
+      description: get all user media
+      operationId: getSelfMedia
       parameters:
-        - name: from
+        - name: pagination
           in: query
-          description: feeds from date
-          required: false
           type: string
-          default: '2017-12-30T11:15:25.038Z'
       responses:
         "200":
           description: array of links to images
           schema:
-            $ref: '#/definitions/imagesResponse'
+            $ref: '#/definitions/media_list'
           examples:
             application/json; charset=utf-8:
-              [{
-                link: 'https://mock.stylifier.com/image/82736482'
-              }]
+              {
+                "pagination": "",
+                "data": [{
+                  "id": "d42e0091-2c67-437b-987c-296661c0dc3e",
+                  "user": {
+                    "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                    "username": "acme",
+                    "full_name": "acme",
+                    "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                  },
+                  "images": {
+                    "thumbnail" : {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    },
+                    "low_resolution": {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    },
+                    "standard_resolution": {
+                      "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                      "width": 640,
+                      "height": 480
+                    }
+                  },
+                  "user_has_liked": false,
+                  "likes": 10,
+                  "type": image,
+                  "users_in_photo": [],
+                  "created_time": "2017-12-26T15:54:24.921Z",
+                  "location": {
+                    "latitude": 60.167,
+                    "longitude": 24.955,
+                    "name": "Market Square, Helsinki",
+                    "id": "504979721",
+                  }
+                }]
+              }
     post:
       description: upload new image
       operationId: createImage
-      parameters:
-        - name: X-Is-Public
-          in: header
-          required: true
-          type: boolean
-        - name: X-Thread-Id
-          in: header
-          type: string
-          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        - name: X-Message-Id
-          in: header
-          type: string
-          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-
       responses:
         "200":
           description: Object of the image
@@ -355,26 +490,9 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
           examples:
             application/json; charset=utf-8:
               { 
-                "success": true
+                "success": true,
+                "id": "1210dce8-25da-4275-a73a-1383b9774255"
               }
-
-  '/images/{imageId}':
-    x-swagger-router-controller: images
-    get:
-      description: get all user images
-      operationId: getImageById
-      parameters:
-        - name: imageId
-          in: path
-          required: true
-          type: string
-          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-          x-example: '1210dce8-25da-4275-a73a-1383b9774255'
-
-      responses:
-        "200":
-          description: object of image
-
 
   '/threads':
     x-swagger-router-controller: threads
@@ -382,45 +500,52 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
       description: get all user's threads
       operationId: getSelfThreads
       parameters:
-        - name: from
+        - name: pagination
           in: query
-          description: threads from date
-          required: false
           type: string
-          default: '2017-12-30T11:15:25.038Z'
-        - name: to
-          in: query
-          description: threads to date
-          required: false
-          type: string
-          default: '2017-12-30T11:15:25.038Z'
       responses:
         "200":
           description: array of threads
           schema:
-            $ref: '#/definitions/threadsResponse'
+            $ref: '#/definitions/threads'
           examples:
             application/json; charset=utf-8:
-              [{
-                "id": "9210dce8-25da-4275-a73a-1383b9774255",
-                "status": "OPEN",
-                "from": "MockUser",
-                "to": "anna",
-                assets: [{
+              {
+                "pagination": "",
+                "data": [{
                   "id": "d42e0091-2c67-437b-987c-296661c0dc3e",
-                  "createdAt": "2017-12-26T15:54:24.921Z",
-                  "threadId": "9210dce8-25da-4275-a73a-1383b9774255",
-                  "isPublic": false,
-                  "owner": "tim"
-                },
-                {
-                  "id": "8e0e5bea-f914-492a-8a2b-011bdbae7ae7",
-                  "threadId": "9210dce8-25da-4275-a73a-1383b9774255",
-                  "createdAt": "2017-12-26T18:54:24.921Z",
-                  "isPublic": false,
-                  "owner": "anna"
+                  "status": "REQUESTED",
+                  "from": {
+                    "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                    "username": "acme",
+                    "full_name": "acme",
+                    "profile_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Logo_acme.svg/1000px-Logo_acme.svg.png"
+                  },
+                  "to": {
+                    "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                    "username": "mockuser",
+                    "full_name": "mock user",
+                    "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                  },
+                  "created_time": 1515096742249
+                },{
+                  "id": "d42e0091-2c67-437b-987c-296661c0dc0e",
+                  "status": "REQUESTED",
+                  "from": {
+                    "id": "9214dce8-25da-4275-a73a-1383b9774253",
+                    "username": "acme",
+                    "full_name": "acme",
+                    "profile_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Logo_acme.svg/1000px-Logo_acme.svg.png"
+                  },
+                  "to": {
+                    "id": "9219dce8-25da-4275-a73a-1383b9774253",
+                    "username": "mockuser",
+                    "full_name": "mock user",
+                    "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                  },
+                  "created_time": 1515096742249
                 }]
-              }]
+              }
     post:
       description: create a new thread
       operationId: createThread
@@ -433,9 +558,7 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
 
       responses:
         "200":
-          description: array of threads
-          schema:
-            $ref: '#/definitions/threadsResponse'
+          description: thread created
           examples:
             application/json; charset=utf-8:
               {
@@ -443,62 +566,81 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
                 "success": true
               }
 
-  '/threads/{threadId}/messages':
+  '/threads/{thread_id}/messages':
     x-swagger-router-controller: threadsMessages
     get:
       description: get a thread messages
       operationId: getMessages
       parameters:
-        - name: threadId
+        - name: thread_id
           in: path
           required: true
           type: string
-          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
-        - name: from
+        - name: pagination
           in: query
-          description: messages from date
-          required: false
           type: string
-          default: '2017-12-30T11:15:25.038Z'
-        - name: to
-          in: query
-          description: messages to date
-          required: false
-          type: string
-          default: '2017-12-30T11:15:25.038Z'
       responses:
         "200":
-          description: array of threads
+          description: array of messages
           schema:
-            $ref: '#/definitions/threadsResponse'
+            $ref: '#/definitions/messages'
           examples:
             application/json; charset=utf-8:
-              [{
-                "createdAt": "",
-                "text": "",
-                "status": "DELIVERED",
-                "id": "9210dce8-25da-4275-a73a-1383b9774255",
-                "threadId": "9210dce8-25da-4275-a73a-1383b9774255",
-                assets: [{
-                  "id": "d42e0091-2c67-437b-987c-296661c0dc3e",
-                  "createdAt": "2017-12-26T15:54:24.921Z",
-                  "threadId": "9210dce8-25da-4275-a73a-1383b9774255",
-                  "messageId": "9210dce8-25da-4275-a73a-1383b9774255",
-                  "isPublic": false,
-                  "owner": "tim"
+              {
+                pagination: '',
+                data: [{
+                  "text": "hi",
+                  "status": "DELIVERED",
+                  "id": "9210dce8-25da-4275-a73a-1383b9774255",
+                  "thread_id": "9210dce8-25da-4275-a73a-1383b9774255",
+                  "media": [{
+                    "id": "d42e0091-2c67-437b-987c-296661c0dc3e",
+                    "user": {
+                      "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                      "username": "acme",
+                      "full_name": "acme",
+                      "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg"
+                    },
+                    "images": {
+                      "thumbnail" : {
+                        "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                        "width": 640,
+                        "height": 480
+                      },
+                      "low_resolution": {
+                        "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                        "width": 640,
+                        "height": 480
+                      },
+                      "standard_resolution": {
+                        "url": "https://mock.stylifier.com/images/d42e0091-2c67-437b-987c-296661c0dc3e.jpeg",
+                        "width": 640,
+                        "height": 480
+                      }
+                    },
+                    "user_has_liked": false,
+                    "likes": 10,
+                    "type": image,
+                    "users_in_photo": [],
+                    "created_time": "2017-12-26T15:54:24.921Z",
+                    "location": {
+                      "latitude": 60.167,
+                      "longitude": 24.955,
+                      "name": "Market Square, Helsinki",
+                      "id": "504979721",
+                    }
+                  }],
+                  "created_time": ""
                 }]
-              }]
+              }
     put:
       description: create a message
       operationId: createMessage
       parameters:
-        - name: threadId
+        - name: thread_id
           in: path
           required: true
           type: string
-          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-          x-example: '9210dce8-25da-4275-a73a-1383b9774255'
         - name: body
           in: body
           required: true
@@ -513,131 +655,104 @@ Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor
     x-swagger-pipe: swagger_raw
 
 definitions:
-  loginInfo:
-    type: object
-    properties:
-      username:
-        type: string
-      password:
-        type: string
-    required:
-     - username
-     - password
+  id:
+    type: string
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    x-example: '9210dce8-25da-4275-a73a-1383b9774255'
 
-  brand:
-    type: object
-    properties:
-      name: 
-        type: string
-      description:
-        type: string
-      followersCount:
-        type: number
-      avatar:
-        type: string
-  
-  userToCreate:
+  login_info:
     type: object
     properties:
       username:
         type: string
-      email:
-        type: string
       password:
-        type: string
-      firstName:
-        type: string
-      lastName:
         type: string
     required:
      - username
      - password
-     - firstName
-     - email
+  
+  user_to_create:
+    type: object
+    allOf:
+      - $ref: '#/definitions/user_short'
+      - type: object
+        properties: 
+          email:
+            type: string
+          password:
+            type: string
+          instagram_code:
+            type: string
 
   style:
     type: string
 
-  sponsors:
+  user_short:
     type: object
     properties:
-      name:
-        type: string
-      image:
-        type: string
-        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
-        
-  userBrief:
-    type: object
-    properties:
+      id:
+        $ref: '#/definitions/id'
       username:
         type: string
-      firstName:
+      full_name:
         type: string
-      lastName:
+      profile_picture:
         type: string
-      story:
-        type: string
-      createdAt:
-        type: string
-      followersCount:
-        type: number
-      avatar:
-        type: string
-      rating:
-        type: number
-      styles:
-        type: array
-        items:
-          $ref: '#/definitions/style'
-      sponsors:
-        type: array
-        items:
-          $ref: '#/definitions/sponsors'
 
   user:
+    allOf:
+      - $ref: '#/definitions/user_short'
+      - type: object
+        properties:        
+          bio:
+            type: string
+          counts:
+            type: object
+            properties:
+              follows:
+                type: number
+              followed_by:
+                type: number
+              media:
+                type: number
+              thread_asked_by:
+                type: number
+              thread_asked_by_open:
+                type: number
+              sponsored:
+                type: number
+          contribution_earned:
+            type: number
+          rating:
+            type: number
+          is_instagram_user:
+            type: boolean
+          is_brand:
+            type: boolean
+          styles:
+            type: array
+            items:
+              $ref: '#/definitions/style'
+          sponsors:
+            type: array
+            items:
+              $ref: '#/definitions/user_short'
+          created_time:
+            type: string
+
+  users:
     type: object
     properties:
-      username:
+      pagination:
         type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-      createdAt:
-        type: string
-      story:
-        type: string
-      avatar:
-        type: string
-      rating:
-        type: number
-      followersCount:
-        type: number
-      followers:
+      data:
         type: array
         items:
-          $ref: '#/definitions/userBrief'
-      styles:
-        type: array
-        items:
-          $ref: '#/definitions/style'
-      sponsors:
-        type: array
-        items:
-          $ref: '#/definitions/sponsors'
-
-  userSearchResponse:
-    type: array
-    items:
-      $ref: '#/definitions/user'
+          $ref: '#/definitions/user'
 
   message:
     type: object
     properties:
-      createdAt:
-        type: string
       text:
         type: string
       status:
@@ -647,25 +762,31 @@ definitions:
           - SENT
           - SEEN
       id:
-        type: string
-        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
-      threadId:
-        type: string
-        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
-      assets:
+        $ref: '#/definitions/id'
+      thread_id:
+        $ref: '#/definitions/id'
+      media:
         type: array
         items:
-          $ref: '#/definitions/image'
+          $ref: '#/definitions/media'
+      created_time:
+        type: string
+
+  messages:
+    type: object
+    properties:
+      pagination:
+        type: string
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/message'
 
   thread:
     type: object
     properties:
       id:
-        type: string
-        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+        $ref: '#/definitions/id'
       status:
         type: string
         enum:
@@ -674,63 +795,87 @@ definitions:
           - RATING
           - CLOSED
       from:
-        type: string
-        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
+        $ref: '#/definitions/user_short'
       to:
+        $ref: '#/definitions/user_short'
+      created_time:
         type: string
-        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
-      assets:
-        type: array
-        items:
-          $ref: '#/definitions/image'
-      createdAt:
-        type: string
-    required:
-      - to
 
-  threadsResponse:
-    type: array
-    items:
-      $ref: '#/definitions/thread'
-
-  failUserCreatedResponse:
+  threads:
     type: object
     properties:
-      message:
+      pagination:
         type: string
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/thread'
+          
+  media:
+    type: object
+    properties:
+      id:
+        $ref: '#/definitions/id'
+      user:
+        $ref: '#/definitions/user_short'
+      images:
+        $ref: '#/definitions/image'
+      user_has_liked:
+        type: boolean
+      likes:
+        type: number
+      type:
+        type: string
+        enum:
+          - image
+      users_in_photo:
+        type: array
+        items:
+          $ref: '#/definitions/user'
+      location:
+        $ref: '#/definitions/location'
+      created_time:
+        type: number
+
+  location:
+    type: object
+    properties:
+      latitude:
+        type: number
+      longitude:
+        type: number
+      name:
+        type: string
+      id:
+        type: string
+          
 
   image:
     type: object
     properties:
-      owner:
+      width:
+        type: number
+      height:
+        type: number
+      url:
         type: string
-      id:
-        type: string
-        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
-      createdAt:
-        type: string
-      threadId:
-        type: string
-        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
-      messageId:
-        type: string
-        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-        x-example: '9210dce8-25da-4275-a73a-1383b9774255'
-      isPublic:
-        type: boolean
 
-
-  imagesResponse:
-    type: array
-    items:
-      $ref: '#/definitions/image'
-
-  loginResponse:
+  images:
     type: object
     properties:
-      jwt:
+      thumbnail:
+        $ref: '#/definitions/image'
+      low_resolution:
+        $ref: '#/definitions/image'
+      standard_resolution:
+        $ref: '#/definitions/image'
+
+  media_list:
+    type: object
+    properties:
+      pagination:
         type: string
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/media'
