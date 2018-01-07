@@ -8,7 +8,11 @@ basePath: /
 
 schemes:
   - https
-
+  
+consumes:
+  - application/json; charset=utf-8
+  - application/json
+  
 paths:
   /register:
     x-swagger-router-controller: users
@@ -60,6 +64,9 @@ paths:
           description: query value to search for, type specified with `in` parameter
           type: string
           x-example: "acme"
+        - name: pagination
+          in: query
+          type: number
       responses:
         "200":
           description: return `allow [ tags ]`
@@ -92,7 +99,7 @@ paths:
           x-example: "tom"
         - name: pagination
           in: query
-          type: string
+          type: number
       responses:
         "200":
           description: return list of users
@@ -167,7 +174,7 @@ paths:
           type: string
         - name: pagination
           in: query
-          type: string
+          type: number
       responses:
         "200":
           description: return list of users
@@ -186,6 +193,25 @@ paths:
                   "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
                 }]
               }
+              
+  '/users/{username}/follow':
+    x-swagger-router-controller: followers              
+    post:
+      description: follow a user
+      operationId: createFollow
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: success true
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
   
   '/users/{username}/media':
     x-swagger-router-controller: media
@@ -199,7 +225,7 @@ paths:
           type: string
         - name: pagination
           in: query
-          type: string
+          type: number
 
       responses:
         "200":
@@ -327,7 +353,7 @@ paths:
                 "created_time": "1515094955466"
               }
   '/feeds':
-    x-swagger-router-controller: feeds
+    x-swagger-router-controller: media
     get:
       description: get user recent feeds
       operationId: getFeeds
@@ -431,7 +457,7 @@ paths:
       parameters:
         - name: pagination
           in: query
-          type: string
+          type: number
       responses:
         "200":
           description: array of links to images
@@ -482,6 +508,8 @@ paths:
     post:
       description: upload new image
       operationId: createMedia
+      consumes:
+        - multipart/form-data
       responses:
         "200":
           description: Object of the image
@@ -502,7 +530,7 @@ paths:
       parameters:
         - name: pagination
           in: query
-          type: string
+          type: number
       responses:
         "200":
           description: array of threads
@@ -578,7 +606,7 @@ paths:
           type: string
         - name: pagination
           in: query
-          type: string
+          type: number
       responses:
         "200":
           description: array of messages
