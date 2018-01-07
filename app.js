@@ -6,17 +6,16 @@ module.exports = function(config, deps) {
   const multer = require('multer')
   const AWS = require('aws-sdk')
   
-  const s3 = new AWS.S3();
+  deps.s3 = new AWS.S3();
   AWS.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
   });
 
-  
   app.use('/media', multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 52428800 },
-  }).single('media'))
+  }).single('qqfile'))
 
   // in fittings/swagger-router this dependencies will enject into controllers
   config.dependencies = deps

@@ -4,6 +4,7 @@ module.exports = function(dependencies) {
   const s3 = dependencies.s3
   const id = dependencies.id
   const Media = dependencies.db.Media
+  const Followable = dependencies.db.Followable
   const Op = dependencies.db.Op
   const Users = dependencies.db.Users
   const bucket = 'stylifier.com-images'
@@ -54,7 +55,7 @@ module.exports = function(dependencies) {
           type: 'image'
         })
         .then(media => {
-          res.json(media)
+          res.json({success: true, id: mediaId})
           next()
         })
         .catch(e => next(e))

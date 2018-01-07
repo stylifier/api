@@ -64,6 +64,8 @@ module.exports = function(dependencies) {
       const quary = req.swagger.params.q.value
       const offset = req.swagger.params.pagination.value || 0
       
+      console.log(req.swagger.params.pagination.value);
+      
       Users.findAll({
         where: {[Op.and]: [
           {[Op.or]: [

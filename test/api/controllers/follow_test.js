@@ -78,7 +78,7 @@ describe('validate route', function() {
         })
       })
     
-      it.only('follow other user', function(done) {
+      it('follow other user', function(done) {
         request(server)
         .get(`/users/${usernameTo}/followers`)
         .set('Accept', 'application/json')

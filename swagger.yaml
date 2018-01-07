@@ -364,6 +364,9 @@ paths:
           required: false
           type: string
           default: '2017-12-30T11:15:25.038Z'
+        - name: pagination
+          in: query
+          type: number
 
       responses:
         "200":
