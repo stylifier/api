@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use strict'
 
 const should = require('should')
@@ -36,12 +37,12 @@ describe('validate route', function() {
         done(err)
       })
     })
-    
+
     describe('creates a user and', function() {
       const password = '12345678'
-      let jwt
+
       let username
-      
+
       beforeEach(function(done) {
         username = 'test' + (new Date()).getTime()
         request(server)
@@ -54,11 +55,10 @@ describe('validate route', function() {
         })
         .set('Accept', 'application/json')
         .end(function(err, res) {
-          jwt = res.body.jwt
           done(err)
         })
       })
-    
+
       it('login a user', function(done) {
         request(server)
         .post('/login')
@@ -73,23 +73,23 @@ describe('validate route', function() {
           done(err)
         })
       })
-      
+
       it('get brands', function(done) {
         request(server)
-        .get(`/brands?q=test`)
+        .get('/brands?q=test')
         .set('X-Consumer-Username', username)
         .set('Accept', 'application/json')
         .end(function(err, res) {
-          console.log(res.body.data);
+          console.log(res.body.data)
           res.status.should.eql(200)
           should.exists(res.body.data)
           done(err)
         })
       })
-      
+
       it('get brands with pagination', function(done) {
         request(server)
-        .get(`/brands?q=test&pagination=10`)
+        .get('/brands?q=test&pagination=10')
         .set('X-Consumer-Username', username)
         .set('Accept', 'application/json')
         .end(function(err, res) {
@@ -98,10 +98,10 @@ describe('validate route', function() {
           done(err)
         })
       })
-      
+
       it('get users', function(done) {
         request(server)
-        .get(`/users?q=test`)
+        .get('/users?q=test')
         .set('X-Consumer-Username', username)
         .set('Accept', 'application/json')
         .end(function(err, res) {
@@ -110,7 +110,7 @@ describe('validate route', function() {
           done(err)
         })
       })
-      
+
       it('get user by username', function(done) {
         request(server)
         .get(`/users/${username}`)
@@ -122,10 +122,10 @@ describe('validate route', function() {
           done(err)
         })
       })
-      
+
       it('get self user', function(done) {
         request(server)
-        .get(`/user/self`)
+        .get('/user/self')
         .set('X-Consumer-Username', username)
         .set('Accept', 'application/json')
         .end(function(err, res) {

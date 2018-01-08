@@ -1,7 +1,8 @@
 'use strict'
+const id = require('uniqid')
 
-module.exports = (sequelize, Datatypes) => 
-  sequelize.define('threads', {
+module.exports = (sequelize, Datatypes) => {
+  const model = sequelize.define('threads', {
     id: {
       type: Datatypes.STRING,
       primaryKey: true
@@ -10,3 +11,53 @@ module.exports = (sequelize, Datatypes) =>
     createdAt: Datatypes.DATE,
     updatedAt: Datatypes.DATE
   })
+
+  model.findUserThreads = function(username, offset) {
+    return this.findAll({
+      where: {
+        [Datatypes.Op.or]: [
+          {fromUsername: username},
+          {toUsername: username}
+        ]
+      },
+      offset: offset,
+      limit: 20,
+      attributes: ['id', 'status', ['createdAt', 'created_time']],
+      include: [
+        {
+          model: sequelize.models.Users,
+          as: 'from',
+          attributes: [
+            'username',
+            'id',
+            'full_name',
+            'profile_picture',
+            ['createdAt', 'created_time']
+          ]
+        },
+        {
+          model: sequelize.models.Users,
+          as: 'to',
+          attributes: [
+            'username',
+            'id',
+            'full_name',
+            'profile_picture',
+            ['createdAt', 'created_time']
+          ]
+        }
+      ]
+    })
+  }
+
+  model.createInstance = function(from, to) {
+    return this.create({
+      id: id(),
+      status: 'REQUESTED',
+      fromUsername: from,
+      toUsername: to,
+    })
+  }
+
+  return model
+}

@@ -1,35 +1,43 @@
 'use strict'
 
-module.exports = function(sequelize, Datatypes) {
-  const Users = require('./Users')(sequelize, Datatypes)
-  const Styles = require('./Styles')(sequelize, Datatypes)
-  const Threads = require('./Threads')(sequelize, Datatypes)
-  const Messages = require('./Messages')(sequelize, Datatypes)
-  const Media = require('./Media')(sequelize, Datatypes)
-  const Followable = require('./Followable')(sequelize, Datatypes)
-  
-  Users.belongsToMany(Styles, {as: 'styles', through: 'user_style'})
-  Users.belongsToMany(Users, {as: 'sponsors', through: 'sponsor'})
-  
-  Threads.belongsTo(Users, {as: 'from'})
-  Threads.belongsTo(Users, {as: 'to'})
-  
-  Followable.belongsTo(Users, {as: 'follower'})
-  Followable.belongsTo(Users, {as: 'followed_by'})
-  
-  Messages.belongsTo(Threads, {as: 'thread'})
-  Messages.hasMany(Media, {as: 'media'})
-  
-  Media.belongsTo(Users, {as: 'user'})
-  Media.belongsToMany(Users, {as: 'users_in_photo', through: 'tagable'})
-  
+module.exports = function(s, Datatypes) {
+  s.models.Users = require('./Users')(s, Datatypes)
+  s.models.Styles = require('./Styles')(s, Datatypes)
+  s.models.Threads = require('./Threads')(s, Datatypes)
+  s.models.Messages = require('./Messages')(s, Datatypes)
+  s.models.Media = require('./Media')(s, Datatypes)
+  s.models.Followable = require('./Followable')(s, Datatypes)
+
+  s.models.Users.belongsToMany(s.models.Styles, {
+    as: 'styles',
+    through: 'user_style'
+  })
+  s.models.Users.belongsToMany(s.models.Users, {
+    as: 'sponsors',
+    through: 'sponsor'
+  })
+
+  s.models.Threads.belongsTo(s.models.Users, {as: 'from'})
+  s.models.Threads.belongsTo(s.models.Users, {as: 'to'})
+
+  s.models.Followable.belongsTo(s.models.Users, {as: 'follower'})
+  s.models.Followable.belongsTo(s.models.Users, {as: 'followed_by'})
+
+  s.models.Messages.belongsTo(s.models.Threads, {as: 'thread'})
+  s.models.Messages.hasMany(s.models.Media, {as: 'media'})
+
+  s.models.Media.belongsTo(s.models.Users, {as: 'user'})
+  s.models.Media.belongsToMany(s.models.Users, {
+    as: 'users_in_photo',
+    through: 'tagable'
+  })
+
   return {
-    Users: Users,
-    Styles: Styles,
-    Threads: Threads,
-    Messages: Messages,
-    Media: Media,
-    Followable: Followable,
-    Op: Datatypes.Op
+    Users: s.models.Users,
+    Styles: s.models.Styles,
+    Threads: s.models.Threads,
+    Messages: s.models.Messages,
+    Media: s.models.Media,
+    Followable: s.models.Followable
   }
 }

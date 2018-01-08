@@ -1,7 +1,7 @@
 'use strict'
 const models = require('./models')
 
-const Sequelize = require('sequelize');
+const Sequelize = require('sequelize')
 const sequelize = new Sequelize('stylifier', 'test', 'test', {
   host: 'localhost',
   port: 32769,
@@ -13,7 +13,7 @@ const sequelize = new Sequelize('stylifier', 'test', 'test', {
     idle: 10000
   },
   operatorsAliases: false
-});
+})
 
 // sequelize.sync({force: true})
 

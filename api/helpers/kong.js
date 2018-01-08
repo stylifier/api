@@ -1,10 +1,11 @@
+/* eslint-disable camelcase */
 'use strict'
 const rp = require('request-promise')
 const jwt = require('jwt-simple')
 
-module.exports = (config) => {
+module.exports = config => {
   return {
-    createUser: (username, id) => 
+    createUser: (username, id) =>
       rp('http://kong.stylifier.com:8001/consumers/', {
         method: 'POST',
         json: true,
@@ -13,12 +14,12 @@ module.exports = (config) => {
           custom_id: id
         }
       }),
-    createJWT: (username) => 
+    createJWT: username =>
       rp(`http://kong.stylifier.com:8001/consumers/${username}/jwt`, {
         json: true,
         method: 'POST',
         formData: {}
-      }).then((r) => {
+      }).then(r => {
         return {jwt: jwt.encode({iss: r.key}, r.secret, r.algorithm)}
       })
   }

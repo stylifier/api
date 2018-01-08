@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use strict'
 
 const should = require('should')
@@ -20,13 +21,12 @@ describe('validate route', function() {
     })
   })
 
-    
   describe('creates a user and', function() {
     const password = '12345678'
-    let jwt
+
     let usernameFrom
     let usernameTo
-    
+
     const createUser = (user, cb) => {
       request(server)
       .post('/register')
@@ -38,11 +38,10 @@ describe('validate route', function() {
       })
       .set('Accept', 'application/json')
       .end(function(err, res) {
-        jwt = res.body.jwt
         cb(err)
       })
     }
-    
+
     beforeEach(function(done) {
       usernameFrom = 'test' + (new Date()).getTime()
       createUser(usernameFrom, () => {
@@ -50,7 +49,7 @@ describe('validate route', function() {
         createUser(usernameTo, () => done())
       })
     })
-  
+
     it('create a media', function(done) {
       this.timeout(5000)
       request(server)
@@ -65,9 +64,9 @@ describe('validate route', function() {
         done(err)
       })
     })
-    
+
     describe('creates a media and', function() {
-      
+
       beforeEach(function(done) {
         this.timeout(5000)
         request(server)
@@ -81,7 +80,7 @@ describe('validate route', function() {
           done(err)
         })
       })
-    
+
       it('get self media', function(done) {
         this.timeout(5000)
         request(server)
@@ -98,7 +97,7 @@ describe('validate route', function() {
           done(err)
         })
       })
-      
+
       it('get self media with pagination', function(done) {
         this.timeout(5000)
         request(server)
@@ -114,8 +113,8 @@ describe('validate route', function() {
           done(err)
         })
       })
-      
-      it.only('get someone else media with pagination', function(done) {
+
+      it('get someone else media with pagination', function(done) {
         this.timeout(5000)
         request(server)
         .get(`/users/${usernameFrom}/media?pagination=1`)
@@ -130,7 +129,7 @@ describe('validate route', function() {
           done(err)
         })
       })
-      
+
       it('get someone else media', function(done) {
         this.timeout(5000)
         request(server)
@@ -149,4 +148,3 @@ describe('validate route', function() {
     })
   })
 })
-

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use strict'
 
 const should = require('should')
@@ -19,14 +20,12 @@ describe('validate route', function() {
     })
   })
 
-    
   describe('creates a user and thread', function() {
     const password = '12345678'
-    let jwt
     let usernameFrom
     let usernameTo
     let threadId
-    
+
     const createUser = (user, cb) => {
       request(server)
       .post('/register')
@@ -38,12 +37,11 @@ describe('validate route', function() {
       })
       .set('Accept', 'application/json')
       .end(function(err, res) {
-        jwt = res.body.jwt
         cb(err)
       })
     }
-    
-    const createThread = (cb) => {
+
+    const createThread = cb => {
       request(server)
       .post('/threads')
       .send({to: {username: usernameTo}})
@@ -56,7 +54,7 @@ describe('validate route', function() {
         cb(err)
       })
     }
-    
+
     beforeEach(function(done) {
       usernameFrom = 'test' + (new Date()).getTime()
       createUser(usernameFrom, () => {
@@ -64,7 +62,7 @@ describe('validate route', function() {
         createUser(usernameTo, () => createThread(() => done()))
       })
     })
-  
+
     it('create a message', function(done) {
       request(server)
       .put(`/threads/${threadId}/messages`)
@@ -77,8 +75,8 @@ describe('validate route', function() {
         done(err)
       })
     })
-    
-    describe('creates a message and', function() {
+
+    describe.only('creates a message and', function() {
       beforeEach(function(done) {
         request(server)
         .put(`/threads/${threadId}/messages`)
@@ -91,7 +89,7 @@ describe('validate route', function() {
           done(err)
         })
       })
-      
+
       it('create a message', function(done) {
         request(server)
         .get(`/threads/${threadId}/messages`)
@@ -103,8 +101,5 @@ describe('validate route', function() {
         })
       })
     })
-    
-    
   })
 })
-
