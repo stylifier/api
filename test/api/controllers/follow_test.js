@@ -10,14 +10,7 @@ describe('validate route', function() {
   before(function() {
     const appname = require('../../../package').name
     const config = require('rc')(appname, {})
-    server = require('../../../app')(config, {
-      db: require('../../../api/helpers/db'),
-      // kong: require('../../../api/helpers/kong')(config.kong),
-      kong: require('../../../api/mocks/kong')(config.kong),
-      id: require('uniqid'),
-      bcrypt: require('bcrypt'),
-      jwt: require('jwt-simple')
-    })
+    server = require('../app')(config)
   })
 
   describe('creates a user and', function() {

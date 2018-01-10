@@ -14,6 +14,7 @@ module.exports = (sequelize, Datatypes) => {
     password: Datatypes.STRING,
     profile_picture: Datatypes.STRING,
     id: Datatypes.STRING,
+    website: Datatypes.STRING,
     bio: Datatypes.TEXT,
     contribution_earned: Datatypes.DOUBLE,
     rating: Datatypes.DOUBLE,
@@ -36,6 +37,23 @@ module.exports = (sequelize, Datatypes) => {
     return this.create(userToCreate)
   }
 
+  model.findOrCreateInstance = function(obj) {
+    return this.findOrCreate({
+      where: {id: obj.id},
+      defaults: {
+        id: obj.id,
+        full_name: obj.full_name,
+        profile_picture: obj.profile_picture,
+        bio: obj.bio,
+        website: obj.website,
+        username: obj.username,
+        is_brand: obj.is_business,
+        is_instagram_user: true,
+        contribution_earned: 0,
+      }
+    })
+  }
+
   model.findByQuary = function(q, offset) {
     return this.findAll({
       where: {[Datatypes.Op.and]: [
@@ -47,26 +65,40 @@ module.exports = (sequelize, Datatypes) => {
       ]},
       offset: offset,
       limit: 20,
-      attributes: [
-        'username',
-        'id',
-        'full_name',
-        'profile_picture',
-        ['createdAt', 'created_time']
-      ]
+      attributes: this.shortAttributes
     })
   }
 
-  model.findUsername = function(username) {
+  model.checkLogin = function(username, password) {
+    return this.findOne({where: {username: username}})
+    .then(user => user.get('password'))
+    .then(psw => bcrypt.compareSync(password, psw) ?
+      Promise.resolve() :
+      Promise.reject('wrong username or password')
+    )
+  }
+
+  model.shortAttributes = [
+    'username',
+    'id',
+    'full_name',
+    'profile_picture',
+    ['createdAt', 'created_time']
+  ]
+
+  model.fullAttributes = [
+    'bio',
+    'contribution_earned',
+    'rating',
+    'is_instagram_user',
+    'is_brand',
+    ...model.shortAttributes
+  ]
+
+  model.findUsername = function(username, isFullAttributes) {
     return this.findOne({
       where: {username: username},
-      attributes: [
-        'username',
-        'id',
-        'full_name',
-        'profile_picture',
-        ['createdAt', 'created_time']
-      ]
+      attributes: isFullAttributes ? this.fullAttributes : this.shortAttributes
     })
   }
 

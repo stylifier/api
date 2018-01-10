@@ -33,7 +33,6 @@ module.exports = (sequelize, Datatypes) => {
   }
 
   model.createInstance = function(username, threadId, text) {
-    console.log('___>>>>', username, threadId, text)
     return this.create({
       id: id(),
       senderUsername: username,

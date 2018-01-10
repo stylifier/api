@@ -4,9 +4,10 @@ const rp = require('request-promise')
 const jwt = require('jwt-simple')
 
 module.exports = config => {
+  const baseURL = 'http://kong.stylifier.com:8001'
   return {
     createUser: (username, id) =>
-      rp('http://kong.stylifier.com:8001/consumers/', {
+      rp(baseURL + '/consumers/', {
         method: 'POST',
         json: true,
         formData: {
@@ -15,7 +16,7 @@ module.exports = config => {
         }
       }),
     createJWT: username =>
-      rp(`http://kong.stylifier.com:8001/consumers/${username}/jwt`, {
+      rp(baseURL + `/consumers/${username}/jwt`, {
         json: true,
         method: 'POST',
         formData: {}

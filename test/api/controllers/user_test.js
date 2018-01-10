@@ -10,14 +10,7 @@ describe('validate route', function() {
   before(function() {
     const appname = require('../../../package').name
     const config = require('rc')(appname, {})
-    server = require('../../../app')(config, {
-      db: require('../../../api/helpers/db'),
-      // kong: require('../../../api/helpers/kong')(config.kong),
-      kong: require('../../../api/mocks/kong')(config.kong),
-      id: require('uniqid'),
-      bcrypt: require('bcrypt'),
-      jwt: require('jwt-simple')
-    })
+    server = require('../app')(config)
   })
 
   describe('/users', function() {
@@ -33,6 +26,20 @@ describe('validate route', function() {
       .set('Accept', 'application/json')
       .end(function(err, res) {
         should.exists(res.body.jwt)
+        res.status.should.eql(200)
+        done(err)
+      })
+    })
+
+    it.only('create a user with instagram', function(done) {
+      request(server)
+      .post('/register')
+      .send({
+        instagram_code: '218288355ac045bc99d5619d47cf6f8b'
+      })
+      .set('Accept', 'application/json')
+      .end(function(err, res) {
+        console.log(res.body)
         res.status.should.eql(200)
         done(err)
       })
@@ -70,6 +77,20 @@ describe('validate route', function() {
         .end(function(err, res) {
           res.status.should.eql(200)
           should.exists(res.body.jwt)
+          done(err)
+        })
+      })
+
+      it('fail login a user', function(done) {
+        request(server)
+        .post('/login')
+        .send({
+          username: username,
+          password: '12345',
+        })
+        .set('Accept', 'application/json')
+        .end(function(err, res) {
+          res.status.should.eql(401)
           done(err)
         })
       })

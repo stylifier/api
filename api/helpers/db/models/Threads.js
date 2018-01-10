@@ -27,24 +27,12 @@ module.exports = (sequelize, Datatypes) => {
         {
           model: sequelize.models.Users,
           as: 'from',
-          attributes: [
-            'username',
-            'id',
-            'full_name',
-            'profile_picture',
-            ['createdAt', 'created_time']
-          ]
+          attributes: sequelize.models.shortAttributes
         },
         {
           model: sequelize.models.Users,
           as: 'to',
-          attributes: [
-            'username',
-            'id',
-            'full_name',
-            'profile_picture',
-            ['createdAt', 'created_time']
-          ]
+          attributes: sequelize.models.shortAttributes
         }
       ]
     })

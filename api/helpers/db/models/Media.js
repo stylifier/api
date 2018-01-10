@@ -29,19 +29,28 @@ module.exports = (sequelize, Datatypes) => {
         'location',
         ['createdAt', 'created_time']
       ],
-      order: [['updatedAt', 'DESC']],
+      order: [['createdAt', 'DESC']],
       include: [{
         model: sequelize.models.Users,
         as: 'user',
-        attributes: [
-          'username',
-          'id',
-          'full_name',
-          'profile_picture',
-          ['createdAt', 'created_time']
-        ]
+        attributes: sequelize.models.shortAttributes
       }]
     })
+  }
+
+  model.createOrUpdateInstances = function(media, username) {
+    return Promise.all(media.reverse().map(m => this.findOne({where: {id: m.id}})
+      .then(obj => obj ?
+        obj.update({images: m.images, location: m.location}) :
+        this.create({
+          id: m.id,
+          userUsername: username,
+          images: m.images,
+          location: m.location,
+          type: 'image'
+        })
+      )
+    ))
   }
 
   model.createInstance = function(username, mediaExtention, bucket, mId) {

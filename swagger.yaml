@@ -8,11 +8,11 @@ basePath: /
 
 schemes:
   - https
-  
+
 consumes:
   - application/json; charset=utf-8
   - application/json
-  
+
 paths:
   /register:
     x-swagger-router-controller: users
@@ -85,7 +85,7 @@ paths:
                   "profile_picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Logo_acme.svg/1000px-Logo_acme.svg.png",
                 }]
               }
-  
+
   /users:
     x-swagger-router-controller: users
     get:
@@ -118,7 +118,7 @@ paths:
                   "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
                 }]
               }
-              
+
   '/users/{username}':
     x-swagger-router-controller: users
     get:
@@ -193,9 +193,9 @@ paths:
                   "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
                 }]
               }
-              
+
   '/users/{username}/follow':
-    x-swagger-router-controller: followers              
+    x-swagger-router-controller: followers
     post:
       description: follow a user
       operationId: createFollow
@@ -212,7 +212,7 @@ paths:
               {
                 "success": true
               }
-  
+
   '/users/{username}/media':
     x-swagger-router-controller: media
     get:
@@ -310,7 +310,7 @@ paths:
                   }
                 }]
               }
-              
+
 
   '/user/self':
     x-swagger-router-controller: users
@@ -329,8 +329,8 @@ paths:
                 "username": "mockuser",
                 "full_name": "mock user",
                 "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
-                "bio": "Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
-                
+                "bio": "Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+
                 Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum.",
                 "counts": {
                   "follows": 10,
@@ -520,7 +520,7 @@ paths:
             $ref: '#/definitions/image'
           examples:
             application/json; charset=utf-8:
-              { 
+              {
                 "success": true,
                 "id": "1210dce8-25da-4275-a73a-1383b9774255"
               }
@@ -701,13 +701,13 @@ definitions:
     required:
      - username
      - password
-  
+
   user_to_create:
     type: object
     allOf:
       - $ref: '#/definitions/user_short'
       - type: object
-        properties: 
+        properties:
           email:
             type: string
           password:
@@ -734,7 +734,7 @@ definitions:
     allOf:
       - $ref: '#/definitions/user_short'
       - type: object
-        properties:        
+        properties:
           bio:
             type: string
           counts:
@@ -841,7 +841,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/thread'
-          
+
   media:
     type: object
     properties:
@@ -879,7 +879,7 @@ definitions:
         type: string
       id:
         type: string
-          
+
 
   image:
     type: object
