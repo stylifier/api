@@ -8,6 +8,7 @@ before_install:
   - sudo apt-get install fakeroot jq -y
   - sudo apt-get install git-core -y
   - sudo apt-get install libavahi-compat-libdnssd-dev -y
+  - sudo apt-get install aws-cli
 
 install:
   - npm i -f
@@ -29,4 +30,3 @@ addons:
     packages:
       - g++-4.9
       - docker
-      - aws-cli
