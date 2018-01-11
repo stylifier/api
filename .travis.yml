@@ -8,6 +8,7 @@ before_install:
   - sudo apt-get install fakeroot jq -y
   - sudo apt-get install git-core -y
   - sudo apt-get install libavahi-compat-libdnssd-dev -y
+  - sudo pip install awscli
 
 install:
   - npm i -f
