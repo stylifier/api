@@ -6,7 +6,7 @@ WORKDIR /opt/api
 
 COPY . .
 
-RUN apk add --no-cache make gcc g++ python
+RUN apk add --no-cache make gcc g++ python git
 RUN npm install
 
 CMD ["node","index.js"]
