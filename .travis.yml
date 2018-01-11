@@ -14,6 +14,10 @@ install:
 
 script:
   - npm run test
+  - $(aws ecr get-login --no-include-email --region eu-central-1)
+  - docker build -t stylifier .
+  - docker tag stylifier:latest 012029284016.dkr.ecr.eu-central-1.amazonaws.com/stylifier:latest
+  - docker push 012029284016.dkr.ecr.eu-central-1.amazonaws.com/stylifier:latest
 
 env:
   - CXX=g++-4.9
