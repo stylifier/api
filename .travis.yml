@@ -8,7 +8,6 @@ before_install:
   - sudo apt-get install fakeroot jq -y
   - sudo apt-get install git-core -y
   - sudo apt-get install libavahi-compat-libdnssd-dev -y
-  - sudo apt-get install aws-cli
 
 install:
   - npm i -f
@@ -21,7 +20,9 @@ script:
   - docker push 012029284016.dkr.ecr.eu-central-1.amazonaws.com/stylifier:latest
 
 env:
-  - CXX=g++-4.9
+  global:
+    - AWS_DEFAULT_REGION=eu-central-1
+    - CXX=g++-4.9
 
 addons:
   apt:
@@ -30,3 +31,5 @@ addons:
     packages:
       - g++-4.9
       - docker
+      - python
+      - python-pip
