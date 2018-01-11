@@ -1,5 +1,28 @@
 language: node_js
+
 node_js:
-  - 6
-after_success:
-  - npm run coveralls
+  - node
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install fakeroot jq -y
+  - sudo apt-get install git-core -y
+  - sudo apt-get install libavahi-compat-libdnssd-dev -y
+
+install:
+  - npm i -f
+
+script:
+  - npm run test
+
+env:
+  - CXX=g++-4.9
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.9
+      - docker
+      - aws-cli
