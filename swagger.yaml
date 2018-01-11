@@ -175,6 +175,9 @@ paths:
         - name: pagination
           in: query
           type: number
+        - name: q
+          in: query
+          type: string
       responses:
         "200":
           description: return list of users

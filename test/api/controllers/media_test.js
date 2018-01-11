@@ -58,7 +58,7 @@ describe('validate route', function() {
       })
     })
 
-    describe('creates a media and', function() {
+    describe.only('creates a media and', function() {
 
       beforeEach(function(done) {
         this.timeout(5000)

@@ -1,4 +1,11 @@
 {
   "appPort": 3000,
-  "appRoot": "./"
+  "appRoot": "./",
+  "db": {
+    "name": "stylifier",
+    "username": "test",
+    "password": "test",
+    "host": "localhost",
+    "port": "5432"
+  }
 }

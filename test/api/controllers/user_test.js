@@ -31,7 +31,7 @@ describe('validate route', function() {
       })
     })
 
-    it.only('create a user with instagram', function(done) {
+    it('create a user with instagram', function(done) {
       request(server)
       .post('/register')
       .send({

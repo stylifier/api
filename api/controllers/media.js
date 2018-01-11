@@ -57,8 +57,8 @@ module.exports = function(dependencies) {
       const offset = req.swagger.params.pagination.value || 0
       const username = req.headers['x-consumer-username']
 
-      Followable.getUserFollowers(username, 10000)
-      .then(r => r.map(i => i.followed_by))
+      Followable.getUserFollowers(username, 0, undefined, 10000)
+      .then(r => r.map(i => i.followed_by.username))
       .then(r => Media.getMediaByUsernames(r, offset))
       .then(r => {
         res.json({data: r, pagination: offset + r.length})

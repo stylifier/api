@@ -2,19 +2,22 @@
 const models = require('./models')
 
 const Sequelize = require('sequelize')
-const sequelize = new Sequelize('stylifier', 'test', 'test', {
-  host: 'localhost',
-  port: 32769,
-  dialect: 'postgres',
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  },
-  operatorsAliases: false
-})
 
-// sequelize.sync({force: true})
+module.exports = function(config) {
+  const sequelize = new Sequelize(config.name, config.username, config.password, {
+    host: config.host,
+    port: config.port,
+    dialect: 'postgres',
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
+    operatorsAliases: false
+  })
 
-module.exports = models(sequelize, Sequelize)
+  // sequelize.sync({force: true})
+
+  return models(sequelize, Sequelize)
+}

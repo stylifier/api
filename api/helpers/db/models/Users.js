@@ -54,14 +54,14 @@ module.exports = (sequelize, Datatypes) => {
     })
   }
 
-  model.findByQuary = function(q, offset) {
+  model.findByQuary = function(q, offset, isBrand) {
     return this.findAll({
       where: {[Datatypes.Op.and]: [
         {[Datatypes.Op.or]: [
           {username: {[Datatypes.Op.like]: `%${q}%`}},
           {full_name: {[Datatypes.Op.like]: `%${q}%`}}
         ]},
-        {is_brand: true}
+        {is_brand: isBrand}
       ]},
       offset: offset,
       limit: 20,

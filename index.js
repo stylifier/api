@@ -4,8 +4,8 @@ const appname = require('./package').name
 const config = require('rc')(appname, {})
 const logger = console
 const db = config.mockBackend ?
-  require('./api/mocks/db') :
-  require('./api/helpers/db')
+  require('./api/mocks/db')(config.db) :
+  require('./api/helpers/db')(config.db)
 
 const kong = !config.mockKong ?
   require('./api/mocks/kong') :

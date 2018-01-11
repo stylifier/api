@@ -19,9 +19,10 @@ module.exports = (sequelize, Datatypes) => {
     })
   }
 
-  model.getUserFollowers = function(username, offset) {
+  model.getUserFollowers = function(username, offset, quary, limit) {
     return this.findAll({
-      where: {followerUsername: username},
+      where: Object.assign({followerUsername: username},
+        quary ? {followedByUsername: quary} : {}),
       attributes: [],
       include: [{
         model: sequelize.models.Users,
@@ -29,7 +30,7 @@ module.exports = (sequelize, Datatypes) => {
         attributes: sequelize.models.shortAttributes
       }],
       offset: offset,
-      limit: 20
+      limit: limit || 20
     })
   }
 

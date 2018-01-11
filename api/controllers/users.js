@@ -69,7 +69,7 @@ module.exports = function(dependencies) {
     },
     getBrands: function(req, res, next) {
       const offset = req.swagger.params.pagination.value || 0
-      Users.findByQuary(req.swagger.params.q.value, offset)
+      Users.findByQuary(req.swagger.params.q.value, offset, false)
       .then(r => {
         res.json({data: r, pagination: offset + r.length})
         next()
@@ -78,7 +78,7 @@ module.exports = function(dependencies) {
     },
     getUsers: function(req, res, next) {
       const offset = req.swagger.params.pagination.value || 0
-      Users.findByQuary(req.swagger.params.q.value, offset)
+      Users.findByQuary(req.swagger.params.q.value, offset, true)
       .then(r => {
         res.json({data: r, pagination: offset + r.length})
         next()
