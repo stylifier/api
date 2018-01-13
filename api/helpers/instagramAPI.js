@@ -13,7 +13,7 @@ module.exports = config => {
           client_id: process.env.INSTA_CLIENT_ID,
           client_secret: process.env.INSTA_CLIENT_SECRET,
           grant_type: 'authorization_code',
-          redirect_uri: 'http://localhost:8080/instagram_callback',
+          redirect_uri: config.redirect_uri,
           code: code
         }
       })
