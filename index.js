@@ -7,7 +7,7 @@ const db = config.mockBackend ?
   require('./api/mocks/db')(config.db) :
   require('./api/helpers/db')(config.db)
 
-const kong = !config.mockKong ?
+const kong = config.mockKong ?
   require('./api/mocks/kong') :
   require('./api/helpers/kong')
 
