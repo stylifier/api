@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.16",
-    "dredd": "^2.2.5",
     "eslint": "^3.4.0",
     "eslint-config-google": "^0.6.0",
     "gulp": "^3.9.1",
@@ -45,7 +44,6 @@
     "test": "node ./node_modules/.bin/_mocha test/**/*_test.js",
     "watch": "./node_modules/.bin/_mocha -w */*.js test/**/*_test.js",
     "coverage": "node ./node_modules/.bin/gulp cover",
-    "dredd": "node ./node_modules/.bin/dredd",
     "doc": "node ./node_modules/.bin/swagger project edit",
     "lint": "node ./node_modules/.bin/eslint api/**/*.js test/api/**/*.js *.js",
     "coveralls": "gulp cover && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
