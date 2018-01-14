@@ -8,8 +8,12 @@ module.exports = function(dependencies) {
 
   const register = (req, res, next) =>
     Users.createInstance(req.swagger.params.userInfo.value)
-    .then(r => kong.createUser(r.username, r.id))
-    .then(r => kong.createJWT(r.username, r.id))
+    .then(r =>
+      kong.createUser(r.username, r.id)
+      .then(() => r))
+    .then(r =>
+      kong.createJWT(r.username)
+      .then(() => r))
     .then(r => {
       res.json(r)
       next()
