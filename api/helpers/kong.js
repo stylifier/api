@@ -14,6 +14,11 @@ module.exports = config => {
           username: username,
           custom_id: id
         }
+      }).catch(e => {
+        if (e.statusCode === 409) {
+          return Promise.resolve({isCreated: false})
+        }
+        return e
       }),
     createJWT: username =>
       rp(baseURL + `/consumers/${username}/jwt`, {
