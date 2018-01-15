@@ -39,7 +39,8 @@ module.exports = (sequelize, Datatypes) => {
   }
 
   model.createOrUpdateInstances = function(media, username) {
-    return Promise.all(media.reverse().map(m => this.findOne({where: {id: m.id}})
+    return Promise.all(media.reverse()
+        .map(m => this.findOne({where: {id: m.id}})
       .then(obj => obj ?
         obj.update({images: m.images, location: m.location}) :
         this.create({

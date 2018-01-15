@@ -22,7 +22,7 @@ module.exports = (sequelize, Datatypes) => {
   model.getUserFollowers = function(username, offset, quary, limit) {
     return this.findAll({
       where: Object.assign({followerUsername: username},
-        quary ? {followedByUsername: quary} : {}),
+        quary ? {followedByUsername: {[Datatypes.Op.like]: `${quary}`}} : {}),
       attributes: [],
       include: [{
         model: sequelize.models.Users,

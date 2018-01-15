@@ -40,13 +40,6 @@ module.exports = function(dependencies) {
         next()
       })
     })
-    // Users.createInstance(req.swagger.params.userInfo.value)
-    // .then(r => kong.createUser(r.username, r.id))
-    // .then(r => kong.createJWT(r.username, r.id))
-    // .then(r => {
-    //   res.json(r)
-    //   next()
-    // })
     .catch(e => next(e))
 
   return {
