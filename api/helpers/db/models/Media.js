@@ -13,12 +13,13 @@ module.exports = (sequelize, Datatypes) => {
     is_user_liked: Datatypes.BOOLEAN,
     location: Datatypes.JSON,
     createdAt: Datatypes.DATE,
+    is_public: Datatypes.BOOLEAN,
     updatedAt: Datatypes.DATE
   })
 
   model.getMediaByUsernames = function(usernames, offset) {
     return this.findAll({
-      where: {userUsername: {[Datatypes.Op.in]: usernames}},
+      where: {userUsername: {[Datatypes.Op.in]: usernames, is_public: true}},
       offset: offset,
       limit: 20,
       attributes: [
@@ -48,16 +49,17 @@ module.exports = (sequelize, Datatypes) => {
           userUsername: username,
           images: m.images,
           location: m.location,
-          type: 'image'
+          type: 'image',
+          is_public: true
         })
       )
     ))
   }
 
-  model.createInstance = function(username, mediaExtention, bucket, mId) {
+  model.createInstance = function(username, mediaExtention, bucket, mId, isPublic) {
     const mediaId = mId || id()
 
-    return this.create({
+    return this.create(Object.assign({
       id: mediaId,
       userUsername: username,
       images: {
@@ -72,7 +74,7 @@ module.exports = (sequelize, Datatypes) => {
         }
       },
       type: 'image'
-    })
+    }, isPublic ? {is_public: isPublic} : {is_public: true}))
   }
 
   return model

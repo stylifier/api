@@ -17,7 +17,7 @@ module.exports = function(config) {
     operatorsAliases: false
   })
 
-  // sequelize.sync({force: true})
+  sequelize.sync()
 
   return models(sequelize, Sequelize)
 }
