@@ -19,7 +19,7 @@ module.exports = (sequelize, Datatypes) => {
 
   model.getMediaByUsernames = function(usernames, offset) {
     return this.findAll({
-      where: {userUsername: {[Datatypes.Op.in]: usernames, is_public: true}},
+      where: {userUsername: {[Datatypes.Op.in]: usernames}, is_public: true},
       offset: offset,
       limit: 20,
       attributes: [
