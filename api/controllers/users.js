@@ -11,9 +11,7 @@ module.exports = function(dependencies) {
     .then(r =>
       kong.createUser(r.username, r.id)
       .then(() => r))
-    .then(r =>
-      kong.createJWT(r.username)
-      .then(() => r))
+    .then(r => kong.createJWT(r.username))
     .then(r => {
       res.json(r)
       next()
