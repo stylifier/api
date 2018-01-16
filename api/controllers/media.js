@@ -12,7 +12,7 @@ module.exports = function(dependencies) {
       const username = req.headers['x-consumer-username']
       const mediaId = id()
       const mediaExtention = req.file.mimetype.split('/').pop()
-      const messageId = req.headers['x-is-public'] === 'true'
+      const isPublic = req.headers['x-is-public'] === 'true'
 
       s3.putObject({
         Bucket: bucket,
@@ -24,8 +24,7 @@ module.exports = function(dependencies) {
           return next(err)
         }
 
-
-        Media.createInstance(username, mediaExtention, bucket, mediaId, messageId)
+        Media.createInstance(username, mediaExtention, bucket, mediaId, isPublic)
         .then(media => {
           res.json({success: true, id: media.id})
           next()

@@ -59,7 +59,7 @@ module.exports = (sequelize, Datatypes) => {
   model.createInstance = function(username, mediaExtention, bucket, mId, isPublic) {
     const mediaId = mId || id()
 
-    return this.create(Object.assign({
+    return this.create({
       id: mediaId,
       userUsername: username,
       images: {
@@ -73,8 +73,9 @@ module.exports = (sequelize, Datatypes) => {
           url: `https://s3.eu-central-1.amazonaws.com/${bucket}/${mediaId}.${mediaExtention}`
         }
       },
+      is_public: isPublic,
       type: 'image'
-    }, isPublic ? {is_public: isPublic} : {is_public: true}))
+    })
   }
 
   return model
