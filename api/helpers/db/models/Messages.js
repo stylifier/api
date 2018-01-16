@@ -19,6 +19,7 @@ module.exports = (sequelize, Datatypes) => {
       where: {threadId: threadId},
       offset: offset,
       limit: 20,
+      order: [['createdAt', 'DESC']],
       attributes: ['id',
         'text',
         ['threadId', 'thread_id'],

@@ -23,6 +23,7 @@ module.exports = (sequelize, Datatypes) => {
       offset: offset,
       limit: 20,
       attributes: ['id', 'status', ['createdAt', 'created_time']],
+      order: [['createdAt', 'DESC']],
       include: [
         {
           model: sequelize.models.Users,
