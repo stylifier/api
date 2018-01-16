@@ -24,6 +24,7 @@ module.exports = function(dependencies) {
           return next(err)
         }
 
+
         Media.createInstance(username, mediaExtention, bucket, mediaId, messageId)
         .then(media => {
           res.json({success: true, id: media.id})
