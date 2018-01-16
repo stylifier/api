@@ -12,9 +12,7 @@ module.exports = function(dependencies) {
       const username = req.headers['x-consumer-username']
       const mediaId = id()
       const mediaExtention = req.file.mimetype.split('/').pop()
-      const messageId = req.headers['x-is-public'] ?
-        req.headers['x-is-public'] === 'true' :
-        true
+      const messageId = req.headers['x-is-public'] === 'true'
 
       s3.putObject({
         Bucket: bucket,
