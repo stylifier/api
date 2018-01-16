@@ -21,7 +21,7 @@ module.exports = function(dependencies) {
       const threadId = req.swagger.params.thread_id.value
 
       Messages.createInstance(username, threadId, body.text)
-      .then(msg => msg.addMedia(body.media))
+      .then(msg => Promise.all(body.media.map((m) => msg.addMedia(m.id))))
       .then(msg => {
         res.json({success: true})
         next()
