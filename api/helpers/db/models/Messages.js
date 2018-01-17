@@ -20,7 +20,9 @@ module.exports = (sequelize, Datatypes) => {
       offset: offset,
       limit: 20,
       order: [['createdAt', 'DESC']],
-      attributes: ['id',
+      attributes: [
+        'senderUsername',
+        'id',
         'text',
         ['threadId', 'thread_id'],
         'status',
