@@ -40,7 +40,7 @@ module.exports = (sequelize, Datatypes) => {
   }
 
   model.createInstance = function(from, to) {
-    this.findAll({
+    return this.findAll({
       where: {
         [Datatypes.Op.and]: [
           {fromUsername: from},
