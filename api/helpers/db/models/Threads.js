@@ -40,11 +40,25 @@ module.exports = (sequelize, Datatypes) => {
   }
 
   model.createInstance = function(from, to) {
-    return this.create({
-      id: id(),
-      status: 'REQUESTED',
-      fromUsername: from,
-      toUsername: to,
+    this.findAll({
+      where: {
+        [Datatypes.Op.and]: [
+          {fromUsername: from},
+          {toUsername: to},
+          {status: 'REQUESTED'}
+        ]
+      }
+    })
+    .then(r => {
+      if (r.length > 0)
+        return r[0]
+
+      return this.create({
+        id: id(),
+        status: 'REQUESTED',
+        fromUsername: from,
+        toUsername: to,
+      })
     })
   }
 
