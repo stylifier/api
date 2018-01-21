@@ -2,6 +2,7 @@
 
 module.exports = function(dependencies) {
   const Messages = dependencies.db.Messages
+  const Threads = dependencies.db.Threads
 
   return {
     getMessages: function(req, res, next) {
@@ -20,8 +21,13 @@ module.exports = function(dependencies) {
       const body = req.swagger.params.body.value
       const threadId = req.swagger.params.thread_id.value
 
-      Messages.createInstance(username, threadId, body.text)
-      .then(msg => Promise.all(body.media.map((m) => msg.addMedia(m.id))))
+      Threads.getThreadById(threadId)
+      .then(t => (typeof t.dataValues !== undefined &&
+          t.dataValues.status === 'REQUESTED' &&
+          t.dataValues.toUsername === username) &&
+          t.update({status: 'OPENED'}))
+      .then(() => Messages.createInstance(username, threadId, body.text))
+      .then(msg => Promise.all(body.media.map(m => msg.addMedia(m.id))))
       .then(msg => {
         res.json({success: true})
         next()

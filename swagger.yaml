@@ -600,6 +600,32 @@ paths:
                 "success": true
               }
 
+  '/threads/{thread_id}/close':
+    x-swagger-router-controller: threads
+    post:
+      description: close the thread
+      operationId: closeThread
+      parameters:
+        - name: thread_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/threadRating"
+
+      responses:
+        "200":
+          description: thread created
+          examples:
+            application/json; charset=utf-8:
+              {
+                "id": "9210dce8-25da-4275-a73a-1383b9774255",
+                "success": true
+              }
+
   '/threads/{thread_id}/messages':
     x-swagger-router-controller: messages
     get:
@@ -842,6 +868,14 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/thread'
+
+  threadRating:
+    type: object
+    properties:
+      rating:
+        type: number
+      review:
+        type: string
 
   media:
     type: object

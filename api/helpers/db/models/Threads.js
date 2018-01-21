@@ -8,6 +8,11 @@ module.exports = (sequelize, Datatypes) => {
       primaryKey: true
     },
     status: Datatypes.STRING,
+    fromReview: Datatypes.TEXT,
+    fromRating: Datatypes.DOUBLE,
+    toReview: Datatypes.TEXT,
+    toRating: Datatypes.DOUBLE,
+    is_public: Datatypes.BOOLEAN,
     createdAt: Datatypes.DATE,
     updatedAt: Datatypes.DATE
   })
@@ -39,13 +44,22 @@ module.exports = (sequelize, Datatypes) => {
     })
   }
 
+  model.getThreadById = function(id) {
+    return this.findOne({
+      where: {
+        id: id
+      }
+    })
+  }
+
   model.createInstance = function(from, to) {
     return this.findAll({
       where: {
         [Datatypes.Op.and]: [
           {fromUsername: from},
           {toUsername: to},
-          {status: 'REQUESTED'}
+          {status: 'REQUESTED'},
+          {status: 'OPENED'}
         ]
       }
     })
@@ -58,6 +72,7 @@ module.exports = (sequelize, Datatypes) => {
         status: 'REQUESTED',
         fromUsername: from,
         toUsername: to,
+        is_public: false
       })
     })
   }
