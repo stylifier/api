@@ -7,6 +7,7 @@ module.exports = function(s, Datatypes) {
   s.models.Messages = require('./Messages')(s, Datatypes)
   s.models.Media = require('./Media')(s, Datatypes)
   s.models.Followable = require('./Followable')(s, Datatypes)
+  s.models.Subscriptions = require('./Subscriptions')(s, Datatypes)
 
   s.models.Users.belongsToMany(s.models.Styles, {
     as: 'styles',
@@ -32,12 +33,15 @@ module.exports = function(s, Datatypes) {
     through: 'tagable'
   })
 
+  s.models.Subscriptions.belongsTo(s.models.Users, {as: 'user'})
+
   return {
     Users: s.models.Users,
     Styles: s.models.Styles,
     Threads: s.models.Threads,
     Messages: s.models.Messages,
     Media: s.models.Media,
-    Followable: s.models.Followable
+    Followable: s.models.Followable,
+    Subscriptions: s.models.Subscriptions
   }
 }

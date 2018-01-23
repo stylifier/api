@@ -626,6 +626,44 @@ paths:
                 "success": true
               }
 
+  '/subscriptions/{subscription_id}':
+    x-swagger-router-controller: subscriptions
+    post:
+      description: register the subscription
+      operationId: createSubscription
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: subscription created
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+    delete:
+      description: delete the subscription
+      operationId: deleteSubscription
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: subscription deleted
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   '/threads/{thread_id}/messages':
     x-swagger-router-controller: messages
     get:
