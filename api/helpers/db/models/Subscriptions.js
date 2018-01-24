@@ -19,14 +19,14 @@ module.exports = (sequelize, Datatypes) => {
       this.create({
         id: subscriptionId,
         name: 'OneSignal',
-        userUsername: username
+        userUsername: username.toLowerCase()
       })
     )
   }
 
   model.getUsersSubscriptions = function(username) {
     return this.findAll({
-      where: {userUsername: username},
+      where: {userUsername: username.toLowerCase()},
       attributes: ['id']
     }).then(r => r.map(t => t.id))
   }
@@ -36,7 +36,7 @@ module.exports = (sequelize, Datatypes) => {
       where: {
         id: subscriptionId,
         name: 'OneSignal',
-        userUsername: username
+        userUsername: username.toLowerCase()
       }
     })
     .then(subscription => subscription && subscription.destroy())

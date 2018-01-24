@@ -21,8 +21,8 @@ module.exports = (sequelize, Datatypes) => {
     return this.findAll({
       where: {
         [Datatypes.Op.or]: [
-          {fromUsername: username},
-          {toUsername: username}
+          {fromUsername: username.toLowerCase()},
+          {toUsername: username.toLowerCase()}
         ]
       },
       offset: offset,
@@ -56,8 +56,8 @@ module.exports = (sequelize, Datatypes) => {
     return this.findAll({
       where: {
         [Datatypes.Op.and]: [
-          {fromUsername: from},
-          {toUsername: to},
+          {fromUsername: from.toLowerCase()},
+          {toUsername: to.toLowerCase()},
           {
             [Datatypes.Op.or]: [
               {status: 'REQUESTED'},
@@ -74,8 +74,8 @@ module.exports = (sequelize, Datatypes) => {
       return this.create({
         id: id(),
         status: 'REQUESTED',
-        fromUsername: from,
-        toUsername: to,
+        fromUsername: from.toLowerCase(),
+        toUsername: to.toLowerCase(),
         is_public: false
       })
     })

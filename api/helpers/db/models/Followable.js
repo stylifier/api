@@ -14,14 +14,14 @@ module.exports = (sequelize, Datatypes) => {
   model.createInstance = function(follower, followedBy) {
     return this.create({
       id: id(),
-      followerUsername: follower,
-      followedByUsername: followedBy
+      followerUsername: follower.toLowerCase(),
+      followedByUsername: followedBy.toLowerCase()
     })
   }
 
   model.getUserFollowers = function(username, offset, quary, limit) {
     return this.findAll({
-      where: Object.assign({followerUsername: username},
+      where: Object.assign({followerUsername: username.toLowerCase()},
         quary ? {followedByUsername: {[Datatypes.Op.like]: `${quary}`}} : {}),
       attributes: [],
       include: [{

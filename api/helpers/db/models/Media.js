@@ -46,7 +46,7 @@ module.exports = (sequelize, Datatypes) => {
         obj.update({images: m.images, location: m.location}) :
         this.create({
           id: m.id,
-          userUsername: username,
+          userUsername: username.toLowerCase(),
           images: m.images,
           location: m.location,
           type: 'image',
@@ -61,7 +61,7 @@ module.exports = (sequelize, Datatypes) => {
 
     return this.create({
       id: mediaId,
-      userUsername: username,
+      userUsername: username.toLowerCase(),
       images: {
         thumbnail: {
           url: `https://s3.eu-central-1.amazonaws.com/${bucket}/${mediaId}.${mediaExtention}`

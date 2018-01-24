@@ -38,7 +38,7 @@ module.exports = (sequelize, Datatypes) => {
   model.createInstance = function(username, threadId, text) {
     return this.create({
       id: id(),
-      senderUsername: username,
+      senderUsername: username.toLowerCase(),
       status: 'SENT',
       threadId: threadId,
       text: text

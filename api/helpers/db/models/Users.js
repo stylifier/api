@@ -42,11 +42,11 @@ module.exports = (sequelize, Datatypes) => {
       where: {id: obj.id},
       defaults: {
         id: obj.id,
-        full_name: obj.full_name,
+        full_name: obj.full_name.toLowerCase(),
         profile_picture: obj.profile_picture,
         bio: obj.bio,
-        website: obj.website,
-        username: obj.username,
+        website: obj.website.toLowerCase(),
+        username: obj.username.toLowerCase(),
         is_brand: obj.is_business,
         is_instagram_user: true,
         contribution_earned: 0,
@@ -58,8 +58,8 @@ module.exports = (sequelize, Datatypes) => {
     return this.findAll({
       where: {[Datatypes.Op.and]: [
         {[Datatypes.Op.or]: [
-          {username: {[Datatypes.Op.like]: `%${q}%`}},
-          {full_name: {[Datatypes.Op.like]: `%${q}%`}}
+          {username: {[Datatypes.Op.like]: `%${q.toLowerCase()}%`}},
+          {full_name: {[Datatypes.Op.like]: `%${q.toLowerCase()}%`}}
         ]},
         {is_brand: isBrand}
       ]},
@@ -70,7 +70,7 @@ module.exports = (sequelize, Datatypes) => {
   }
 
   model.checkLogin = function(username, password) {
-    return this.findOne({where: {username: username}})
+    return this.findOne({where: {username: username.toLowerCase()}})
     .then(user => user.get('password'))
     .then(psw => bcrypt.compareSync(password, psw) ?
       Promise.resolve() :
@@ -97,7 +97,7 @@ module.exports = (sequelize, Datatypes) => {
 
   model.findUsername = function(username, isFullAttributes) {
     return this.findOne({
-      where: {username: username},
+      where: {username: username.toLowerCase()},
       attributes: isFullAttributes ? this.fullAttributes : this.shortAttributes
     })
   }
