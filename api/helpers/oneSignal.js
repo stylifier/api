@@ -16,7 +16,7 @@ module.exports = config => {
         body: {
           app_id: config.app_id,
           contents: {en: message},
-          url: url || '',
+          url: url ? 'https://www.stylifier.com/' + url : '',
           include_player_ids: ids,
           mutable_content: true
         }
