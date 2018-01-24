@@ -3,6 +3,8 @@
 module.exports = function(dependencies) {
   const Messages = dependencies.db.Messages
   const Threads = dependencies.db.Threads
+  const Subscriptions = dependencies.db.Subscriptions
+  const oneSignal = dependencies.oneSignal
 
   return {
     getMessages: function(req, res, next) {
@@ -22,10 +24,20 @@ module.exports = function(dependencies) {
       const threadId = req.swagger.params.thread_id.value
 
       Threads.getThreadById(threadId)
-      .then(t => (typeof t.dataValues !== undefined &&
-          t.dataValues.status === 'REQUESTED' &&
-          t.dataValues.toUsername === username) &&
-          t.update({status: 'OPENED'}))
+      .then(t => {
+        if (typeof t.dataValues === undefined ||
+          t.dataValues.status !== 'REQUESTED' ||
+          t.dataValues.toUsername !== username)
+          return t
+
+        t.update({status: 'OPENED'})
+
+        return Subscriptions.getUsersSubscriptions(t.dataValues.fromUsername)
+        .then(ids =>
+          oneSignal.send(ids,
+            `${username} accepted your advice request.`,
+            `messages/${t.dataValues.id}`))
+      })
       .then(() => Messages.createInstance(username, threadId, body.text))
       .then(msg => Promise.all(body.media.map(m => msg.addMedia(m.id))))
       .then(msg => {

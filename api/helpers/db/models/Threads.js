@@ -58,14 +58,18 @@ module.exports = (sequelize, Datatypes) => {
         [Datatypes.Op.and]: [
           {fromUsername: from},
           {toUsername: to},
-          {status: 'REQUESTED'},
-          {status: 'OPENED'}
+          {
+            [Datatypes.Op.or]: [
+              {status: 'REQUESTED'},
+              {status: 'OPENED'}
+            ]
+          }
         ]
       }
     })
     .then(r => {
       if (r.length > 0)
-        return r[0]
+        return Object.assign({isNotCreated: true}, r[0])
 
       return this.create({
         id: id(),

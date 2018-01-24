@@ -10,5 +10,9 @@
   },
   "instagram": {
     "redirect_uri": "http://localhost:8080/instagram_callback"
+  },
+  "oneSignal": {
+    "token": "",
+    "app_id": "32e810a8-17ec-46ce-92c8-852abd3df96f"
   }
 }

@@ -11,6 +11,10 @@ const kong = config.mockKong ?
   require('./api/mocks/kong') :
   require('./api/helpers/kong')
 
+const oneSignal = config.mockOneSignal ?
+  require('./api/mocks/oneSignal')(config.oneSignal) :
+  require('./api/helpers/oneSignal')(config.oneSignal)
+
 const instagramAPI = config.mockInstagramAPI ?
   require('./api/mocks/instagramAPI')(config.instagram) :
   require('./api/helpers/instagramAPI')(config.instagram)
@@ -21,7 +25,8 @@ const server = require('./app')(config, {
   instagram: instagramAPI,
   kong: kong(config),
   id: require('uniqid'),
-  jwt: require('jwt-simple')
+  jwt: require('jwt-simple'),
+  oneSignal: oneSignal
 })
 server.listen(config.appPort)
 logger.info('server has started on port ' + config.appPort)

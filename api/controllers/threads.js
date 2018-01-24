@@ -2,6 +2,8 @@
 
 module.exports = function(dependencies) {
   const Threads = dependencies.db.Threads
+  const Subscriptions = dependencies.db.Subscriptions
+  const oneSignal = dependencies.oneSignal
 
   return {
     getSelfThreads: function(req, res, next) {
@@ -20,6 +22,13 @@ module.exports = function(dependencies) {
       const toUsername = req.swagger.params.body.value.to.username
 
       Threads.createInstance(fromUsername, toUsername)
+      .then(r =>
+        r.isNotCreated ? r : Subscriptions.getUsersSubscriptions(toUsername)
+        .then(ids =>
+          oneSignal.send(ids,
+            `${fromUsername} asked for your advice.`,
+            `messages/${r.dataValues.id}`))
+        .then(() => r))
       .then(r => {
         res.json({success: true, id: r.dataValues.id})
         next()
@@ -34,33 +43,50 @@ module.exports = function(dependencies) {
       Threads.getThreadById(threadId)
       .then(t => {
         if (t.dataValues.status === 'REQUESTED') {
-          t.update({
-            status: 'CLOSED'
-          })
-          res.json({success: true, id: threadId})
-          return next()
+          return t.update({status: 'CLOSED'})
         } else if (t.dataValues.toUsername === username) {
-          t.update({
+          return t.update({
             status: t.dataValues.status === 'CLOSED' ? 'CLOSED' : 'RATING',
             fromRating: body.rating,
             fromReview: body.review
           })
-          res.json({success: true, id: threadId})
-          return next()
         } else if (t.dataValues.fromUsername === username) {
-          t.update({
+          return t.update({
             status: 'CLOSED',
             toRating: body.rating,
             toReview: body.review
           })
-          res.json({success: true, id: threadId})
-          return next()
         }
-        next(Object.assign(
+        throw Object.assign(
           new Error('you cant close a thread that does not belong to you'),
           {statusCode: 401})
-        )
       })
+      .then(r => {
+        const d = r.dataValues
+        switch (r.dataValues.status) {
+          case 'CLOSED':
+            return Subscriptions.getUsersSubscriptions(
+              username === d.toUsername ? d.fromUsername : username)
+            .then(ids =>
+              oneSignal.send(ids,
+                `${username} closed the advice request.`,
+                `messages/${r.dataValues.id}`))
+          case 'RATING':
+            return Subscriptions.getUsersSubscriptions(
+              username === d.toUsername ? d.fromUsername : username)
+            .then(ids =>
+              oneSignal.send(ids,
+                `${username} asked for your rating on his advice.`,
+                `messages/${r.dataValues.id}`))
+          default:
+            return
+        }
+      })
+      .then(() => {
+        res.json({success: true, id: threadId})
+        return next()
+      })
+      .catch(e => next(e))
     }
   }
 }

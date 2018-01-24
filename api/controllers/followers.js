@@ -2,6 +2,8 @@
 
 module.exports = function(dependencies) {
   const Followable = dependencies.db.Followable
+  const Subscriptions = dependencies.db.Subscriptions
+  const oneSignal = dependencies.oneSignal
 
   return {
     createFollow: function(req, res, next) {
@@ -9,6 +11,13 @@ module.exports = function(dependencies) {
       const usernameToFollow = req.swagger.params.username.value
 
       Followable.createInstance(username, usernameToFollow)
+      .then(r =>
+        Subscriptions.getUsersSubscriptions(usernameToFollow)
+        .then(ids =>
+          oneSignal.send(ids,
+            `${username} started following you.`,
+            `profile/${username}`))
+        .then(() => r))
       .then(userToFollow => {
         res.json({success: true})
         next()
