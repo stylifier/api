@@ -45,7 +45,7 @@ module.exports = (sequelize, Datatypes) => {
         full_name: obj.full_name.toLowerCase(),
         profile_picture: obj.profile_picture,
         bio: obj.bio,
-        website: obj.website.toLowerCase(),
+        website: obj.website ? obj.website.toLowerCase() : '',
         username: obj.username.toLowerCase(),
         is_brand: obj.is_business,
         is_instagram_user: true,
