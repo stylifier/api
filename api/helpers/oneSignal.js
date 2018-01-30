@@ -20,7 +20,6 @@ module.exports = config => {
           include_player_ids: ids,
           mutable_content: true
         }
-      }) : Promise.resolve()
-      .catch(t => console.log(t) && Promise.resolve())
+      }).catch(() => Promise.resolve()) : Promise.resolve()
   }
 }
