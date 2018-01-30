@@ -26,7 +26,7 @@ module.exports = (sequelize, Datatypes) => {
         ]
       },
       offset: offset,
-      limit: 20,
+      limit: 1000,
       attributes: ['id', 'status', ['createdAt', 'created_time']],
       order: [['createdAt', 'DESC']],
       include: [

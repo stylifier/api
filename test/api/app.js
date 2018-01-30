@@ -1,7 +1,6 @@
 'use strict'
 
 module.exports = function(config) {
-  console.log('===>>>>', config)
   return require('../../app')(config, {
     db: require('../../api/helpers/db')(config.db),
     // kong: require('../../api/helpers/kong')(config.kong),
