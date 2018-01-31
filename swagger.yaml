@@ -537,6 +537,11 @@ paths:
         - name: pagination
           in: query
           type: number
+        - name: q
+          in: query
+          description: query value to search for
+          type: string
+          x-example: "tom"
       responses:
         "200":
           description: array of threads

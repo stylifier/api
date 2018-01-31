@@ -10,7 +10,7 @@ module.exports = function(dependencies) {
       const username = req.headers['x-consumer-username']
       const offset = req.swagger.params.pagination.value || 0
 
-      Threads.findUserThreads(username, offset)
+      Threads.findUserThreads(username, offset, req.swagger.params.q.value)
       .then(r => {
         res.json({data: r, pagination: offset + r.length})
         next()

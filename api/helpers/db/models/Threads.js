@@ -17,12 +17,30 @@ module.exports = (sequelize, Datatypes) => {
     updatedAt: Datatypes.DATE
   })
 
-  model.findUserThreads = function(username, offset) {
+  model.findUserThreads = function(username, offset, q) {
     return this.findAll({
       where: {
         [Datatypes.Op.or]: [
-          {fromUsername: username.toLowerCase()},
-          {toUsername: username.toLowerCase()}
+          {
+            [Datatypes.Op.and]: [
+              {fromUsername: username.toLowerCase()},
+              {
+                toUsername: {
+                  [Datatypes.Op.like]: q ? `%${q.toLowerCase()}%` : '%'
+                }
+              },
+            ]
+          },
+          {
+            [Datatypes.Op.and]: [
+              {toUsername: username.toLowerCase()},
+              {
+                fromUsername: {
+                  [Datatypes.Op.like]: q ? `%${q.toLowerCase()}%` : '%'
+                }
+              },
+            ]
+          },
         ]
       },
       offset: offset,
