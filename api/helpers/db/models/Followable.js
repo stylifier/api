@@ -27,7 +27,7 @@ module.exports = (sequelize, Datatypes) => {
       include: [{
         model: sequelize.models.Users,
         as: 'followed_by',
-        attributes: sequelize.models.shortAttributes
+        attributes: sequelize.models.Users.shortAttributes
       }],
       offset: offset,
       limit: limit || 20

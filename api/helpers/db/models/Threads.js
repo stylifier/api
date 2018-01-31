@@ -51,12 +51,12 @@ module.exports = (sequelize, Datatypes) => {
         {
           model: sequelize.models.Users,
           as: 'from',
-          attributes: sequelize.models.shortAttributes
+          attributes: sequelize.models.Users.shortAttributes
         },
         {
           model: sequelize.models.Users,
           as: 'to',
-          attributes: sequelize.models.shortAttributes
+          attributes: sequelize.models.Users.shortAttributes
         }
       ]
     })

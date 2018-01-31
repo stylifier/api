@@ -34,7 +34,7 @@ module.exports = (sequelize, Datatypes) => {
       include: [{
         model: sequelize.models.Users,
         as: 'user',
-        attributes: sequelize.models.shortAttributes
+        attributes: sequelize.models.Users.shortAttributes
       }]
     })
   }
