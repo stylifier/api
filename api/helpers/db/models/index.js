@@ -18,6 +18,7 @@ module.exports = function(s, Datatypes) {
     through: 'sponsor'
   })
 
+  s.models.Threads.hasMany(s.models.Media, {as: 'media'})
   s.models.Threads.belongsTo(s.models.Users, {as: 'from'})
   s.models.Threads.belongsTo(s.models.Users, {as: 'to'})
 
@@ -29,9 +30,12 @@ module.exports = function(s, Datatypes) {
 
   s.models.Media.belongsTo(s.models.Users, {as: 'user'})
   s.models.Media.belongsToMany(s.models.Users, {
-    as: 'users_in_photo',
+    as: 'usersInPhoto',
     through: 'tagable'
   })
+
+  // s.models.Media.sync({force: true})
+  // s.models.Threads.sync({force: true})
 
   s.models.Subscriptions.belongsTo(s.models.Users, {as: 'user'})
 

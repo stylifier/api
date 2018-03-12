@@ -17,6 +17,19 @@ module.exports = function(dependencies) {
       })
       .catch(e => next(e))
     },
+    addMediaThread: function(req, res, next) {
+      const threadId = req.swagger.params.thread_id.value
+      const body = req.swagger.params.body.value
+
+      Threads.getThreadById(threadId)
+      .then(msg => body.media ?
+        Promise.all(body.media.map(m => msg.addMedia(m.id))) : msg)
+      .then(msg => {
+        res.json({success: true})
+        next()
+      })
+      .catch(e => next(e))
+    },
     createThread: function(req, res, next) {
       const fromUsername = req.headers['x-consumer-username']
       const toUsername = req.swagger.params.body.value.to.username

@@ -39,7 +39,6 @@ describe('validate route', function() {
       })
       .set('Accept', 'application/json')
       .end(function(err, res) {
-        console.log(res.body)
         res.status.should.eql(200)
         done(err)
       })
@@ -101,7 +100,6 @@ describe('validate route', function() {
         .set('X-Consumer-Username', username)
         .set('Accept', 'application/json')
         .end(function(err, res) {
-          console.log(res.body.data)
           res.status.should.eql(200)
           should.exists(res.body.data)
           done(err)

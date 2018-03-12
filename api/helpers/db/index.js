@@ -14,7 +14,8 @@ module.exports = function(config) {
       acquire: 30000,
       idle: 10000
     },
-    operatorsAliases: false
+    operatorsAliases: false,
+    logging: false
   })
 
   sequelize.sync()

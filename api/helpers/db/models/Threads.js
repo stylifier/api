@@ -45,7 +45,13 @@ module.exports = (sequelize, Datatypes) => {
       },
       offset: offset,
       limit: 1000,
-      attributes: ['id', 'status', ['createdAt', 'created_time']],
+      attributes: [
+        'id',
+        'status',
+        ['createdAt', 'created_time'],
+        'toRating',
+        'fromRating'
+      ],
       order: [['createdAt', 'DESC']],
       include: [
         {
@@ -60,6 +66,15 @@ module.exports = (sequelize, Datatypes) => {
         }
       ]
     })
+    .then(threads =>
+      Promise.all(threads.map(thread =>
+        sequelize.models.Media.getMediaByThreadId(thread.id)
+        .then(m => {
+          thread.dataValues.media = m
+          return Promise.resolve()
+        })))
+      .then(() => threads)
+    )
   }
 
   model.getThreadById = function(id) {
@@ -97,6 +112,50 @@ module.exports = (sequelize, Datatypes) => {
         is_public: false
       })
     })
+  }
+
+  model.getUserRating = function(username) {
+    return this.findAll({
+      where: {
+        [Datatypes.Op.and]: [
+          {toUsername: username.toLowerCase()},
+          {status: 'CLOSED'},
+        ]
+      },
+      attributes: ['toRating']
+    })
+    .then(threads => threads.map(t => t.toRating))
+    .then(ratings => ({
+      ratings: ratings.filter(r => typeof r === 'number'),
+      count: ratings.length
+    }))
+    .then(({count, ratings}) => ({
+      rating: Math.round(
+        ratings.reduce((a, b) => a + b, 0) * 10 / ratings.length
+      ) / 10,
+      count: count
+    }))
+  }
+
+  model.getUserRequestRating = function(username) {
+    return this.findAll({
+      where: {
+        [Datatypes.Op.and]: [
+          {toUsername: username.toLowerCase()},
+          {
+            [Datatypes.Op.or]: [
+              {status: 'RATING'},
+              {status: 'CLOSED'}
+            ]
+          }
+        ]
+      },
+      attributes: ['fromRating']
+    })
+    .then(threads => threads.map(t => t.fromRating))
+    .then(ratings => ratings.filter(r => typeof r === 'number'))
+    .then(ratings =>
+      Math.round(ratings.reduce((a, b) => a + b, 0) * 10 / ratings.length) / 10)
   }
 
   return model

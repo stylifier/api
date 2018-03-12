@@ -8,6 +8,7 @@ module.exports = function(config) {
     id: require('uniqid'),
     bcrypt: require('bcrypt'),
     jwt: require('jwt-simple'),
-    instagram: require('../../api/helpers/instagramAPI')(config.instagram)
+    oneSignal: require('../../api/mocks/oneSignal')(config.oneSignal),
+    instagram: require('../../api/mocks/instagramAPI')(config.instagram)
   })
 }

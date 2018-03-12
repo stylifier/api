@@ -67,6 +67,13 @@ module.exports = (sequelize, Datatypes) => {
       limit: 20,
       attributes: this.shortAttributes
     })
+    .then(res =>
+      Promise.all(res.map(user =>
+        sequelize.models.threads.getUserRating(user.username)
+        .then(({count, rating}) =>
+          Object.assign(user, {rating: rating, responded_request_count: count}))
+      ))
+    )
   }
 
   model.checkLogin = function(username, password) {
@@ -100,6 +107,18 @@ module.exports = (sequelize, Datatypes) => {
       where: {username: username.toLowerCase()},
       attributes: isFullAttributes ? this.fullAttributes : this.shortAttributes
     })
+    .then(res =>
+      sequelize.models.threads.getUserRating(username)
+      .then(({count, rating}) =>
+        Object.assign({}, res.dataValues, {
+          rating: rating,
+          responded_request_count: count
+        }))
+    )
+    .then(res =>
+      sequelize.models.threads.getUserRequestRating(username)
+      .then(rating => Object.assign({}, res, {request_rating: rating}))
+    )
   }
 
   return model

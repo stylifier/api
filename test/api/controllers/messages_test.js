@@ -94,5 +94,36 @@ describe('validate route', function() {
         })
       })
     })
+
+    describe('open thread and', function() {
+      beforeEach(function(done) {
+        request(server)
+        .put(`/threads/${threadId}/messages`)
+        .send({text: 'asd'})
+        .set('Accept', 'application/json')
+        .set('X-Consumer-Username', usernameTo)
+        .end(function(err, res) {
+          res.status.should.eql(200)
+          should.exists(res.body.success)
+          done(err)
+        })
+      })
+
+      it('close thread', function(done) {
+        request(server)
+        .post(`/threads/${threadId}/close`)
+        .send({rating: 4, review: 'test review'})
+        .set('Accept', 'application/json')
+        .set('X-Consumer-Username', usernameFrom)
+        .end((err, res) => {
+          if (err) return done(err)
+          request(server)
+          .get(`/users/${usernameFrom}`)
+          .end((err, res) => {
+            done(err)
+          })
+        })
+      })
+    })
   })
 })

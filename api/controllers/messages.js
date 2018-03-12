@@ -39,7 +39,8 @@ module.exports = function(dependencies) {
             `messages/${t.dataValues.id}`))
       })
       .then(() => Messages.createInstance(username, threadId, body.text))
-      .then(msg => Promise.all(body.media.map(m => msg.addMedia(m.id))))
+      .then(msg => body.media ?
+        Promise.all(body.media.map(m => msg.addMedia(m.id))) : msg)
       .then(msg => {
         res.json({success: true})
         next()

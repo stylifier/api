@@ -605,6 +605,36 @@ paths:
                 "success": true
               }
 
+  '/threads/{thread_id}/media':
+    x-swagger-router-controller: threads
+    put:
+      description: add media to the thread
+      operationId: addMediaThread
+      parameters:
+        - name: thread_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              media:
+                type: array
+                items:
+                  $ref: '#/definitions/media'
+
+      responses:
+        "200":
+          description: media added
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   '/threads/{thread_id}/close':
     x-swagger-router-controller: threads
     post:
@@ -630,6 +660,27 @@ paths:
                 "id": "9210dce8-25da-4275-a73a-1383b9774255",
                 "success": true
               }
+
+  '/media/{media_id}/share':
+    x-swagger-router-controller: media
+    post:
+      description: share media on requester profile
+      operationId: shareMedia
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: media shared
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
 
   '/subscriptions/{subscription_id}':
     x-swagger-router-controller: subscriptions
@@ -825,6 +876,8 @@ definitions:
           contribution_earned:
             type: number
           rating:
+            type: number
+          request_rating:
             type: number
           is_instagram_user:
             type: boolean

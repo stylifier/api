@@ -13,12 +13,14 @@ module.exports = function(dependencies) {
       const mediaId = id()
       const mediaExtention = req.file.mimetype.split('/').pop()
       const isPublic = req.headers['x-is-public'] === 'true'
+      const taggedUsers = req.headers['x-tagged-users'] ?
+       req.headers['x-tagged-users'].split(',') : []
 
       s3.putObject({
         Bucket: bucket,
         Key: mediaId + '.' + mediaExtention,
         Body: req.file.buffer,
-        ACL: 'public-read', // your permisions
+        ACL: 'public-read',
       }, (err, o) => {
         if (err) {
           return next(err)
@@ -26,6 +28,7 @@ module.exports = function(dependencies) {
 
         Media.createInstance(username, mediaExtention, bucket, mediaId, isPublic)
         .then(media => {
+          taggedUsers.forEach(user => media.addUsersInPhoto(user))
           res.json({success: true, id: media.id})
           next()
         })
@@ -53,6 +56,18 @@ module.exports = function(dependencies) {
         next()
       })
       .catch(e => next(e))
+    },
+    shareMedia: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const id = req.swagger.params.media_id.value
+
+      Media.getMediaById(id)
+      .then(media =>
+        media.update({userUsername: username, threadId: null, is_public: true}))
+      .then(() => {
+        res.json({success: true})
+        next()
+      })
     },
     getFeeds: function(req, res, next) {
       const offset = req.swagger.params.pagination.value || 0

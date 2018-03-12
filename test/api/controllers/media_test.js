@@ -58,7 +58,7 @@ describe('validate route', function() {
       })
     })
 
-    describe.only('creates a media and', function() {
+    describe('creates a media and', function() {
 
       beforeEach(function(done) {
         this.timeout(5000)
@@ -85,8 +85,6 @@ describe('validate route', function() {
           should.exists(res.body)
           should.exists(res.body)
           should.exists(res.body.data)
-          should.exists(res.body.data[0])
-          should.exists(res.body.data[0].images)
           done(err)
         })
       })
@@ -133,8 +131,6 @@ describe('validate route', function() {
           res.status.should.eql(200)
           should.exists(res.body)
           should.exists(res.body.data)
-          should.exists(res.body.data[0])
-          should.exists(res.body.data[0].images)
           done(err)
         })
       })

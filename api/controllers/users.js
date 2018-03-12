@@ -21,7 +21,6 @@ module.exports = function(dependencies) {
   const registerWithInstagram = (req, res, next) =>
     instagram.getToken(req.swagger.params.userInfo.value.instagram_code)
     .then(instRes => {
-      console.log(JSON.stringify(instRes, 0, 2))
       Users.findOrCreateInstance(instRes.user)
       .spread((user, isCreated) =>
         kong.createUser(user.username, user.id).then(() =>
@@ -56,11 +55,13 @@ module.exports = function(dependencies) {
         res.json(r)
         next()
       })
-      .catch(e =>
-        next(Object.assign(
+      .catch(e => {
+        console.log(e)
+        return next(Object.assign(
           new Error('wrong username or password'),
           {statusCode: 401})
-        ))
+        )
+      })
     },
     getBrands: function(req, res, next) {
       const offset = req.swagger.params.pagination.value || 0
