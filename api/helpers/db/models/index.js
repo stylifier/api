@@ -8,14 +8,11 @@ module.exports = function(s, Datatypes) {
   s.models.Media = require('./Media')(s, Datatypes)
   s.models.Followable = require('./Followable')(s, Datatypes)
   s.models.Subscriptions = require('./Subscriptions')(s, Datatypes)
+  s.models.Sponsorable = require('./Sponsorable')(s, Datatypes)
 
   s.models.Users.belongsToMany(s.models.Styles, {
     as: 'styles',
     through: 'user_style'
-  })
-  s.models.Users.belongsToMany(s.models.Users, {
-    as: 'sponsors',
-    through: 'sponsor'
   })
 
   s.models.Threads.hasMany(s.models.Media, {as: 'media'})
@@ -34,6 +31,9 @@ module.exports = function(s, Datatypes) {
     through: 'tagable'
   })
 
+  s.models.Sponsorable.belongsTo(s.models.Users, {as: 'sponsor'})
+  s.models.Sponsorable.belongsTo(s.models.Users, {as: 'sponsored_by'})
+
   // s.models.Media.sync({force: true})
   // s.models.Threads.sync({force: true})
 
@@ -46,6 +46,7 @@ module.exports = function(s, Datatypes) {
     Messages: s.models.Messages,
     Media: s.models.Media,
     Followable: s.models.Followable,
+    Sponsorable: s.models.Sponsorable,
     Subscriptions: s.models.Subscriptions
   }
 }

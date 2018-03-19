@@ -216,6 +216,35 @@ paths:
                 "success": true
               }
 
+  '/users/{username}/sponsor':
+    x-swagger-router-controller: sponsors
+    post:
+      description: ask/accept for sponsorship
+      operationId: createSponsor
+      parameters:
+        - name: body
+          in: body
+          required: false
+          schema:
+            type: object
+            properties:
+              accept:
+                type: boolean
+
+
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: success true
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   '/users/{username}/media':
     x-swagger-router-controller: media
     get:
