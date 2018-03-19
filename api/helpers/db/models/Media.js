@@ -32,7 +32,7 @@ module.exports = (sequelize, Datatypes) => {
         'updatedAt',
         ['createdAt', 'created_time']
       ],
-      order: [['updatedAt', 'DESC']],
+      order: [['createdAt', 'DESC']],
       include: [{
         model: sequelize.models.Users,
         as: 'user',
@@ -59,7 +59,7 @@ module.exports = (sequelize, Datatypes) => {
         'updatedAt',
         ['createdAt', 'created_time']
       ],
-      order: [['updatedAt', 'DESC']]
+      order: [['createdAt', 'DESC']]
     })
   }
 
