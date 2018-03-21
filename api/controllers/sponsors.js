@@ -22,7 +22,18 @@ module.exports = function(dependencies) {
       const query = req.swagger.params.q.value
 
       Sponsorable.getUserSponsors(username, offset, query)
-      .then(r => r.map(i => i.followed_by))
+      .then(r => {
+        res.json({data: r, pagination: offset + r.length})
+        next()
+      })
+      .catch(e => next(e))
+    },
+    getUsersSponsoredBy: function(req, res, next) {
+      const offset = req.swagger.params.pagination.value || 0
+      const username = req.headers['x-consumer-username']
+      const query = req.swagger.params.q.value
+
+      Sponsorable.getUsersSponsoredBy(username, offset, query)
       .then(r => {
         res.json({data: r, pagination: offset + r.length})
         next()

@@ -245,6 +245,76 @@ paths:
                 "success": true
               }
 
+  '/users/{username}/sponsors':
+    x-swagger-router-controller: sponsors
+    get:
+      description: get
+      operationId: getUsersSponsors
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: pagination
+          in: query
+          type: number
+        - name: q
+          in: query
+          type: string
+      responses:
+        "200":
+          description: return list of users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/user_short'
+          examples:
+            application/json; charset=utf-8:
+              {
+                pagination: "",
+                "data": [{
+                  "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                  "username": "mockuser",
+                  "full_name": "mock user",
+                  "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                }]
+              }
+
+  '/users/{username}/sponsored_by':
+    x-swagger-router-controller: sponsors
+    get:
+      description: get
+      operationId: getUsersSponsoredBy
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: pagination
+          in: query
+          type: number
+        - name: q
+          in: query
+          type: string
+      responses:
+        "200":
+          description: return list of users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/user_short'
+          examples:
+            application/json; charset=utf-8:
+              {
+                pagination: "",
+                "data": [{
+                  "id": "9210dce8-25da-4275-a73a-1383b9774253",
+                  "username": "mockuser",
+                  "full_name": "mock user",
+                  "profile_picture": "https://mock.stylifier.com/images/9210dce8-25da-4275-a73a-1383b9774253.jpeg",
+                }]
+              }
+
   '/users/{username}/media':
     x-swagger-router-controller: media
     get:

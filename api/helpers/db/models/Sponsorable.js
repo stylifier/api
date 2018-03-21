@@ -40,14 +40,33 @@ module.exports = (sequelize, Datatypes) => {
     })
   }
 
-  model.getUserSponsors = function(username, offset, quary, limit) {
+  model.getUsersSponsoredBy = function(username, offset, quary, limit) {
     return this.findAll({
-      where: Object.assign({sponsorUsername: username.toLowerCase()},
-        quary ? {sponsoredByUsername: {[Datatypes.Op.like]: `${quary}`}} : {}),
+      where: Object.assign({
+        sponsorUsername: username.toLowerCase(),
+        status: {
+          [Datatypes.Op.or]: ['REQUESTED', 'ACCEPTED']
+        }
+      }, quary ? {sponsoredByUsername: {[Datatypes.Op.like]: `${quary}`}} : {}),
       attributes: [],
       include: [{
         model: sequelize.models.Users,
         as: 'sponsored_by',
+        attributes: sequelize.models.Users.shortAttributes
+      }],
+      offset: offset,
+      limit: limit || 20
+    })
+  }
+
+  model.getUserSponsors = function(username, offset, quary, limit) {
+    return this.findAll({
+      where: Object.assign({sponsoredByUsername: username.toLowerCase(), status: 'ACCEPTED'},
+        quary ? {sponsorUsername: {[Datatypes.Op.like]: `${quary}`}} : {}),
+      attributes: ['status', 'plan'],
+      include: [{
+        model: sequelize.models.Users,
+        as: 'sponsor',
         attributes: sequelize.models.Users.shortAttributes
       }],
       offset: offset,

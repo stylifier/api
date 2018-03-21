@@ -15,8 +15,8 @@ describe('sponsor route', function() {
 
   describe('creates a user and', function() {
     const password = '12345678'
-    let usernameFrom
-    let usernameTo
+    let userUsername
+    let sponsorUsername
 
     const createUser = (user, isBrand, cb) => {
       request(server)
@@ -35,19 +35,19 @@ describe('sponsor route', function() {
     }
 
     beforeEach(function(done) {
-      usernameFrom = 'test' + (new Date()).getTime()
-      createUser(usernameFrom, false, () => {
-        usernameTo = 'test' + (new Date()).getTime()
-        createUser(usernameTo, true, () => done())
+      userUsername = 'test' + (new Date()).getTime()
+      createUser(userUsername, false, () => {
+        sponsorUsername = 'brand_test' + (new Date()).getTime()
+        createUser(sponsorUsername, true, () => done())
       })
     })
 
     it('ask for sponsorship', function(done) {
       request(server)
-      .post(`/users/${usernameTo}/sponsor`)
+      .post(`/users/${sponsorUsername}/sponsor`)
       .send({})
       .set('Accept', 'application/json')
-      .set('X-Consumer-Username', usernameFrom)
+      .set('X-Consumer-Username', userUsername)
       .end(function(err, res) {
         res.status.should.eql(200)
         should.exists(res.body.success)
@@ -58,10 +58,10 @@ describe('sponsor route', function() {
     describe('ask for sponsorship and', function() {
       beforeEach(function(done) {
         request(server)
-        .post(`/users/${usernameTo}/sponsor`)
+        .post(`/users/${sponsorUsername}/sponsor`)
         .send({})
         .set('Accept', 'application/json')
-        .set('X-Consumer-Username', usernameFrom)
+        .set('X-Consumer-Username', userUsername)
         .end(function(err, res) {
           res.status.should.eql(200)
           should.exists(res.body.success)
@@ -71,22 +71,60 @@ describe('sponsor route', function() {
 
       it.only('brands accepts', function(done) {
         request(server)
-        .post(`/users/${usernameFrom}/sponsor`)
+        .post(`/users/${userUsername}/sponsor`)
         .set('Accept', 'application/json')
         .send({accept: true})
-        .set('X-Consumer-Username', usernameTo)
+        .set('X-Consumer-Username', sponsorUsername)
         .end(function(err, res) {
           res.status.should.eql(200)
           done(err)
         })
       })
 
+      it.only('brands accepts and get brand sponsored by', function(done) {
+        request(server)
+        .post(`/users/${userUsername}/sponsor`)
+        .set('Accept', 'application/json')
+        .send({accept: true})
+        .set('X-Consumer-Username', sponsorUsername)
+        .end(function(err, res) {
+          request(server)
+          .get(`/users/${sponsorUsername}/sponsored_by`)
+          .set('Accept', 'application/json')
+          .set('X-Consumer-Username', sponsorUsername)
+          .end(function(err, res) {
+            res.body.data.length.should.eql(1)
+            res.status.should.eql(200)
+            done(err)
+          })
+        })
+      })
+
+      it.only('brands accepts and get user sponsors', function(done) {
+        request(server)
+        .post(`/users/${userUsername}/sponsor`)
+        .set('Accept', 'application/json')
+        .send({accept: true})
+        .set('X-Consumer-Username', sponsorUsername)
+        .end(function(err, res) {
+          request(server)
+          .get(`/users/${userUsername}/sponsors`)
+          .set('Accept', 'application/json')
+          .set('X-Consumer-Username', userUsername)
+          .end(function(err, res) {
+            res.body.data.length.should.eql(1)
+            res.status.should.eql(200)
+            done(err)
+          })
+        })
+      })
+
       it.only('brands rejects', function(done) {
         request(server)
-        .post(`/users/${usernameFrom}/sponsor`)
+        .post(`/users/${userUsername}/sponsor`)
         .set('Accept', 'application/json')
         .send({accept: false})
-        .set('X-Consumer-Username', usernameTo)
+        .set('X-Consumer-Username', sponsorUsername)
         .end(function(err, res) {
           res.status.should.eql(200)
           done(err)
