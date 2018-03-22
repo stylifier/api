@@ -61,7 +61,12 @@ module.exports = (sequelize, Datatypes) => {
 
   model.getUserSponsors = function(username, offset, quary, limit) {
     return this.findAll({
-      where: Object.assign({sponsoredByUsername: username.toLowerCase(), status: 'ACCEPTED'},
+      where: Object.assign({
+        sponsoredByUsername: username.toLowerCase(),
+        status: {
+          [Datatypes.Op.or]: ['REQUESTED', 'ACCEPTED']
+        }
+      },
         quary ? {sponsorUsername: {[Datatypes.Op.like]: `${quary}`}} : {}),
       attributes: ['status', 'plan'],
       include: [{
