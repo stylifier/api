@@ -18,7 +18,7 @@ module.exports = function(dependencies) {
     },
     getUsersSponsors: function(req, res, next) {
       const offset = req.swagger.params.pagination.value || 0
-      const username = req.headers['x-consumer-username']
+      const username = req.swagger.params.username.value
       const query = req.swagger.params.q.value
 
       Sponsorable.getUserSponsors(username, offset, query)
@@ -30,7 +30,7 @@ module.exports = function(dependencies) {
     },
     getUsersSponsoredBy: function(req, res, next) {
       const offset = req.swagger.params.pagination.value || 0
-      const username = req.headers['x-consumer-username']
+      const username = req.swagger.params.username.value
       const query = req.swagger.params.q.value
 
       Sponsorable.getUsersSponsoredBy(username, offset, query)
