@@ -48,7 +48,7 @@ module.exports = (sequelize, Datatypes) => {
           [Datatypes.Op.or]: ['REQUESTED', 'ACCEPTED']
         }
       }, quary ? {sponsoredByUsername: {[Datatypes.Op.like]: `${quary}`}} : {}),
-      attributes: [],
+      attributes: ['status', 'plan'],
       include: [{
         model: sequelize.models.Users,
         as: 'sponsored_by',
