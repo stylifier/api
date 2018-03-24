@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use strict'
 
 module.exports = function(dependencies) {
@@ -23,8 +24,18 @@ module.exports = function(dependencies) {
     .then(instRes => {
       Users.findOrCreateInstance(instRes.user)
       .spread((user, isCreated) =>
-        kong.createUser(user.username, user.id).then(() =>
-        Promise.resolve(user, isCreated))
+        kong.createUser(user.username, user.id)
+        .then(() => user.update({
+          profile_picture: instRes.user.profile_picture,
+          full_name: instRes.user.full_name.toLowerCase(),
+          bio: instRes.user.bio,
+          website: instRes.user.website ?
+            instRes.user.website.toLowerCase() : '',
+          username: instRes.user.username.toLowerCase(),
+          is_brand: instRes.user.is_business,
+          is_instagram_user: true,
+        }))
+        .then(() => Promise.resolve(user, isCreated))
       )
       .then((user, isCreated) => {
         return instagram.getRecentMedia(instRes.access_token)
