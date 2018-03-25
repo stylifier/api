@@ -413,6 +413,73 @@ paths:
                 }]
               }
 
+  '/media/{media_id}/style/{style}':
+    x-swagger-router-controller: media
+    post:
+      description: assign style to media
+      operationId: setStyle
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          type: string
+        - name: style
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: thread created
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+  '/styles':
+    x-swagger-router-controller: media
+    get:
+      description: get top 20 styles
+      operationId: getStyles
+      parameters:
+        - name: q
+          in: query
+          type: string
+      responses:
+        "200":
+          description: return list of users
+          schema:
+            type: array
+            items:
+              type: string
+          examples:
+            application/json; charset=utf-8:
+              ['pepe', 'street']
+
+  '/users/{username}/styles':
+    x-swagger-router-controller: media
+    get:
+      description: get user top 20 styles
+      operationId: getUserStyles
+      parameters:
+        - name: q
+          in: query
+          type: string
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: return list of users
+          schema:
+            type: array
+            items:
+              type: string
+          examples:
+            application/json; charset=utf-8:
+              ['pepe', 'street']
 
   '/user/self':
     x-swagger-router-controller: users

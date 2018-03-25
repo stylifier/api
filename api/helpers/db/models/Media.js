@@ -10,6 +10,7 @@ module.exports = (sequelize, Datatypes) => {
     },
     images: Datatypes.JSON,
     type: Datatypes.STRING,
+    style: Datatypes.STRING,
     is_user_liked: Datatypes.BOOLEAN,
     location: Datatypes.JSON,
     createdAt: Datatypes.DATE,
@@ -28,6 +29,7 @@ module.exports = (sequelize, Datatypes) => {
         'type',
         'userUsername',
         'is_user_liked',
+        'style',
         'location',
         'updatedAt',
         ['createdAt', 'created_time']
@@ -56,6 +58,7 @@ module.exports = (sequelize, Datatypes) => {
         'type',
         'is_user_liked',
         'location',
+        'style',
         'updatedAt',
         ['createdAt', 'created_time']
       ],
@@ -103,6 +106,25 @@ module.exports = (sequelize, Datatypes) => {
       },
       is_public: isPublic,
       type: 'image'
+    })
+  }
+
+  model.getStyles = function(q, user) {
+    return this.findAll({
+      where: {
+        [Datatypes.Op.and]: [
+          {style: {[Datatypes.Op.ne]: null}}
+        ].concat(q ?
+          [{style: {[Datatypes.Op.like]: `${q.toLowerCase()}%`}}] : []
+        ).concat(user ? [{userUsername: user}] : [])
+      },
+      attributes: [
+        'style',
+        [sequelize.fn('count', sequelize.col('style')), 'stylecount']
+      ],
+      limit: 20,
+      group: ['style'],
+      order: [[sequelize.fn('count', sequelize.col('style')), 'DESC']],
     })
   }
 
