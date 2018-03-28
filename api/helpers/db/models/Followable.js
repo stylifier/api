@@ -12,10 +12,20 @@ module.exports = (sequelize, Datatypes) => {
   })
 
   model.createInstance = function(follower, followedBy) {
-    return this.create({
-      id: id(),
-      followerUsername: follower.toLowerCase(),
-      followedByUsername: followedBy.toLowerCase()
+    return this.findOne({
+      where: {
+        followerUsername: follower.toLowerCase(),
+        followedByUsername: followedBy.toLowerCase()
+      }
+    }).then(f => {
+      if (!f)
+        return this.create({
+          id: id(),
+          followerUsername: follower.toLowerCase(),
+          followedByUsername: followedBy.toLowerCase()
+        })
+
+      return f
     })
   }
 
