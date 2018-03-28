@@ -31,6 +31,8 @@ module.exports = (sequelize, Datatypes) => {
       id: userId,
       is_brand: false,
       is_instagram_user: false,
+      username: obj.username.toLowerCase(),
+      full_name: obj.full_name.toLowerCase(),
       contribution_earned: 0,
       profile_picture: `https://identicon-api.herokuapp.com/${userId}/300?format=png`
     }, obj)
