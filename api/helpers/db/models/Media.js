@@ -48,6 +48,39 @@ module.exports = (sequelize, Datatypes) => {
     })
   }
 
+  model.getMediaByStyle = function(style, offset) {
+    return this.findAll({
+      where: {
+        style: {[Datatypes.Op.like]: `${style.toLowerCase()}%`},
+        is_public: true
+      },
+      offset: offset,
+      limit: 20,
+      attributes: [
+        'id',
+        'images',
+        'type',
+        'userUsername',
+        'is_user_liked',
+        'style',
+        'location',
+        'updatedAt',
+        ['createdAt', 'created_time']
+      ],
+      order: [['createdAt', 'DESC']],
+      include: [{
+        model: sequelize.models.Users,
+        as: 'user',
+        attributes: sequelize.models.Users.shortAttributes
+      },
+      {
+        model: sequelize.models.Users,
+        as: 'usersInPhoto',
+        attributes: sequelize.models.Users.shortAttributes
+      }]
+    })
+  }
+
   model.getMediaByThreadId = function(threadId) {
     return this.findAll({
       where: {threadId: threadId},

@@ -63,7 +63,7 @@ describe('validate route', function() {
       beforeEach(function(done) {
         this.timeout(5000)
         request(server)
-        .post('/media')
+        .post('/self_media')
         .attach('qqfile', path.join(__dirname, '../../fixtures/d42e0091-2c67-437b-987c-296661c0dc3e.jpg'))
         .set('Accept', 'application/json')
         .set('X-Consumer-Username', usernameFrom)
@@ -77,7 +77,7 @@ describe('validate route', function() {
       it('get self media', function(done) {
         this.timeout(5000)
         request(server)
-        .get('/media')
+        .get('/self_media')
         .set('Accept', 'application/json')
         .set('X-Consumer-Username', usernameFrom)
         .end(function(err, res) {
@@ -92,7 +92,7 @@ describe('validate route', function() {
       it('get self media with pagination', function(done) {
         this.timeout(5000)
         request(server)
-        .get('/media?pagination=1')
+        .get('/self_media?pagination=1')
         .set('Accept', 'application/json')
         .set('X-Consumer-Username', usernameFrom)
         .end(function(err, res) {
@@ -108,7 +108,7 @@ describe('validate route', function() {
       it('get someone else media with pagination', function(done) {
         this.timeout(5000)
         request(server)
-        .get(`/users/${usernameFrom}/media?pagination=1`)
+        .get(`/users/${usernameFrom}/self_media?pagination=1`)
         .set('Accept', 'application/json')
         .set('X-Consumer-Username', usernameFrom)
         .end(function(err, res) {

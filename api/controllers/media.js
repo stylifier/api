@@ -29,7 +29,6 @@ module.exports = function(dependencies) {
 
         Media.createInstance(username, mediaExtention, bucket, mediaId, isPublic)
         .then(media => {
-          console.log(taggedUsers)
           taggedUsers.forEach(user => user && media.addUsersInPhoto(user))
           res.json({success: true, id: media.id})
           next()
@@ -112,6 +111,17 @@ module.exports = function(dependencies) {
         res.json(r.map(r => r.style))
         next()
       })
+    },
+    getMedia: function(req, res, next) {
+      const offset = req.swagger.params.pagination.value || 0
+      const style = req.swagger.params.q.value || 0
+
+      Media.getMediaByStyle(style, offset)
+      .then(r => {
+        res.json({data: r, pagination: offset + r.length})
+        next()
+      })
+      .catch(e => next(e))
     }
   }
 }

@@ -113,7 +113,7 @@ module.exports = (sequelize, Datatypes) => {
     .then(res =>
       sequelize.models.threads.getUserRating(username)
       .then(({count, rating}) =>
-        Object.assign({}, res.dataValues, {
+        Object.assign({}, res ? res.dataValues : {}, {
           rating: rating,
           responded_request_count: count
         }))
