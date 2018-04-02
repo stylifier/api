@@ -1033,6 +1033,47 @@ paths:
         "204":
           description: successfully created
 
+  '/campaigns':
+    x-swagger-router-controller: campaigns
+    get:
+      description: get top 6 campaigns
+      operationId: getCampaigns
+      responses:
+        "200":
+          description: array of campaigns
+          schema:
+            $ref: '#/definitions/campaigns'
+
+    post:
+      description: create a new campaign
+      operationId: createCampaign
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/campaign'
+
+      responses:
+        "200":
+          description: thread created
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+  '/self_campaigns':
+    x-swagger-router-controller: campaigns
+    get:
+      description: get self campaigns
+      operationId: getSelfCampaigns
+      responses:
+        "200":
+          description: array of campaigns
+          schema:
+            $ref: '#/definitions/campaigns'
+
   /swagger:
     x-swagger-pipe: swagger_raw
 
@@ -1131,6 +1172,25 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/user'
+
+  campaign:
+    type: object
+    properties:
+      description:
+        type: string
+      user:
+        $ref: '#/definitions/user'
+      location:
+        $ref: '#/definitions/location'
+      media:
+        $ref: '#/definitions/media'
+      created_time:
+        type: string
+
+  campaigns:
+    type: array
+    items:
+      $ref: '#/definitions/campaign'
 
   message:
     type: object

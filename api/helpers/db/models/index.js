@@ -9,6 +9,7 @@ module.exports = function(s, Datatypes) {
   s.models.Followable = require('./Followable')(s, Datatypes)
   s.models.Subscriptions = require('./Subscriptions')(s, Datatypes)
   s.models.Sponsorable = require('./Sponsorable')(s, Datatypes)
+  s.models.Campaigns = require('./Campaigns')(s, Datatypes)
 
   s.models.Users.belongsToMany(s.models.Styles, {
     as: 'styles',
@@ -34,8 +35,11 @@ module.exports = function(s, Datatypes) {
   s.models.Sponsorable.belongsTo(s.models.Users, {as: 'sponsor'})
   s.models.Sponsorable.belongsTo(s.models.Users, {as: 'sponsored_by'})
 
+  s.models.Campaigns.belongsTo(s.models.Users, {as: 'user'})
+  s.models.Campaigns.belongsTo(s.models.Media, {as: 'media'})
+
   // s.models.Media.sync({force: true})
-  // s.models.Threads.sync({force: true})
+  // s.models.Campaigns.sync({force: true})
 
   s.models.Subscriptions.belongsTo(s.models.Users, {as: 'user'})
 
@@ -47,6 +51,7 @@ module.exports = function(s, Datatypes) {
     Media: s.models.Media,
     Followable: s.models.Followable,
     Sponsorable: s.models.Sponsorable,
-    Subscriptions: s.models.Subscriptions
+    Subscriptions: s.models.Subscriptions,
+    Campaigns: s.models.Campaigns
   }
 }
