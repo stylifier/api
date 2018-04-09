@@ -4,27 +4,51 @@
 module.exports = function(dependencies) {
   const Users = dependencies.db.Users
   const Media = dependencies.db.Media
+  const Invites = dependencies.db.Invites
   const kong = dependencies.kong
   const instagram = dependencies.instagram
 
-  const register = (req, res, next) =>
-    Users.createInstance(req.swagger.params.userInfo.value)
+  const register = (req, res, next) => {
+    let inviteInstance
+    return Invites.useInviteCode(req.swagger.params.userInfo.value.invite_code)
+    .then(invite => {
+      inviteInstance = invite
+      const userInfo = req.swagger.params.userInfo.value
+      return Users.createInstance(userInfo, invite.is_brand)
+    })
     .then(r =>
       kong.createUser(r.username, r.id)
       .then(() => r))
     .then(r => kong.createJWT(r.username))
     .then(r => {
+      if (inviteInstance) inviteInstance.update({is_used: true})
       res.json(r)
       next()
     })
     .catch(e => next(e))
+  }
 
   const registerWithInstagram = (req, res, next) =>
     instagram.getToken(req.swagger.params.userInfo.value.instagram_code)
     .then(instRes => {
       Users.findOrCreateInstance(instRes.user)
-      .spread((user, isCreated) =>
-        kong.createUser(user.username, user.id)
+      .spread((user, isCreated) => {
+        console.log('--->>>>>>>')
+        return Invites.useInviteCode(req.swagger.params.userInfo.value.invite_code)
+        .then(invite => {
+          console.log('--->>', invite)
+          user.update({is_brand: invite.is_brand})
+          invite.update({is_used: true})
+          return Promise.resolve(user, isCreated)
+        })
+        .catch(e => {
+          if (user)
+            user.destroy()
+          return Promise.reject(e)
+        })
+      })
+      .then((user, isCreated) => {
+        return kong.createUser(user.username, user.id)
         .then(() => user.update({
           profile_picture: instRes.user.profile_picture,
           full_name: instRes.user.full_name.toLowerCase(),
@@ -36,7 +60,7 @@ module.exports = function(dependencies) {
           is_instagram_user: true,
         }))
         .then(() => Promise.resolve(user, isCreated))
-      )
+      })
       .then((user, isCreated) => {
         return instagram.getRecentMedia(instRes.access_token)
         .then(media => ({username: user.username, media}))
@@ -49,6 +73,7 @@ module.exports = function(dependencies) {
         res.json(r)
         next()
       })
+      .catch(e => next(e))
     })
     .catch(e => next(e))
 
@@ -70,8 +95,7 @@ module.exports = function(dependencies) {
         console.log(e)
         return next(Object.assign(
           new Error('wrong username or password'),
-          {statusCode: 401})
-        )
+          {statusCode: 401}))
       })
     },
     getBrands: function(req, res, next) {

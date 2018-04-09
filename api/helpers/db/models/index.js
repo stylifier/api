@@ -10,6 +10,7 @@ module.exports = function(s, Datatypes) {
   s.models.Subscriptions = require('./Subscriptions')(s, Datatypes)
   s.models.Sponsorable = require('./Sponsorable')(s, Datatypes)
   s.models.Campaigns = require('./Campaigns')(s, Datatypes)
+  s.models.Invites = require('./Invites')(s, Datatypes)
 
   s.models.Users.belongsToMany(s.models.Styles, {
     as: 'styles',
@@ -52,6 +53,7 @@ module.exports = function(s, Datatypes) {
     Followable: s.models.Followable,
     Sponsorable: s.models.Sponsorable,
     Subscriptions: s.models.Subscriptions,
-    Campaigns: s.models.Campaigns
+    Campaigns: s.models.Campaigns,
+    Invites: s.models.Invites
   }
 }
