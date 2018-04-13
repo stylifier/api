@@ -144,5 +144,12 @@ module.exports = (sequelize, Datatypes) => {
     )
   }
 
+  model.findUserByUsername = function(username, isFullAttributes) {
+    return this.findOne({
+      where: {username: username.toLowerCase()},
+      attributes: isFullAttributes ? this.fullAttributes : this.shortAttributes
+    })
+  }
+
   return model
 }

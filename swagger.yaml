@@ -481,6 +481,27 @@ paths:
             application/json; charset=utf-8:
               ['pepe', 'street']
 
+  '/user/self/profile_picture':
+    x-swagger-router-controller: users
+    post:
+      description: set users profile picture
+      operationId: setProfilePicture
+      parameters:
+        - name: media
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/media'
+
+      responses:
+        "200":
+          description: profile picture has changed
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   '/user/self':
     x-swagger-router-controller: users
     get:
@@ -1285,7 +1306,7 @@ definitions:
       location:
         $ref: '#/definitions/location'
       created_time:
-        type: number
+        type: string
 
   location:
     type: object

@@ -41,8 +41,7 @@ module.exports = function(dependencies) {
             return Promise.resolve(user, isCreated)
           })
           .catch(e => {
-            if (user)
-              user.destroy()
+            if (user) user.destroy()
             return Promise.reject(e)
           }) :
           Promise.resolve(user, isCreated)
@@ -130,6 +129,18 @@ module.exports = function(dependencies) {
       Users.findUsername(username, true)
       .then(r => {
         res.json(r)
+        next()
+      })
+      .catch(e => next(e))
+    },
+    setProfilePicture: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const media = req.swagger.params.media.value
+      Users.findUserByUsername(username, true)
+      .then(r => r.update({
+        profile_picture: media.images.standard_resolution.url}))
+      .then(r => {
+        res.json({success: true})
         next()
       })
       .catch(e => next(e))
