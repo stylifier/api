@@ -32,21 +32,21 @@ module.exports = function(dependencies) {
     instagram.getToken(req.swagger.params.userInfo.value.instagram_code)
     .then(instRes => {
       Users.findOrCreateInstance(instRes.user)
-      .spread((user, isCreated) => {
-        console.log('--->>>>>>>')
-        return Invites.useInviteCode(req.swagger.params.userInfo.value.invite_code)
-        .then(invite => {
-          console.log('--->>', invite)
-          user.update({is_brand: invite.is_brand})
-          invite.update({is_used: true})
-          return Promise.resolve(user, isCreated)
-        })
-        .catch(e => {
-          if (user)
-            user.destroy()
-          return Promise.reject(e)
-        })
-      })
+      .spread((user, isCreated) =>
+        isCreated ?
+          Invites.useInviteCode(req.swagger.params.userInfo.value.invite_code)
+          .then(invite => {
+            user.update({is_brand: invite.is_brand})
+            invite.update({is_used: true})
+            return Promise.resolve(user, isCreated)
+          })
+          .catch(e => {
+            if (user)
+              user.destroy()
+            return Promise.reject(e)
+          }) :
+          Promise.resolve(user, isCreated)
+      )
       .then((user, isCreated) => {
         return kong.createUser(user.username, user.id)
         .then(() => user.update({
