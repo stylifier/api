@@ -10,6 +10,7 @@ module.exports = function(s, Datatypes) {
   s.models.Subscriptions = require('./Subscriptions')(s, Datatypes)
   s.models.Sponsorable = require('./Sponsorable')(s, Datatypes)
   s.models.Campaigns = require('./Campaigns')(s, Datatypes)
+  s.models.Products = require('./Products')(s, Datatypes)
   s.models.Invites = require('./Invites')(s, Datatypes)
 
   s.models.Users.belongsToMany(s.models.Styles, {
@@ -26,6 +27,10 @@ module.exports = function(s, Datatypes) {
 
   s.models.Messages.belongsTo(s.models.Threads, {as: 'thread'})
   s.models.Messages.hasMany(s.models.Media, {as: 'media'})
+  s.models.Messages.belongsToMany(s.models.Products, {
+    as: 'products',
+    through: 'message_product'
+  })
 
   s.models.Media.belongsTo(s.models.Users, {as: 'user'})
   s.models.Media.belongsToMany(s.models.Users, {
@@ -39,7 +44,10 @@ module.exports = function(s, Datatypes) {
   s.models.Campaigns.belongsTo(s.models.Users, {as: 'user'})
   s.models.Campaigns.belongsTo(s.models.Media, {as: 'media'})
 
-  // s.models.Media.sync({force: true})
+  s.models.Products.belongsTo(s.models.Users, {as: 'user'})
+  s.models.Products.belongsTo(s.models.Media, {as: 'media'})
+
+  // s.models.Messages.sync({force: true})
   // s.models.Campaigns.sync({force: true})
 
   s.models.Subscriptions.belongsTo(s.models.Users, {as: 'user'})
@@ -54,6 +62,7 @@ module.exports = function(s, Datatypes) {
     Sponsorable: s.models.Sponsorable,
     Subscriptions: s.models.Subscriptions,
     Campaigns: s.models.Campaigns,
+    Products: s.models.Products,
     Invites: s.models.Invites
   }
 }

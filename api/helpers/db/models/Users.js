@@ -38,29 +38,12 @@ module.exports = (sequelize, Datatypes) => {
     }, obj)
     userToCreate.password = bcrypt.hashSync(userToCreate.password, 10)
     return this.create(userToCreate)
-    .catch(e => {
-      console.log('===>>', e)
-      return Promise.reject(Object.assign(
+    .catch(e => Promise.reject(Object.assign(
         new Error('Username is taken, please try another username'),
-        {statusCode: 403}))
-    })
+        {statusCode: 403})))
   }
 
   model.findOrCreateInstance = function(obj) {
-    console.log('---->>>>', {
-      where: {id: obj.id},
-      defaults: {
-        id: obj.id,
-        full_name: obj.full_name.toLowerCase(),
-        profile_picture: obj.profile_picture,
-        bio: obj.bio,
-        website: obj.website ? obj.website.toLowerCase() : '',
-        username: obj.username.toLowerCase(),
-        is_brand: obj.is_business,
-        is_instagram_user: true,
-        contribution_earned: 0,
-      }
-    })
     return this.findOrCreate({
       where: {id: obj.id},
       defaults: {

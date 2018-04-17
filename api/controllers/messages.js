@@ -39,6 +39,10 @@ module.exports = function(dependencies) {
             `messages/${t.dataValues.id}`))
       })
       .then(() => Messages.createInstance(username, threadId, body.text))
+      .then(msg => body.products ?
+        Promise.all(
+          body.products.map(m => msg.addProducts(m.id))).then(() => msg) :
+        msg)
       .then(msg => body.media ?
         Promise.all(body.media.map(m => msg.addMedia(m.id))) : msg)
       .then(msg => {

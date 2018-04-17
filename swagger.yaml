@@ -1095,6 +1095,52 @@ paths:
           schema:
             $ref: '#/definitions/campaigns'
 
+  '/products':
+    x-swagger-router-controller: products
+    get:
+      description: get top 10 products
+      operationId: getProducts
+      parameters:
+        - name: q
+          in: query
+          required: false
+          type: string
+      responses:
+        "200":
+          description: array of products
+          schema:
+            $ref: '#/definitions/products'
+
+    post:
+      description: create a new products
+      operationId: createProduct
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/product'
+
+      responses:
+        "200":
+          description: product created
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+  '/self_products':
+    x-swagger-router-controller: products
+    get:
+      description: get self products
+      operationId: getSelfProducts
+      responses:
+        "200":
+          description: array of products
+          schema:
+            $ref: '#/definitions/products'
+
   /swagger:
     x-swagger-pipe: swagger_raw
 
@@ -1212,6 +1258,28 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/campaign'
+
+
+  product:
+    type: object
+    properties:
+      name:
+        type: string
+      code:
+        type: string
+      price:
+        type: number
+      user:
+        $ref: '#/definitions/user'
+      media:
+        $ref: '#/definitions/media'
+      created_time:
+        type: string
+
+  products:
+    type: array
+    items:
+      $ref: '#/definitions/product'
 
   message:
     type: object
