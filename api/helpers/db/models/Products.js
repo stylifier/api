@@ -8,12 +8,13 @@ module.exports = (sequelize, Datatypes) => {
     price: Datatypes.FLOAT,
   })
 
-  model.createInstance = function(username, mediaId, name, code, price) {
+  model.createInstance = function(username, mediaId, name, code, price, shopAddressId) {
     return this.create({
       name: name.toLowerCase(),
       code: code.toLowerCase(),
       price: price,
       mediaId: mediaId,
+      shopAddressId: shopAddressId,
       userUsername: username.toLowerCase()
     })
   }
@@ -26,6 +27,10 @@ module.exports = (sequelize, Datatypes) => {
       include: [{
         model: sequelize.models.Media,
         as: 'media'
+      },
+      {
+        model: sequelize.models.Addresses,
+        as: 'shopAddress'
       },
       {
         model: sequelize.models.Users,
@@ -41,6 +46,10 @@ module.exports = (sequelize, Datatypes) => {
       include: [{
         model: sequelize.models.Media,
         as: 'media'
+      },
+      {
+        model: sequelize.models.Addresses,
+        as: 'shopAddress'
       },
       {
         model: sequelize.models.Users,

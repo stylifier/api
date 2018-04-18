@@ -10,8 +10,9 @@ module.exports = function(dependencies) {
       const name = req.swagger.params.body.value.name
       const price = req.swagger.params.body.value.price
       const code = req.swagger.params.body.value.code
+      const addressId = req.swagger.params.body.value.shopAddress.id
 
-      Products.createInstance(username, mediaId, name, code, price)
+      Products.createInstance(username, mediaId, name, code, price, addressId)
       .then(r => {
         res.json({success: true})
         next()

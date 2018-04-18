@@ -1095,6 +1095,57 @@ paths:
           schema:
             $ref: '#/definitions/campaigns'
 
+  '/addresses':
+    x-swagger-router-controller: addresses
+    get:
+      description: get all addresses
+      operationId: getAddresses
+      responses:
+        "200":
+          description: array of addresses
+          schema:
+            $ref: '#/definitions/addresses'
+
+    post:
+      description: create a new address
+      operationId: createAddress
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/address'
+
+      responses:
+        "200":
+          description: address created
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+  '/addresses/{id}':
+    x-swagger-router-controller: addresses
+
+    delete:
+      description: delete an address
+      operationId: deleteAddress
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: address deleted
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   '/products':
     x-swagger-router-controller: products
     get:
@@ -1388,6 +1439,24 @@ definitions:
       id:
         type: string
 
+  address:
+    type: object
+    properties:
+      id:
+        type: string
+      street:
+        type: string
+      postalCode:
+        type: number
+      city:
+        type: string
+      country:
+        type: string
+
+  addresses:
+    type: array
+    items:
+      $ref: '#/definitions/addresses'
 
   image:
     type: object

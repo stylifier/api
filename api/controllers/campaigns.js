@@ -7,10 +7,10 @@ module.exports = function(dependencies) {
     createCampaign: function(req, res, next) {
       const username = req.headers['x-consumer-username']
       const mediaId = req.swagger.params.body.value.media.id
-      const location = req.swagger.params.body.value.location
+      const shopAddressId = req.swagger.params.body.value.shopAddress.id
       const description = req.swagger.params.body.value.description
 
-      Campaigns.createInstance(username, mediaId, location, description)
+      Campaigns.createInstance(username, mediaId, description, shopAddressId)
       .then(r => {
         res.json({success: true})
         next()

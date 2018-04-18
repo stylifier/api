@@ -4,16 +4,15 @@
 module.exports = (sequelize, Datatypes) => {
   const model = sequelize.define('campaigns', {
     description: Datatypes.STRING,
-    location: Datatypes.JSON,
     approved: Datatypes.BOOLEAN,
     rejection_reason: Datatypes.STRING,
     expired: {type: Datatypes.BOOLEAN, defaultValue: false}
   })
 
-  model.createInstance = function(username, mediaId, location, description) {
+  model.createInstance = function(username, mediaId, description, shopAddressId) {
     return this.create({
-      location: location,
       description: description,
+      shopAddressId: shopAddressId,
       mediaId: mediaId,
       userUsername: username.toLowerCase()
     })
@@ -31,6 +30,10 @@ module.exports = (sequelize, Datatypes) => {
         as: 'media'
       },
       {
+        model: sequelize.models.Addresses,
+        as: 'shopAddress'
+      },
+      {
         model: sequelize.models.Users,
         as: 'user',
         attributes: sequelize.models.Users.shortAttributes
@@ -46,6 +49,10 @@ module.exports = (sequelize, Datatypes) => {
       include: [{
         model: sequelize.models.Media,
         as: 'media'
+      },
+      {
+        model: sequelize.models.Addresses,
+        as: 'shopAddress'
       },
       {
         model: sequelize.models.Users,

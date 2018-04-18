@@ -12,6 +12,9 @@ module.exports = function(s, Datatypes) {
   s.models.Campaigns = require('./Campaigns')(s, Datatypes)
   s.models.Products = require('./Products')(s, Datatypes)
   s.models.Invites = require('./Invites')(s, Datatypes)
+  s.models.Orders = require('./Orders')(s, Datatypes)
+  s.models.Orderable = require('./Orderable')(s, Datatypes)
+  s.models.Addresses = require('./Addresses')(s, Datatypes)
 
   s.models.Users.belongsToMany(s.models.Styles, {
     as: 'styles',
@@ -43,14 +46,26 @@ module.exports = function(s, Datatypes) {
 
   s.models.Campaigns.belongsTo(s.models.Users, {as: 'user'})
   s.models.Campaigns.belongsTo(s.models.Media, {as: 'media'})
+  s.models.Campaigns.belongsTo(s.models.Addresses, {as: 'shopAddress'})
 
   s.models.Products.belongsTo(s.models.Users, {as: 'user'})
   s.models.Products.belongsTo(s.models.Media, {as: 'media'})
-
-  // s.models.Messages.sync({force: true})
-  // s.models.Campaigns.sync({force: true})
+  s.models.Products.belongsTo(s.models.Addresses, {as: 'shopAddress'})
 
   s.models.Subscriptions.belongsTo(s.models.Users, {as: 'user'})
+
+  s.models.Orders.belongsTo(s.models.Users, {as: 'user'})
+  s.models.Orders.hasMany(s.models.Orderable, {as: 'items'})
+
+  s.models.Addresses.belongsTo(s.models.Users, {as: 'user'})
+  s.models.Addresses.hasOne(s.models.Orders, {as: 'sendFromAddress'})
+  s.models.Addresses.hasOne(s.models.Orders, {as: 'deliverToAddress'})
+
+  s.models.Orderable.belongsTo(s.models.Orders, {as: 'order'})
+
+  // s.models.Orders.sync({force: true})
+  // s.models.Addresses.sync({force: true})
+  // s.models.Products.sync({force: true})
 
   return {
     Users: s.models.Users,
@@ -63,6 +78,9 @@ module.exports = function(s, Datatypes) {
     Subscriptions: s.models.Subscriptions,
     Campaigns: s.models.Campaigns,
     Products: s.models.Products,
-    Invites: s.models.Invites
+    Orders: s.models.Orders,
+    Orderable: s.models.Orderable,
+    Invites: s.models.Invites,
+    Addresses: s.models.Addresses
   }
 }
