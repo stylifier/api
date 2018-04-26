@@ -1192,6 +1192,89 @@ paths:
           schema:
             $ref: '#/definitions/products'
 
+  '/order-item/{id}':
+    x-swagger-router-controller: orders
+
+    delete:
+      description: delete an order item
+      operationId: deleteOrderItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: address deleted
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+  '/orders':
+    x-swagger-router-controller: orders
+    get:
+      description: get all orders
+      operationId: getOrders
+      parameters:
+        - name: status
+          in: query
+          required: false
+          type: string
+      responses:
+        "200":
+          description: array of orders
+          schema:
+            $ref: '#/definitions/orders'
+
+    put:
+      description: add an order
+      operationId: addOrder
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/product'
+
+      responses:
+        "200":
+          description: order added
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+  '/orders/{id}/close':
+    x-swagger-router-controller: orders
+
+    post:
+      description: close an open order
+      operationId: closeOrder
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/address'
+
+        - name: id
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: order closed
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   /swagger:
     x-swagger-pipe: swagger_raw
 
@@ -1457,6 +1540,38 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/addresses'
+
+  item:
+    type: object
+    properties:
+      id:
+        type: string
+      status:
+        type: string
+      product:
+        $ref: '#/definitions/product'
+
+  items:
+    type: array
+    items:
+      $ref: '#/definitions/item'
+
+  order:
+    type: object
+    properties:
+      id:
+        type: string
+      status:
+        type: string
+      user:
+        $ref: '#/definitions/user'
+      items:
+        $ref: '#/definitions/items'
+
+  orders:
+    type: array
+    items:
+      $ref: '#/definitions/order'
 
   image:
     type: object

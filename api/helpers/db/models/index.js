@@ -62,10 +62,12 @@ module.exports = function(s, Datatypes) {
   s.models.Addresses.hasOne(s.models.Orders, {as: 'deliverToAddress'})
 
   s.models.Orderable.belongsTo(s.models.Orders, {as: 'order'})
+  s.models.Orderable.belongsTo(s.models.Products, {as: 'product'})
 
-  // s.models.Orders.sync({force: true})
+  // s.models.Orderable.sync({force: true})
   // s.models.Addresses.sync({force: true})
   // s.models.Products.sync({force: true})
+  // s.models.Campaigns.sync({force: true})
 
   return {
     Users: s.models.Users,
