@@ -50,13 +50,24 @@ module.exports = function(dependencies) {
       const addressId = req.swagger.params.body.value.id
       const orderId = req.swagger.params.id.value
 
-      Orders.getOrderById(username, orderId)
+      Orders.setStatus(username, orderId, 'ORDERED')
       .then(order =>
         order.update({
-          status: 'ORDERED',
           deliverToAddressId: addressId,
           sendFromAddressId: order.items[0].product.shopAddressId
         }))
+      .then(r => {
+        res.json(r)
+        next()
+      })
+      .catch(e => next(e))
+    },
+    setOrderStatus: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const orderId = req.swagger.params.id.value
+      const status = req.swagger.params.status.value
+
+      Orders.setStatus(username, orderId, status)
       .then(r => {
         res.json(r)
         next()

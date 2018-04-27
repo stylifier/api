@@ -1275,6 +1275,32 @@ paths:
                 "success": true
               }
 
+  '/orders/{id}/status/{status}':
+    x-swagger-router-controller: orders
+
+    post:
+      description: set order status
+      operationId: setOrderStatus
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: status
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: order status set
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   /swagger:
     x-swagger-pipe: swagger_raw
 

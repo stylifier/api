@@ -8,6 +8,7 @@ module.exports = (sequelize, Datatypes) => {
       'OPEN',
       'ORDERED',
       'READY_TO_PICK_UP',
+      'REJECTED',
       'DELIVERED')
   })
 
@@ -19,9 +20,14 @@ module.exports = (sequelize, Datatypes) => {
   }
 
   model.getOrders = function(username, status) {
-    return this.findAll({
+    return sequelize.models.Addresses.getAddresses(username)
+    .then(adds => adds.map(add => add.id))
+    .then(addIds => this.findAll({
       where: Object.assign({
-        userUsername: username
+        [Datatypes.Op.or]: [
+          {userUsername: username},
+          {sendFromAddressId: {[Datatypes.Op.in]: addIds}}
+        ]
       }, status ? {status} : {}),
       include: [{
         model: sequelize.models.Users,
@@ -46,13 +52,18 @@ module.exports = (sequelize, Datatypes) => {
           }
         ]
       }]
-    })
+    }))
   }
 
   model.getOrderById = function(username, id) {
-    return this.findOne({
+    return sequelize.models.Addresses.getAddresses(username)
+    .then(adds => adds.map(add => add.id))
+    .then(addIds => this.findOne({
       where: {
-        userUsername: username,
+        [Datatypes.Op.or]: [
+          {userUsername: username},
+          {sendFromAddressId: {[Datatypes.Op.in]: addIds}}
+        ],
         id
       },
       include: [{
@@ -78,7 +89,7 @@ module.exports = (sequelize, Datatypes) => {
           }
         ]
       }]
-    })
+    }))
   }
 
   model.getOpenOrders = function(username) {
@@ -92,6 +103,11 @@ module.exports = (sequelize, Datatypes) => {
         'READY_TO_PICK_UP',
         'DELIVERED']
     })
+  }
+
+  model.setStatus = function(username, orderId, status) {
+    return model.getOrderById(username, orderId)
+    .then(order => order.update({status: status}))
   }
 
   model.getAllOrders = function(username) {
