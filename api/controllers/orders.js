@@ -1,8 +1,8 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const Orders = dependencies.db.Orders
-  const Orderable = dependencies.db.Orderable
+  const {db, notifications} = dependencies
+  const {Orders, Orderable} = db
 
   return {
     addOrder: function(req, res, next) {
@@ -50,11 +50,20 @@ module.exports = function(dependencies) {
       const addressId = req.swagger.params.body.value.id
       const orderId = req.swagger.params.id.value
 
-      Orders.setStatus(username, orderId, 'ORDERED')
+      Orders.getOrderById(username, orderId)
+      .then(order => order.update({
+        deliverToAddressId: addressId,
+        sendFromAddressId: order.items[0].product.shopAddressId
+      }))
+      .then(() => Orders.setStatus(username, orderId, 'ORDERED'))
       .then(order =>
-        order.update({
-          deliverToAddressId: addressId,
-          sendFromAddressId: order.items[0].product.shopAddressId
+        notifications.send({
+          username: order.sendFromAddress.userUsername,
+          subject: `${username} has orders your products`,
+          url: 'orders',
+          sendCopyToAdmin: true,
+          body: `Dear ${order.sendFromAddress.userUsername}<br><br>
+  ${username} has orders your products, you can check the order in <a href="https://www.stylfier.com/orders"> here </a>`
         }))
       .then(r => {
         res.json(r)

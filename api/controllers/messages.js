@@ -1,10 +1,8 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const Messages = dependencies.db.Messages
-  const Threads = dependencies.db.Threads
-  const Subscriptions = dependencies.db.Subscriptions
-  const oneSignal = dependencies.oneSignal
+  const {notifications, db} = dependencies
+  const {Messages, Threads} = db
 
   return {
     getMessages: function(req, res, next) {
@@ -32,11 +30,11 @@ module.exports = function(dependencies) {
 
         t.update({status: 'OPENED'})
 
-        return Subscriptions.getUsersSubscriptions(t.dataValues.fromUsername)
-        .then(ids =>
-          oneSignal.send(ids,
-            `${username} accepted your advice request.`,
-            `messages/${t.dataValues.id}`))
+        return notifications.send({
+          username: t.dataValues.fromUsername,
+          subject: `${username} accepted your advice request.`,
+          url: `messages/${t.dataValues.id}`
+        })
       })
       .then(() => Messages.createInstance(username, threadId, body.text))
       .then(msg => body.products ?

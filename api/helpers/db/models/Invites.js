@@ -28,18 +28,19 @@ module.exports = (sequelize, Datatypes) => {
     })
     .catch(e => console.log(e))
 
-    const ErrorMessage = Promise.reject(Object.assign(
-      new Error('INVITE_CODE_NOT_VALID'),
-      {statusCode: 403}))
-
     if (!inviteCode)
-      return ErrorMessage
+      return Promise.reject(Object.assign(
+        new Error('INVITE_CODE_NOT_VALID'),
+        {statusCode: 403}))
 
     return this.findOne({
       where: {id: inviteCode.toLowerCase(), is_used: false}
     }).then(invite => {
       if (!invite)
-        return ErrorMessage
+        return Promise.reject(Object.assign(
+          new Error('INVITE_CODE_NOT_VALID'),
+          {statusCode: 403}))
+
       return invite
     })
   }

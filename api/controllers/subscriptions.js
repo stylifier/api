@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const Subscriptions = dependencies.db.Subscriptions
+  const {Subscriptions} = dependencies.db
 
   return {
     createSubscription: function(req, res, next) {

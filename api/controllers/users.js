@@ -2,11 +2,8 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const Users = dependencies.db.Users
-  const Media = dependencies.db.Media
-  const Invites = dependencies.db.Invites
-  const kong = dependencies.kong
-  const instagram = dependencies.instagram
+  const {kong, instagram, db} = dependencies
+  const {Users, Media, Invites} = db
 
   const register = (req, res, next) => {
     let inviteInstance

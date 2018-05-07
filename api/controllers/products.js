@@ -1,18 +1,20 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const Products = dependencies.db.Products
+  const {Products} = dependencies.db
 
   return {
     createProduct: function(req, res, next) {
       const username = req.headers['x-consumer-username']
-      const mediaId = req.swagger.params.body.value.media.id
-      const name = req.swagger.params.body.value.name
-      const price = req.swagger.params.body.value.price
-      const code = req.swagger.params.body.value.code
-      const addressId = req.swagger.params.body.value.shopAddress.id
+      const {
+        media,
+        name,
+        price,
+        code,
+        shopAddress} = req.swagger.params.body.value
 
-      Products.createInstance(username, mediaId, name, code, price, addressId)
+      Products.createInstance(
+        username, media.id, name, code, price, shopAddress.id)
       .then(r => {
         res.json({success: true})
         next()

@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const Sponsorable = dependencies.db.Sponsorable
+  const {Sponsorable} = dependencies.db
 
   return {
     createSponsor: function(req, res, next) {

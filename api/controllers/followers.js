@@ -1,9 +1,8 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const Followable = dependencies.db.Followable
-  const Subscriptions = dependencies.db.Subscriptions
-  const oneSignal = dependencies.oneSignal
+  const {notifications, db} = dependencies
+  const {Followable} = db
 
   return {
     createFollow: function(req, res, next) {
@@ -12,11 +11,11 @@ module.exports = function(dependencies) {
 
       Followable.createInstance(username, usernameToFollow)
       .then(r =>
-        Subscriptions.getUsersSubscriptions(usernameToFollow)
-        .then(ids =>
-          oneSignal.send(ids,
-            `${username} started following you.`,
-            `profile/${username}`))
+        notifications.send({
+          username: usernameToFollow,
+          subject: `${username} started following you.`,
+          url: `profile/${username}`
+        })
         .then(() => r))
       .then(userToFollow => {
         res.json({success: true})

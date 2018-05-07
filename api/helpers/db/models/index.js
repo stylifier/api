@@ -56,6 +56,8 @@ module.exports = function(s, Datatypes) {
 
   s.models.Orders.belongsTo(s.models.Users, {as: 'user'})
   s.models.Orders.hasMany(s.models.Orderable, {as: 'items'})
+  s.models.Orders.belongsTo(s.models.Addresses, {as: 'sendFromAddress'})
+  s.models.Orders.belongsTo(s.models.Addresses, {as: 'deliverToAddress'})
 
   s.models.Addresses.belongsTo(s.models.Users, {as: 'user'})
   s.models.Addresses.hasOne(s.models.Orders, {as: 'sendFromAddress'})

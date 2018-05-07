@@ -1,0 +1,5 @@
+module.exports = {
+  config: './config/db.json',
+  'migrations-path': './api/helpers/db/migrations',
+  'models-path': './api/helpers/db/models'
+};

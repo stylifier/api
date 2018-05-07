@@ -16,6 +16,7 @@ module.exports = (sequelize, Datatypes) => {
     profile_picture: Datatypes.STRING,
     id: Datatypes.STRING,
     website: Datatypes.STRING,
+    email: Datatypes.STRING,
     bio: Datatypes.TEXT,
     contribution_earned: Datatypes.DOUBLE,
     rating: Datatypes.DOUBLE,
@@ -105,6 +106,7 @@ module.exports = (sequelize, Datatypes) => {
     'rating',
     'is_instagram_user',
     'is_brand',
+    'email',
     ...model.shortAttributes
   ]
 

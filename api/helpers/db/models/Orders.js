@@ -70,8 +70,13 @@ module.exports = (sequelize, Datatypes) => {
         model: sequelize.models.Users,
         as: 'user',
         attributes: sequelize.models.Users.shortAttributes
-      },
-      {
+      }, {
+        model: sequelize.models.Addresses,
+        as: 'sendFromAddress'
+      }, {
+        model: sequelize.models.Addresses,
+        as: 'deliverToAddress'
+      }, {
         model: sequelize.models.Orderable,
         as: 'items',
         include: [

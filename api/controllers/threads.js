@@ -1,9 +1,8 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const Threads = dependencies.db.Threads
-  const Subscriptions = dependencies.db.Subscriptions
-  const oneSignal = dependencies.oneSignal
+  const {notifications, db} = dependencies
+  const {Threads} = db
 
   return {
     getSelfThreads: function(req, res, next) {
@@ -36,11 +35,11 @@ module.exports = function(dependencies) {
 
       Threads.createInstance(fromUsername, toUsername)
       .then(r =>
-        r.isNotCreated ? r : Subscriptions.getUsersSubscriptions(toUsername)
-        .then(ids =>
-          oneSignal.send(ids,
-            `${fromUsername} asked for your advice.`,
-            `messages/${r.dataValues.id}`))
+        r.isNotCreated ? r : notifications.send({
+          username: toUsername,
+          subject: `${fromUsername} asked for your advice.`,
+          url: `messages/${r.dataValues.id}`
+        })
         .then(() => r))
       .then(r => {
         res.json({success: true, id: r.dataValues.id})
@@ -78,19 +77,17 @@ module.exports = function(dependencies) {
         const d = r.dataValues
         switch (r.dataValues.status) {
           case 'CLOSED':
-            return Subscriptions.getUsersSubscriptions(
-              username === d.toUsername ? d.fromUsername : username)
-            .then(ids =>
-              oneSignal.send(ids,
-                `${username} closed the advice request.`,
-                `messages/${r.dataValues.id}`))
+            return notifications.send({
+              username: username === d.toUsername ? d.fromUsername : username,
+              subject: `${username} closed the advice request.`,
+              url: `messages/${r.dataValues.id}`
+            })
           case 'RATING':
-            return Subscriptions.getUsersSubscriptions(
-              username === d.toUsername ? d.fromUsername : username)
-            .then(ids =>
-              oneSignal.send(ids,
-                `${username} asked for your rating on his advice.`,
-                `messages/${r.dataValues.id}`))
+            return notifications.send({
+              username: username === d.toUsername ? d.fromUsername : username,
+              subject: `${username} asked for your rating on his advice.`,
+              url: `messages/${r.dataValues.id}`
+            })
           default:
             return
         }

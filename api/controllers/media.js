@@ -2,10 +2,8 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const s3 = dependencies.s3
-  const id = dependencies.id
-  const Media = dependencies.db.Media
-  const Followable = dependencies.db.Followable
+  const {s3, db, id} = dependencies
+  const {Media, Followable} = db
   const bucket = 'stylifier.com-images'
 
   return {
@@ -15,7 +13,8 @@ module.exports = function(dependencies) {
       const mediaExtention = req.file.mimetype.split('/').pop()
       const isPublic = req.headers['x-is-public'] === 'true'
       const taggedUsers = req.headers['x-tagged-users'] ?
-       req.headers['x-tagged-users'].split(',').filter(t => t !== 'undefined') : []
+        req.headers['x-tagged-users']
+          .split(',').filter(t => t !== 'undefined') : []
 
       s3.putObject({
         Bucket: bucket,
