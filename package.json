@@ -13,6 +13,7 @@
     "async": "^2.1.4",
     "aws-sdk": "^2.177.0",
     "bcrypt": "^2.0.1",
+    "cookiejar": "^2.1.1",
     "express": "^4.12.3",
     "express-fileupload": "^0.3.0",
     "formidable": "^1.2.1",
