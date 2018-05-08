@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const {db, notifications} = dependencies
+  const {db, notifications, mailer} = dependencies
   const {Orders, Orderable} = db
 
   return {
@@ -59,11 +59,12 @@ module.exports = function(dependencies) {
       .then(order =>
         notifications.send({
           username: order.sendFromAddress.userUsername,
-          subject: `${username} has orders your products`,
+          subject: mailer.templates.createOrderSubject(
+            order.sendFromAddress.userUsername, username, 'ORDERED'),
           url: 'orders',
           sendCopyToAdmin: true,
-          body: `Dear ${order.sendFromAddress.userUsername}<br><br>
-  ${username} has orders your products, you can check the order in <a href="https://www.stylfier.com/orders"> here </a>`
+          body: mailer.templates.createOrderBody(
+            order.sendFromAddress.userUsername, username, 'ORDERED')
         }))
       .then(r => {
         res.json(r)
@@ -77,8 +78,17 @@ module.exports = function(dependencies) {
       const status = req.swagger.params.status.value
 
       Orders.setStatus(username, orderId, status)
-      .then(r => {
-        res.json(r)
+      .then(order => notifications.send({
+        username: order.user.username,
+        subject: mailer.templates.createOrderSubject(
+          order.sendFromAddress.userUsername, order.user.username, status),
+        url: 'orders',
+        sendCopyToAdmin: true,
+        body: mailer.templates.createOrderBody(
+          order.sendFromAddress.userUsername, order.user.username, status)
+      }))
+      .then(() => {
+        res.json({success: true})
         next()
       })
       .catch(e => next(e))
@@ -102,7 +112,7 @@ module.exports = function(dependencies) {
           )
         )
       )
-      .then(r => {
+      .then(() => {
         res.json({success: true})
         next()
       })
