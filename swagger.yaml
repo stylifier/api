@@ -1248,6 +1248,35 @@ paths:
                 "success": true
               }
 
+  '/orders/close':
+    x-swagger-router-controller: orders
+
+    post:
+      description: close open orders
+      operationId: closeOrders
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              orders:
+                $ref: '#/definitions/orders'
+              address:
+                $ref: '#/definitions/address'
+              payment_token:
+                $ref: '#/definitions/payment_token'
+
+      responses:
+        "200":
+          description: orders closed
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   '/orders/{id}/close':
     x-swagger-router-controller: orders
 
@@ -1531,8 +1560,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/user'
-      location:
-        $ref: '#/definitions/location'
       created_time:
         type: string
 
@@ -1570,8 +1597,6 @@ definitions:
   item:
     type: object
     properties:
-      id:
-        type: string
       status:
         type: string
       product:
@@ -1585,8 +1610,6 @@ definitions:
   order:
     type: object
     properties:
-      id:
-        type: string
       status:
         type: string
       user:
@@ -1628,3 +1651,21 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/media'
+
+  payment_token:
+    type: object
+    properties:
+      card:
+        type: object
+      client_ip:
+        type: string
+      id:
+        type: string
+      livemode:
+        type: boolean
+      used:
+        type: boolean
+      object:
+        type: string
+      type:
+        type: string

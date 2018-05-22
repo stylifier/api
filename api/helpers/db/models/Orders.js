@@ -9,7 +9,8 @@ module.exports = (sequelize, Datatypes) => {
       'ORDERED',
       'READY_TO_PICK_UP',
       'REJECTED',
-      'DELIVERED')
+      'DELIVERED'),
+    charge: Datatypes.JSON
   })
 
   model.createInstance = function(username) {

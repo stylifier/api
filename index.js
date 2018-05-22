@@ -38,6 +38,10 @@ const notifications = config.mockNotifications ?
   require('./api/helpers/notifications')(
     config.notifications, db, oneSignal, mailer)
 
+const stripe = config.mockStripe ?
+  require('./api/helpers/stripe')(config.stripe.secret_key) :
+  require('./api/helpers/stripe')(config.stripe.secret_key)
+
 const server = require('./app')(config, {
   logger,
   db,
@@ -45,6 +49,7 @@ const server = require('./app')(config, {
   oneSignal,
   s3,
   mailer,
+  stripe,
   instagram: instagramAPI,
   kong: kong(config),
   id: require('uniqid'),

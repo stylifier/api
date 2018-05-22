@@ -17,5 +17,9 @@
   },
   "mailer": {
     "admin": "admin@stylifier.com"
+  },
+  "stripe": {
+    "secret_key": "sk_test_nVzhdxCSDt8eJ63PxdLtNbwM"
   }
+
 }

@@ -1,8 +1,57 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const {db, notifications, mailer} = dependencies
+  const {db, notifications, mailer, stripe} = dependencies
   const {Orders, Orderable} = db
+
+  const _refundOrder = (username, o) =>
+    Orders.getOrderById(username, o.id)
+    .then(order =>
+      stripe.createRefund(
+        order.charge,
+        order.items.map(t => t.product)
+        .reduce((a, b) => a + b.price, 0)
+        .toFixed(2) * 100))
+
+  const _closeOrder = (username, orderId, addressId, charge) =>
+    Orders.getOrderById(username, orderId)
+    .then(order => order.update({
+      deliverToAddressId: addressId,
+      sendFromAddressId: order.items[0].product.shopAddressId,
+      charge: charge
+    }))
+    .then(() => Orders.setStatus(username, orderId, 'ORDERED'))
+    .then(order =>
+      notifications.send({
+        username: order.sendFromAddress.userUsername,
+        subject: mailer.templates.createOrderSubject(
+          order.sendFromAddress.userUsername, username, 'ORDERED'),
+        url: 'orders',
+        sendCopyToAdmin: true,
+        body: mailer.templates.createOrderBody(
+          order.sendFromAddress.userUsername, username, 'ORDERED')
+      })
+    )
+
+  const _chargeOrders = (orders, paymentToken) =>
+    stripe.createCharge({
+      amount: orders
+        .reduce((a, b) => {
+          b.items.map(t => a.push(t))
+          return a
+        }, [])
+        .map(t => t.product)
+        .reduce((a, b) => a + b.price, 0)
+        .toFixed(2) * 100,
+      currency: 'eur',
+      description: 'Stylifier. Orders No:' +
+        orders.map(o => o.id)
+        .reduce((a, b) => {
+          a += b + ','
+          return a
+        }, ''),
+      source: paymentToken.id,
+    })
 
   return {
     addOrder: function(req, res, next) {
@@ -50,22 +99,24 @@ module.exports = function(dependencies) {
       const addressId = req.swagger.params.body.value.id
       const orderId = req.swagger.params.id.value
 
-      Orders.getOrderById(username, orderId)
-      .then(order => order.update({
-        deliverToAddressId: addressId,
-        sendFromAddressId: order.items[0].product.shopAddressId
-      }))
-      .then(() => Orders.setStatus(username, orderId, 'ORDERED'))
-      .then(order =>
-        notifications.send({
-          username: order.sendFromAddress.userUsername,
-          subject: mailer.templates.createOrderSubject(
-            order.sendFromAddress.userUsername, username, 'ORDERED'),
-          url: 'orders',
-          sendCopyToAdmin: true,
-          body: mailer.templates.createOrderBody(
-            order.sendFromAddress.userUsername, username, 'ORDERED')
-        }))
+      _closeOrder(username, orderId, addressId)
+      .then(r => {
+        res.json(r)
+        next()
+      })
+      .catch(e => next(e))
+    },
+    closeOrders: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const addressId = req.swagger.params.body.value.address.id
+      const orders = req.swagger.params.body.value.orders
+      const paymentToken = req.swagger.params.body.value.payment_token
+
+      _chargeOrders(orders, paymentToken)
+      .then(charge =>
+        Promise.all(
+          orders.map(order =>
+            _closeOrder(username, order.id, addressId, charge))))
       .then(r => {
         res.json(r)
         next()
@@ -78,6 +129,8 @@ module.exports = function(dependencies) {
       const status = req.swagger.params.status.value
 
       Orders.setStatus(username, orderId, status)
+      .then(order => status === 'REJECTED' ?
+        _refundOrder(username, order).then(() => order) : order)
       .then(order => notifications.send({
         username: order.user.username,
         subject: mailer.templates.createOrderSubject(

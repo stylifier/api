@@ -26,6 +26,7 @@
     "request-promise": "^4.1.1",
     "sequelize": "^4.29.0",
     "sequelize-cli": "^4.0.0",
+    "stripe": "^6.0.0",
     "swagger": "^0.7.5",
     "swagger-express-mw": "^0.7.0",
     "uniqid": "^4.1.1"
