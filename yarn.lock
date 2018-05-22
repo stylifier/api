@@ -3206,10 +3206,6 @@ lodash.isobject@~2.4.1:
   dependencies:
     lodash._objecttypes "~2.4.1"
 
-lodash.isplainobject@^4.0.6:
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz#7c526a52d89b45c45cc690b88163be0497f550cb"
-
 lodash.keys@^3.0.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/lodash.keys/-/lodash.keys-3.1.2.tgz#4dbc0472b156be50a0b286855d1bd0b0c656098a"
@@ -5153,14 +5149,6 @@ strip-eof@^1.0.0:
 strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
-
-stripe@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/stripe/-/stripe-6.0.0.tgz#b0884d1a9b5794c6f91ea8d13a2699e9ed2e2a6e"
-  dependencies:
-    lodash.isplainobject "^4.0.6"
-    qs "~6.5.1"
-    safe-buffer "^5.1.1"
 
 superagent@^1.2.0, superagent@^1.7.2:
   version "1.8.5"
