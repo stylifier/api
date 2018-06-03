@@ -29,8 +29,8 @@ const instagramAPI = config.mockInstagramAPI ?
   require('./api/helpers/instagramAPI')(config.instagram)
 
 const pinterestAPI = config.mockPinterestAPI ?
-  require('./api/mocks/pinterestAPI')(config.pinterest) :
-  require('./api/helpers/pinterestAPI')(config.pinterest)
+  require('./api/mocks/pinterest')(config.pinterest) :
+  require('./api/helpers/pinterest')(config.pinterest)
 
 const mailer = config.mockMailer ?
   require('./api/mocks/mailer')(config.mailer, db) :
