@@ -28,6 +28,10 @@ const instagramAPI = config.mockInstagramAPI ?
   require('./api/mocks/instagramAPI')(config.instagram) :
   require('./api/helpers/instagramAPI')(config.instagram)
 
+const pinterestAPI = config.mockPinterestAPI ?
+  require('./api/mocks/pinterestAPI')(config.pinterest) :
+  require('./api/helpers/pinterestAPI')(config.pinterest)
+
 const mailer = config.mockMailer ?
   require('./api/mocks/mailer')(config.mailer, db) :
   require('./api/helpers/mailer')(config.mailer, db)
@@ -51,6 +55,7 @@ const server = require('./app')(config, {
   mailer,
   stripe,
   instagram: instagramAPI,
+  pinterest: pinterestAPI,
   kong: kong(config),
   id: require('uniqid'),
   jwt: require('jwt-simple'),

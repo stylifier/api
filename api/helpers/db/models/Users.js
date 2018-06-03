@@ -44,18 +44,19 @@ module.exports = (sequelize, Datatypes) => {
         {statusCode: 403})))
   }
 
-  model.findOrCreateInstance = function(obj) {
+  model.findOrCreateInstance = function(obj, isInstagramUser, isPinterestUser) {
     return this.findOrCreate({
       where: {id: obj.id},
       defaults: {
         id: obj.id,
-        full_name: obj.full_name.toLowerCase(),
-        profile_picture: obj.profile_picture,
+        full_name: obj.full_name ? obj.full_name.toLowerCase() : '',
+        profile_picture: obj.profile_picture ? obj.profile_picture : '',
         bio: obj.bio,
         website: obj.website ? obj.website.toLowerCase() : '',
         username: obj.username.toLowerCase(),
-        is_brand: obj.is_business,
-        is_instagram_user: true,
+        is_brand: false,
+        is_instagram_user: isInstagramUser,
+        is_pinterest_user: isPinterestUser,
         contribution_earned: 0,
       }
     })
@@ -105,6 +106,7 @@ module.exports = (sequelize, Datatypes) => {
     'contribution_earned',
     'rating',
     'is_instagram_user',
+    'is_pinterest_user',
     'is_brand',
     'email',
     ...model.shortAttributes

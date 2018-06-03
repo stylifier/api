@@ -112,6 +112,7 @@ module.exports = (sequelize, Datatypes) => {
           id: m.id,
           userUsername: username.toLowerCase(),
           images: m.images,
+          style: m.style,
           location: m.location,
           type: 'image',
           is_public: true

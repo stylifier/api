@@ -2,7 +2,7 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const {kong, instagram, db} = dependencies
+  const {kong, instagram, pinterest, db} = dependencies
   const {Users, Media, Invites} = db
 
   const register = (req, res, next) => {
@@ -28,7 +28,7 @@ module.exports = function(dependencies) {
   const registerWithInstagram = (req, res, next) =>
     instagram.getToken(req.swagger.params.userInfo.value.instagram_code)
     .then(instRes => {
-      Users.findOrCreateInstance(instRes.user)
+      Users.findOrCreateInstance(instRes.user, true, false)
       .spread((user, isCreated) =>
         isCreated ?
           Invites.useInviteCode(req.swagger.params.userInfo.value.invite_code)
@@ -73,11 +73,63 @@ module.exports = function(dependencies) {
     })
     .catch(e => next(e))
 
+  const registerWithPinterest = (req, res, next) =>
+    pinterest.getToken(req.swagger.params.userInfo.value.pinterest_code)
+    .then(pinterestUser => {
+      Users.findOrCreateInstance(pinterestUser, false, true)
+      .spread((user, isCreated) =>
+        isCreated ?
+          Invites.useInviteCode(req.swagger.params.userInfo.value.invite_code)
+          .then(invite => {
+            user.update({is_brand: invite.is_brand})
+            invite.update({is_used: true})
+            return Promise.resolve(user, isCreated)
+          })
+          .catch(e => {
+            if (user) user.destroy()
+            return Promise.reject(e)
+          }) :
+          Promise.resolve(user, isCreated)
+      )
+      .then((user, isCreated) => {
+        return kong.createUser(user.username, user.id)
+        .then(() => user.update({
+          profile_picture:
+           pinterestUser.image[Object.keys(pinterestUser.image)[0]].url,
+          full_name:
+            pinterestUser.first_name.toLowerCase() +
+            pinterestUser.last_name.toLowerCase(),
+          bio: pinterestUser.bio,
+          website: pinterestUser.url,
+          username: pinterestUser.username,
+          is_pinterest_user: true
+        }))
+        .then(() => Promise.resolve(user, isCreated))
+      })
+      .then((user, isCreated) => {
+        return pinterest.getMedia(pinterestUser.access_token)
+        .then(media => ({username: user.username, media}))
+      })
+      .then(({username, media}) =>
+        Media.createOrUpdateInstances(media, username)
+        .then(() => ({username, media})))
+      .then(({username, media}) => kong.createJWT(username))
+      .then(r => {
+        res.json(r)
+        next()
+      })
+      .catch(e => next(e))
+    })
+    .catch(e => next(e))
+
   return {
     registerUser: function(req, res, next) {
-      return req.swagger.params.userInfo.value.instagram_code ?
-        registerWithInstagram(req, res, next) :
-        register(req, res, next)
+      if (req.swagger.params.userInfo.value.instagram_code)
+        return registerWithInstagram(req, res, next)
+      else if (req.swagger.params.userInfo.value.pinterest_code)
+        return registerWithPinterest(req, res, next)
+
+      register(req, res, next)
     },
     login: function(req, res, next) {
       const userToLogin = Object.assign({}, req.swagger.params.loginInfo.value)

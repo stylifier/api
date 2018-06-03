@@ -6,6 +6,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('orders', 'charge')
+    return queryInterface.removeColumn('orders', 'charge')
   }
 }
