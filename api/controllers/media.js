@@ -81,6 +81,17 @@ module.exports = function(dependencies) {
         next()
       })
     },
+    addDescriptionToMedia: function(req, res, next) {
+      const id = req.swagger.params.media_id.value
+      const description = req.swagger.params.body.value.description
+      const username = req.headers['x-consumer-username']
+
+      Media.addDescriptionToMedia(username, id, description)
+      .then(media => {
+        res.json(media)
+        next()
+      })
+    },
     setStyle: function(req, res, next) {
       const mediaId = req.swagger.params.media_id.value
       const style = req.swagger.params.style.value

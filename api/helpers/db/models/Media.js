@@ -15,6 +15,7 @@ module.exports = (sequelize, Datatypes) => {
     location: Datatypes.JSON,
     createdAt: Datatypes.DATE,
     is_public: Datatypes.BOOLEAN,
+    description: Datatypes.TEXT,
     updatedAt: Datatypes.DATE
   })
 
@@ -27,6 +28,7 @@ module.exports = (sequelize, Datatypes) => {
         'id',
         'images',
         'type',
+        'description',
         'userUsername',
         'is_user_liked',
         'style',
@@ -60,6 +62,7 @@ module.exports = (sequelize, Datatypes) => {
         'id',
         'images',
         'type',
+        'description',
         'userUsername',
         'is_user_liked',
         'style',
@@ -89,6 +92,7 @@ module.exports = (sequelize, Datatypes) => {
         'id',
         'images',
         'type',
+        'description',
         'is_user_liked',
         'location',
         'style',
@@ -101,6 +105,15 @@ module.exports = (sequelize, Datatypes) => {
 
   model.getMediaById = function(id) {
     return this.findOne({where: {id: id}})
+  }
+
+  model.addDescriptionToMedia = function(username, id, description) {
+    return this.findOne({
+      where: {
+        id,
+        userUsername: username}})
+    .then(m =>
+      m.update({description}))
   }
 
   model.createOrUpdateInstances = function(media, username) {

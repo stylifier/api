@@ -930,6 +930,29 @@ paths:
                 "success": true
               }
 
+  '/media/{media_id}/description':
+    x-swagger-router-controller: media
+    post:
+      description: add description to media
+      operationId: addDescriptionToMedia
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+
+      responses:
+        "200":
+          description: media shared
+
 
   '/subscriptions/{subscription_id}':
     x-swagger-router-controller: subscriptions
