@@ -38,7 +38,7 @@ ${orderedFromUsername} has rejected your recent order.
 This can be due to outage of the product you have ordered.
 <br><br>
 You can always ask the suplier of your order about the details by visiting their
-<a href="https://www.stylifier.com/profiles/${orderedFromUsername}"> profile </a>
+<a href="https://www.stylifier.com/profile/${orderedFromUsername}"> profile </a>
 <br><br>
 You can also check the order <a href="https://www.stylifier.com/orders"> here </a>.
 `
