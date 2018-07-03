@@ -8,6 +8,7 @@ module.exports = function(s, Datatypes) {
   s.models.Media = require('./Media')(s, Datatypes)
   s.models.Followable = require('./Followable')(s, Datatypes)
   s.models.Subscriptions = require('./Subscriptions')(s, Datatypes)
+  s.models.ColorPallets = require('./ColorPallets')(s, Datatypes)
   s.models.Sponsorable = require('./Sponsorable')(s, Datatypes)
   s.models.Campaigns = require('./Campaigns')(s, Datatypes)
   s.models.Products = require('./Products')(s, Datatypes)
@@ -66,11 +67,6 @@ module.exports = function(s, Datatypes) {
   s.models.Orderable.belongsTo(s.models.Orders, {as: 'order'})
   s.models.Orderable.belongsTo(s.models.Products, {as: 'product'})
 
-  // s.models.Orderable.sync({force: true})
-  // s.models.Addresses.sync({force: true})
-  // s.models.Products.sync({force: true})
-  // s.models.Campaigns.sync({force: true})
-
   return {
     Users: s.models.Users,
     Styles: s.models.Styles,
@@ -80,6 +76,7 @@ module.exports = function(s, Datatypes) {
     Followable: s.models.Followable,
     Sponsorable: s.models.Sponsorable,
     Subscriptions: s.models.Subscriptions,
+    ColorPallets: s.models.ColorPallets,
     Campaigns: s.models.Campaigns,
     Products: s.models.Products,
     Orders: s.models.Orders,

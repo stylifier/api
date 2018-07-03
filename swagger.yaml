@@ -953,6 +953,41 @@ paths:
         "200":
           description: media shared
 
+  '/color_pallets':
+    x-swagger-router-controller: colorPallets
+    post:
+      description: register a color pallet
+      operationId: createColorPallet
+      parameters:
+        - name: colorPallet
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/colorPallet"
+
+      responses:
+        "200":
+          description: color pallet created
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+    get:
+      description: get color pallet suggestion
+      operationId: getCollorPalletSuggestion
+      parameters:
+        - name: color_code
+          in: query
+          required: true
+          type: string
+          pattern: '^#(?:[0-9a-fA-F]{3}){1,2}$'
+
+      responses:
+        "200":
+          description: color pallet suggestions
+          schema:
+            $ref: '#/definitions/colorPallets'
 
   '/subscriptions/{subscription_id}':
     x-swagger-router-controller: subscriptions
@@ -1692,3 +1727,20 @@ definitions:
         type: string
       type:
         type: string
+
+  colorPallet:
+    type: object
+    properties:
+      id:
+        type: string
+      code:
+        type: string
+      likes:
+        type: string
+      popularity:
+        type: number
+
+  colorPallets:
+    type: array
+    items:
+      $ref: '#/definitions/colorPallet'
