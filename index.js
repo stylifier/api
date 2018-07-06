@@ -59,6 +59,7 @@ const server = require('./app')(config, {
   kong: kong(config),
   id: require('uniqid'),
   jwt: require('jwt-simple'),
+  getColors: require('get-image-colors')
 })
 server.listen(config.appPort)
 logger.info('server has started on port ' + config.appPort)

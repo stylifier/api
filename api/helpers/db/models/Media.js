@@ -16,7 +16,8 @@ module.exports = (sequelize, Datatypes) => {
     createdAt: Datatypes.DATE,
     is_public: Datatypes.BOOLEAN,
     description: Datatypes.TEXT,
-    updatedAt: Datatypes.DATE
+    updatedAt: Datatypes.DATE,
+    colorCode: Datatypes.STRING
   })
 
   model.getMediaByUsernames = function(usernames, offset) {
@@ -32,6 +33,7 @@ module.exports = (sequelize, Datatypes) => {
         'userUsername',
         'is_user_liked',
         'style',
+        'colorCode',
         'location',
         'updatedAt',
         ['createdAt', 'created_time']
@@ -66,6 +68,7 @@ module.exports = (sequelize, Datatypes) => {
         'userUsername',
         'is_user_liked',
         'style',
+        'colorCode',
         'location',
         'updatedAt',
         ['createdAt', 'created_time']
@@ -96,6 +99,7 @@ module.exports = (sequelize, Datatypes) => {
         'is_user_liked',
         'location',
         'style',
+        'colorCode',
         'updatedAt',
         ['createdAt', 'created_time']
       ],
@@ -126,6 +130,7 @@ module.exports = (sequelize, Datatypes) => {
           userUsername: username.toLowerCase(),
           images: m.images,
           style: m.style,
+          colorCode: m.colorCode,
           location: m.location,
           type: 'image',
           is_public: true
@@ -134,12 +139,13 @@ module.exports = (sequelize, Datatypes) => {
     ))
   }
 
-  model.createInstance = function(username, mediaExtention, bucket, mId, isPublic) {
+  model.createInstance = function(username, mediaExtention, bucket, mId, isPublic, colorCode) {
     const mediaId = mId || id()
 
     return this.create({
       id: mediaId,
       userUsername: username.toLowerCase(),
+      colorCode: colorCode,
       images: {
         thumbnail: {
           url: `https://s3.eu-central-1.amazonaws.com/${bucket}/${mediaId}.${mediaExtention}`

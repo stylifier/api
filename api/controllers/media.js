@@ -2,7 +2,7 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const {s3, db, id} = dependencies
+  const {s3, db, id, getColors} = dependencies
   const {Media, Followable} = db
   const bucket = 'stylifier.com-images'
 
@@ -26,10 +26,20 @@ module.exports = function(dependencies) {
           return next(err)
         }
 
-        Media.createInstance(username, mediaExtention, bucket, mediaId, isPublic)
+        getColors(req.file.buffer, 'image/' + mediaExtention)
+        .then(colorPallet =>
+          colorPallet.map(c => c.hex().replace('#', '')).join(''))
+        .then(colorCode =>
+          Media.createInstance(
+            username,
+            mediaExtention,
+            bucket,
+            mediaId,
+            isPublic,
+            colorCode))
         .then(media => {
           taggedUsers.forEach(user => user && media.addUsersInPhoto(user))
-          res.json({success: true, id: media.id})
+          res.json(Object.assign({success: true}, media.get({plain: true})))
           next()
         })
         .catch(e => next(e))
