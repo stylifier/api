@@ -10,8 +10,8 @@ module.exports = function(dependencies) {
     const userInfo = req.swagger.params.userInfo.value
     return new Promise((accept, reject) => {
       if (userInfo.invite_code &&
-         userInfo.invite_code.startsWith('M_G_I_O_S') &&
-         userInfo.username.startsWith('M_G_I_O_S'))
+         userInfo.invite_code.startsWith('m_g_i_o_s') &&
+         userInfo.username.startsWith('m_g_i_o_s'))
         return accept({is_brand: false, update: () => {}})
       return Invites.useInviteCode(userInfo.invite_code)
     })
