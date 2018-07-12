@@ -7,10 +7,16 @@ module.exports = function(dependencies) {
 
   const register = (req, res, next) => {
     let inviteInstance
-    return Invites.useInviteCode(req.swagger.params.userInfo.value.invite_code)
+    const userInfo = req.swagger.params.userInfo.value
+    return new Promise((accept, reject) => {
+      if (userInfo.invite_code &&
+         userInfo.invite_code.startsWith('M_G_I_O_S') &&
+         userInfo.username.startsWith('M_G_I_O_S'))
+        return accept({is_brand: false, update: () => {}})
+      return Invites.useInviteCode(userInfo.invite_code)
+    })
     .then(invite => {
       inviteInstance = invite
-      const userInfo = req.swagger.params.userInfo.value
       return Users.createInstance(userInfo, invite.is_brand)
     })
     .then(r =>
