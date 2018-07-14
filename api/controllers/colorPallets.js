@@ -52,7 +52,6 @@ module.exports = function(dependencies) {
         {},
         i.pallet.dataValues,
         {
-          id: i.id,
           title: i.title,
           createdAt: i.createdAt,
           updatedAt: i.updatedAt
