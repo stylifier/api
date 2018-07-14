@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const {ColorPallets} = dependencies.db
+  const {ColorPallets, ColorPalletBookmarks} = dependencies.db
 
   return {
     createColorPallet: function(req, res, next) {
@@ -27,6 +27,39 @@ module.exports = function(dependencies) {
       ColorPallets.getCollorPalletSuggestion(colorCode)
       .then(r => {
         res.json(r)
+        next()
+      })
+      .catch(e => next(e))
+    },
+    createColorPalletBookmart: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const palletId = req.swagger.params.palletId.value
+      const title = req.swagger.params.title.value
+
+      ColorPalletBookmarks.createInstance(username, palletId, title)
+      .then(pallet => {
+        res.json(pallet)
+        next()
+      })
+      .catch(e => next(e))
+    },
+    getUsersColorPalletBookmart: function(req, res, next) {
+      const offset = req.swagger.params.pagination.value || 0
+      const username = req.headers['x-consumer-username']
+
+      ColorPalletBookmarks.getUserColorPalletBookmarks(username, offset)
+      .then(r => r.map(i => Object.assign(
+        {},
+        i.pallet.dataValues,
+        {
+          id: i.id,
+          title: i.title,
+          createdAt: i.createdAt,
+          updatedAt: i.updatedAt
+        }
+      )))
+      .then(r => {
+        res.json({data: r, pagination: offset + r.length})
         next()
       })
       .catch(e => next(e))

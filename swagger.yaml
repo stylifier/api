@@ -953,6 +953,38 @@ paths:
         "200":
           description: media shared
 
+  '/color_pallets/{palletId}':
+    x-swagger-router-controller: colorPallets
+    post:
+      description: bookmark a color pallet
+      operationId: createColorPalletBookmart
+      parameters:
+        - name: palletId
+          in: path
+          required: true
+          type: string
+        - name: title
+          in: query
+          type: string
+
+      responses:
+        "200":
+          description: color has bookmarked
+
+  '/color_pallets_bookmarks':
+    x-swagger-router-controller: colorPallets
+    get:
+      description: get users color pallet bookmart
+      operationId: getUsersColorPalletBookmart
+      parameters:
+        - name: pagination
+          in: query
+          type: number
+
+      responses:
+        "200":
+          description: color has bookmarked
+
   '/color_pallets':
     x-swagger-router-controller: colorPallets
     post:

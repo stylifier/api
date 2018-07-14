@@ -33,14 +33,16 @@ module.exports = (sequelize, Datatypes) => {
     )
   }
 
+  model.shortAttributes = [
+    'id',
+    'code',
+    'popularity'
+  ]
+
   model.getCollorPalletSuggestion = function(targetCode) {
     return this.findAll({
       limit: 20000,
-      attributes: [
-        'id',
-        'code',
-        'popularity'
-      ]
+      attributes: this.shortAttributes
     })
     .then(r =>
       r.map(c => Object.assign(c, {
