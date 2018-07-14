@@ -44,5 +44,15 @@ module.exports = (sequelize, Datatypes) => {
     })
   }
 
+  model.deleteInstance = function(username, palletId) {
+    return this.findOne({
+      where: {
+        userUsername: username.toLowerCase(),
+        palletId
+      }
+    })
+    .then(bm => bm && bm.destroy())
+  }
+
   return model
 }

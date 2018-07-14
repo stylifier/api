@@ -971,6 +971,19 @@ paths:
         "200":
           description: color has bookmarked
 
+    delete:
+      description: delete bookmarked a color pallet
+      operationId: deleteColorPalletBookmart
+      parameters:
+        - name: palletId
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: bookmarked pallet deleted
+
   '/color_pallets_bookmarks':
     x-swagger-router-controller: colorPallets
     get:
@@ -1005,6 +1018,7 @@ paths:
               {
                 "success": true
               }
+
     get:
       description: get color pallet suggestion
       operationId: getCollorPalletSuggestion

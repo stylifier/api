@@ -43,6 +43,19 @@ module.exports = function(dependencies) {
       })
       .catch(e => next(e))
     },
+
+    deleteColorPalletBookmart: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const palletId = req.swagger.params.palletId.value
+
+      ColorPalletBookmarks.deleteInstance(username, palletId)
+      .then(() => {
+        res.json({success: true})
+        next()
+      })
+      .catch(e => next(e))
+    },
+
     getUsersColorPalletBookmart: function(req, res, next) {
       const offset = req.swagger.params.pagination.value || 0
       const username = req.headers['x-consumer-username']
