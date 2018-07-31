@@ -45,10 +45,6 @@ module.exports = (sequelize, Datatypes) => {
             include: [{
               model: sequelize.models.Addresses,
               as: 'shopAddress'
-            },
-            {
-              model: sequelize.models.Media,
-              as: 'media'
             }]
           }
         ]
@@ -87,10 +83,6 @@ module.exports = (sequelize, Datatypes) => {
             include: [{
               model: sequelize.models.Addresses,
               as: 'shopAddress'
-            },
-            {
-              model: sequelize.models.Media,
-              as: 'media'
             }]
           }
         ]

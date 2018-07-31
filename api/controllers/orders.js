@@ -10,7 +10,7 @@ module.exports = function(dependencies) {
       stripe.createRefund(
         order.charge,
         order.items.map(t => t.product)
-        .reduce((a, b) => a + b.price, 0)
+        .reduce((a, b) => a + parseFloat(b.price.original), 0)
         .toFixed(2) * 100))
 
   const _closeOrder = (username, orderId, addressId, charge) =>
@@ -41,7 +41,7 @@ module.exports = function(dependencies) {
           return a
         }, [])
         .map(t => t.product)
-        .reduce((a, b) => a + b.price, 0)
+        .reduce((a, b) => a + parseFloat(b.price.original), 0)
         .toFixed(2) * 100,
       currency: 'eur',
       description: 'Stylifier. Orders No:' +

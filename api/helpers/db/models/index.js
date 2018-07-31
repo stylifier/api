@@ -51,7 +51,6 @@ module.exports = function(s, Datatypes) {
   s.models.Campaigns.belongsTo(s.models.Addresses, {as: 'shopAddress'})
 
   s.models.Products.belongsTo(s.models.Users, {as: 'user'})
-  s.models.Products.belongsTo(s.models.Media, {as: 'media'})
   s.models.Products.belongsTo(s.models.Addresses, {as: 'shopAddress'})
 
   s.models.Subscriptions.belongsTo(s.models.Users, {as: 'user'})

@@ -1250,16 +1250,84 @@ paths:
                 "success": true
               }
 
+  '/users/{username}/products':
+    x-swagger-router-controller: products
+    get:
+      description: get top 10 products
+      operationId: getUserProducts
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: pagination
+          in: query
+          type: number
+        - name: name
+          in: query
+          required: false
+          type: string
+        - name: brand
+          in: query
+          required: false
+          type: string
+        - name: color
+          in: query
+          required: false
+          type: string
+        - name: sub_color
+          in: query
+          required: false
+          type: string
+        - name: category
+          in: query
+          required: false
+          type: string
+        - name: hex
+          in: query
+          required: false
+          type: string
+          pattern: '^#[0-9a-f]{3,6}$'
+      responses:
+        "200":
+          description: array of products
+          schema:
+            $ref: '#/definitions/products'
+
   '/products':
     x-swagger-router-controller: products
     get:
       description: get top 10 products
-      operationId: getProducts
+      operationId: getSelfProducts
       parameters:
-        - name: q
+        - name: pagination
+          in: query
+          type: number
+        - name: name
           in: query
           required: false
           type: string
+        - name: brand
+          in: query
+          required: false
+          type: string
+        - name: color
+          in: query
+          required: false
+          type: string
+        - name: sub_color
+          in: query
+          required: false
+          type: string
+        - name: category
+          in: query
+          required: false
+          type: string
+        - name: hex
+          in: query
+          required: false
+          type: string
+          pattern: '^#[0-9a-f]{3,6}$'
       responses:
         "200":
           description: array of products
@@ -1284,17 +1352,6 @@ paths:
               {
                 "success": true
               }
-
-  '/self_products':
-    x-swagger-router-controller: products
-    get:
-      description: get self products
-      operationId: getSelfProducts
-      responses:
-        "200":
-          description: array of products
-          schema:
-            $ref: '#/definitions/products'
 
   '/order-item/{id}':
     x-swagger-router-controller: orders
@@ -1561,13 +1618,35 @@ definitions:
       code:
         type: string
       price:
-        type: number
+        type: object
+        properties:
+          original:
+            type: string
+          promotional:
+            type: string
       user:
         $ref: '#/definitions/user'
       media:
-        $ref: '#/definitions/media'
+        type: array
+        items:
+          $ref: '#/definitions/images'
+      sizes:
+        type: string
+      externalURL:
+        type: string
+      brand:
+        type: string
+      category:
+        type: string
+      color:
+        type: string
+      subColor:
+        type: string
+      colorPallet:
+        type: string
       created_time:
         type: string
+
 
   products:
     type: array

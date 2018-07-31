@@ -22,11 +22,12 @@ module.exports = (sequelize, Datatypes) => {
     rating: Datatypes.DOUBLE,
     is_instagram_user: Datatypes.BOOLEAN,
     is_brand: Datatypes.BOOLEAN,
+    is_guest: Datatypes.BOOLEAN,
     createdAt: Datatypes.DATE,
     updatedAt: Datatypes.DATE
   })
 
-  model.createInstance = function(obj, isBrand) {
+  model.createInstance = function(obj, isBrand, isGuest) {
     const userId = id()
     const userToCreate = Object.assign({
       id: userId,
@@ -34,6 +35,7 @@ module.exports = (sequelize, Datatypes) => {
       is_brand: typeof isBrand === undefined ? false : isBrand,
       username: obj.username.toLowerCase(),
       full_name: obj.full_name.toLowerCase(),
+      is_guest: isGuest,
       contribution_earned: 0,
       profile_picture: `https://identicon-api.herokuapp.com/${userId}/300?format=png`
     }, obj)
@@ -108,6 +110,7 @@ module.exports = (sequelize, Datatypes) => {
     'is_instagram_user',
     'is_pinterest_user',
     'is_brand',
+    'is_guest',
     'email',
     ...model.shortAttributes
   ]

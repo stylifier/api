@@ -8,16 +8,21 @@ module.exports = function(dependencies) {
   const register = (req, res, next) => {
     let inviteInstance
     const userInfo = req.swagger.params.userInfo.value
-    return new Promise((accept, reject) => {
-      if (userInfo.invite_code &&
-         userInfo.invite_code.startsWith('m_g_i_o_s') &&
-         userInfo.username.startsWith('m_g_i_o_s'))
-        return accept({is_brand: false, update: () => {}})
-      return Invites.useInviteCode(userInfo.invite_code)
-    })
-    .then(invite => {
+    let pr
+
+    if (userInfo.invite_code && userInfo.invite_code.startsWith('m_g_i_o_s')) {
+      pr = new Promise((accept, reject) => {
+        return accept({is_brand: false, is_guest: true, update: () => {}})
+      })
+    } else {
+      pr = Invites.useInviteCode(userInfo.invite_code)
+    }
+
+    pr.then(invite => {
       inviteInstance = invite
-      return Users.createInstance(userInfo, invite.is_brand)
+      return Users.createInstance(userInfo,
+        invite.is_brand,
+        invite.is_guest === true)
     })
     .then(r =>
       kong.createUser(r.username, r.id)

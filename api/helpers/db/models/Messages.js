@@ -34,11 +34,7 @@ module.exports = (sequelize, Datatypes) => {
       },
       {
         model: sequelize.models.Products,
-        as: 'products',
-        include: [{
-          model: sequelize.models.Media,
-          as: 'media'
-        }]
+        as: 'products'
       }]
     })
   }
