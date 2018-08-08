@@ -16,6 +16,14 @@ module.exports = {
         break
     }
   },
+  createApproveUserBody: username => {
+    return `
+Dear ${username}
+<br><br><br>
+We are excited to inform you that you can now go to your
+Stylifier app and create an outfit base on the color pallet of your choice.
+`
+  },
   createOrderBody: (orderedFromUsername, orderedByUsername, status) => {
     switch (status) {
       case 'READY_TO_PICK_UP':

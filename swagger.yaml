@@ -216,6 +216,26 @@ paths:
                 "success": true
               }
 
+  '/users/{username}/approve':
+    x-swagger-router-controller: users
+    post:
+      description: approve a user for beta testing
+      operationId: approveUser
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: success true
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+
   '/users/{username}/sponsor':
     x-swagger-router-controller: sponsors
     post:
@@ -480,6 +500,27 @@ paths:
           examples:
             application/json; charset=utf-8:
               ['pepe', 'street']
+
+  '/user/self/request_approval':
+    x-swagger-router-controller: users
+    post:
+      description: request for approval for beta testing
+      operationId: requestApproveUser
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+
+      responses:
+        "200":
+          description: success true
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
 
   '/user/self/profile_picture':
     x-swagger-router-controller: users

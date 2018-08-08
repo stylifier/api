@@ -2,7 +2,7 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const {kong, instagram, pinterest, db} = dependencies
+  const {kong, instagram, pinterest, db, notifications, mailer} = dependencies
   const {Users, Media, Invites} = db
 
   const register = (req, res, next) => {
@@ -199,6 +199,54 @@ module.exports = function(dependencies) {
       Users.findUserByUsername(username, true)
       .then(r => r.update({
         profile_picture: media.images.standard_resolution.url}))
+      .then(r => {
+        res.json({success: true})
+        next()
+      })
+      .catch(e => next(e))
+    },
+    approveUser: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+
+      if (username !== 'ali')
+        return next(Object.assign(
+          new Error('only accessible by admin'),
+          {statusCode: 401}))
+
+      const usernameToApprove = req.swagger.params.username.value
+
+      Users.findUserByUsername(usernameToApprove, true)
+      .then(r => r.update({is_guest: false}))
+      .then(user =>
+        notifications.send({
+          username: usernameToApprove,
+          subject: 'Creating Outfit on Stylifier ' +
+            'is now available on your region',
+          url: '#',
+          body: mailer.templates.createApproveUserBody(usernameToApprove)
+        }))
+      .then(() => {
+        res.json({success: true})
+        next()
+      })
+      .catch(e => next(e))
+    },
+    requestApproveUser: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const body = req.swagger.params.body.value
+
+      Users.findUsername(username, true)
+      .then(m => notifications.emailAdmin({
+        subject: `${username} wants to be approved for beta testing`,
+        body: `
+<br><br>
+You can approve the request in following link:
+<br><br>
+<a href="https://www.stylifier.com/approve_user?username=${username}"> Approve ${username} </a>
+<br><br>
+More info:<br>
+${Object.keys(body).map(k => `${k}: ${JSON.stringify(body[k], null, 2)}`)}`
+      }))
       .then(r => {
         res.json({success: true})
         next()
