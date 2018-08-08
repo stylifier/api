@@ -18,7 +18,7 @@ module.exports = {
   },
   createApproveUserBody: username => {
     return `
-Dear ${username}
+Dear ${username.replace('m_g_i_o_s_', '')}
 <br><br><br>
 We are excited to inform you that you can now go to your
 Stylifier app and create an outfit base on the color pallet of your choice.

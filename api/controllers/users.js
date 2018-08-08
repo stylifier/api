@@ -237,15 +237,15 @@ module.exports = function(dependencies) {
 
       Users.findUsername(username, true)
       .then(m => notifications.emailAdmin({
-        subject: `${username} wants to be approved for beta testing`,
+        subject: `${username.replace('m_g_i_o_s_', '')} wants to be approved for beta testing`,
         body: `
 <br><br>
 You can approve the request in following link:
 <br><br>
-<a href="https://www.stylifier.com/approve_user?username=${username}"> Approve ${username} </a>
+<a href="https://www.stylifier.com/approve_user?username=${username}"> Approve ${username.replace('m_g_i_o_s_', '')} </a>
 <br><br>
 More info:<br>
-${Object.keys(body).map(k => `${k}: ${JSON.stringify(body[k], null, 2)}`)}`
+${Object.keys(body).map(k => `${k}: ${JSON.stringify(body[k], null, 2)}<br>`)}`
       }))
       .then(r => {
         res.json({success: true})
