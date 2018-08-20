@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const {Products} = dependencies.db
+  const {Products, ProductBookmarks} = dependencies.db
 
   return {
     createProduct: function(req, res, next) {
@@ -92,6 +92,44 @@ module.exports = function(dependencies) {
           data: r,
           pagination: offset + r.length
         })
+        next()
+      })
+      .catch(e => next(e))
+    },
+    createProductBookmart: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const palletId = req.swagger.params.pallet_id.value
+      const productId = req.swagger.params.productId.value
+      const title = req.swagger.params.title.value
+
+      ProductBookmarks.createInstance(username, palletId, productId, title)
+      .then(pallet => {
+        res.json(pallet)
+        next()
+      })
+      .catch(e => next(e))
+    },
+
+    deleteProductBookmart: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const palletId = req.swagger.params.pallet_id.value
+      const productId = req.swagger.params.productId.value
+
+      ProductBookmarks.deleteInstance(username, palletId, productId)
+      .then(() => {
+        res.json({success: true})
+        next()
+      })
+      .catch(e => next(e))
+    },
+
+    getUsersProductBookmart: function(req, res, next) {
+      const offset = req.swagger.params.pagination.value || 0
+      const username = req.headers['x-consumer-username']
+
+      ProductBookmarks.getUserProductBookmarks(username, offset)
+      .then(r => {
+        res.json({data: r, pagination: offset + r.length})
         next()
       })
       .catch(e => next(e))

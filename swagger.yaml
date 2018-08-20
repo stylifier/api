@@ -1394,6 +1394,59 @@ paths:
                 "success": true
               }
 
+  '/product/{productId}/bookmark':
+    x-swagger-router-controller: products
+    post:
+      description: bookmark a product
+      operationId: createProductBookmart
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          type: string
+        - name: pallet_id
+          in: query
+          required: false
+          type: string
+        - name: title
+          in: query
+          type: string
+
+      responses:
+        "200":
+          description: product has bookmarked
+
+    delete:
+      description: delete bookmarked a product
+      operationId: deleteProductBookmart
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          type: string
+        - name: pallet_id
+          in: query
+          required: false
+          type: string
+
+      responses:
+        "200":
+          description: bookmarked product deleted
+
+  '/product_bookmarks':
+    x-swagger-router-controller: products
+    get:
+      description: get users product bookmart
+      operationId: getUsersProductBookmart
+      parameters:
+        - name: pagination
+          in: query
+          type: number
+
+      responses:
+        "200":
+          description: color has bookmarked
+
   '/order-item/{id}':
     x-swagger-router-controller: orders
 
