@@ -93,7 +93,7 @@ const data = [
     code: '#000000',
     name: 'BLACK',
   },
-]
+].map(t => Object.assign(t, {createdAt: new Date(), updatedAt: new Date()}))
 
 module.exports = {
   up: (queryInterface, Datatypes) => {

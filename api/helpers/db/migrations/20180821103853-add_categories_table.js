@@ -1,5 +1,6 @@
 'use strict'
 const data = require('./init_categories.json')
+  .map(t => Object.assign(t, {createdAt: new Date(), updatedAt: new Date()}))
 
 module.exports = {
   up: (queryInterface, Datatypes) => {
