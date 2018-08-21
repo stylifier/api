@@ -1076,6 +1076,17 @@ paths:
           schema:
             $ref: '#/definitions/colorPallets'
 
+
+  '/color_codes':
+    x-swagger-router-controller: colorPallets
+    get:
+      description: get color code matching
+      operationId: getColorCodes
+
+      responses:
+        "200":
+          description: array of color codes
+
   '/subscriptions/{subscription_id}':
     x-swagger-router-controller: subscriptions
     post:
@@ -1446,6 +1457,16 @@ paths:
       responses:
         "200":
           description: color has bookmarked
+
+  '/product_categories':
+    x-swagger-router-controller: products
+    get:
+      description: get all available categories
+      operationId: getProductCategories
+
+      responses:
+        "200":
+          description: array of categories
 
   '/order-item/{id}':
     x-swagger-router-controller: orders

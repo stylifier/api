@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const {Products, ProductBookmarks} = dependencies.db
+  const {Products, ProductBookmarks, Categories} = dependencies.db
 
   return {
     createProduct: function(req, res, next) {
@@ -130,6 +130,15 @@ module.exports = function(dependencies) {
       ProductBookmarks.getUserProductBookmarks(username, offset)
       .then(r => {
         res.json({data: r, pagination: offset + r.length})
+        next()
+      })
+      .catch(e => next(e))
+    },
+
+    getProductCategories: function(req, res, next) {
+      Categories.getActiveCategories()
+      .then(r => {
+        res.json(r)
         next()
       })
       .catch(e => next(e))

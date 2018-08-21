@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const {ColorPallets, ColorPalletBookmarks} = dependencies.db
+  const {ColorPallets, ColorPalletBookmarks, ColorCodes} = dependencies.db
 
   return {
     createColorPallet: function(req, res, next) {
@@ -72,6 +72,15 @@ module.exports = function(dependencies) {
       )))
       .then(r => {
         res.json({data: r, pagination: offset + r.length})
+        next()
+      })
+      .catch(e => next(e))
+    },
+
+    getColorCodes: function(req, res, next) {
+      ColorCodes.getColorCodes()
+      .then(r => {
+        res.json(r)
         next()
       })
       .catch(e => next(e))
