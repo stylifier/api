@@ -142,6 +142,17 @@ module.exports = function(dependencies) {
         next()
       })
       .catch(e => next(e))
+    },
+
+    getById: function(req, res, next) {
+      const id = req.swagger.params.id.value
+
+      Products.getById(id)
+      .then(r => {
+        res.json(r)
+        next()
+      })
+      .catch(e => next(e))
     }
   }
 }

@@ -242,7 +242,7 @@ module.exports = function(dependencies) {
 <br><br>
 You can approve the request in following link:
 <br><br>
-<a href="https://www.stylifier.com/approve_user?username=${username}"> Approve ${username.replace('m_g_i_o_s_', '')} </a>
+<a href="__SWB__/approve_user?username=${username}"> Approve ${username.replace('m_g_i_o_s_', '')} </a>
 <br><br>
 More info:<br>
 ${Object.keys(body).map(k => `${k}: ${JSON.stringify(body[k], null, 2)}<br>`)}`

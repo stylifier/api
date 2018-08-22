@@ -105,6 +105,8 @@ module.exports = {
       },
       name: Datatypes.STRING,
       code: Datatypes.STRING,
+      createdAt: Datatypes.DATE,
+      updatedAt: Datatypes.DATE
     })
     .then(() =>
       queryInterface.sequelize.query(

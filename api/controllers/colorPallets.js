@@ -84,6 +84,24 @@ module.exports = function(dependencies) {
         next()
       })
       .catch(e => next(e))
+    },
+
+    addColorCodes: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const name = req.swagger.params.body.value.name
+      const code = req.swagger.params.body.value.code
+
+      if (username !== 'ali')
+        return next(Object.assign(
+          new Error('only accessible by admin'),
+          {statusCode: 401}))
+
+      ColorCodes.addColorCodes(code, name)
+      .then(r => {
+        res.json(r)
+        next()
+      })
+      .catch(e => next(e))
     }
   }
 }

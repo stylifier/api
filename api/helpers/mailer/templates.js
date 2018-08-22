@@ -36,7 +36,7 @@ You should expect to receive your items in 2 hours.
 In case you won't be in your specified delivery address please reply to
 this email to notify us and reschedule another delivery time.
 <br><br>
-You can also check the order <a href="https://www.stylifier.com/orders"> here </a>.
+You can also check the order <a href="__SWB__/orders"> here </a>.
 `
       case 'REJECTED':
         return `
@@ -46,9 +46,9 @@ ${orderedFromUsername} has rejected your recent order.
 This can be due to outage of the product you have ordered.
 <br><br>
 You can always ask the suplier of your order about the details by visiting their
-<a href="https://www.stylifier.com/profile/${orderedFromUsername}"> profile </a>
+<a href="__SWB__/profile/${orderedFromUsername}"> profile </a>
 <br><br>
-You can also check the order <a href="https://www.stylifier.com/orders"> here </a>.
+You can also check the order <a href="__SWB__/orders"> here </a>.
 `
       case 'DELIVERED':
         break
@@ -56,7 +56,7 @@ You can also check the order <a href="https://www.stylifier.com/orders"> here </
         return `
 Dear ${orderedFromUsername}
 <br><br><br>
-  ${orderedByUsername} has orders your products, you can check the order <a href="https://www.stylifier.com/orders"> here </a>.
+  ${orderedByUsername} has orders your products, you can check the order <a href="__SWB__/orders"> here </a>.
 `
       default:
         break
@@ -351,7 +351,7 @@ Dear ${orderedFromUsername}
                     <tr>
                       <td class="content-block">
                         <span class="apple-link">
-                        <a href="https://www.stylifier.com"> Stylifier </a>
+                        <a href="__SWB__"> Stylifier </a>
                         , All rights reserved.
                         </span>
                       </td>

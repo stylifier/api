@@ -501,6 +501,28 @@ paths:
             application/json; charset=utf-8:
               ['pepe', 'street']
 
+  '/report':
+    x-swagger-router-controller: report
+    post:
+      description: report issue with various part of applicatoins
+      operationId: processIssueReport
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+
+      responses:
+        "200":
+          description: success true
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+
   '/user/self/request_approval':
     x-swagger-router-controller: users
     post:
@@ -1087,6 +1109,26 @@ paths:
         "200":
           description: array of color codes
 
+    post:
+      description: add color code
+      operationId: addColorCodes
+
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+              name:
+                type: string
+
+      responses:
+        "200":
+          description: color code created
+
   '/subscriptions/{subscription_id}':
     x-swagger-router-controller: subscriptions
     post:
@@ -1345,6 +1387,22 @@ paths:
           description: array of products
           schema:
             $ref: '#/definitions/products'
+
+  '/product/{id}':
+    x-swagger-router-controller: products
+    get:
+      description: get product by id
+      operationId: getById
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+      responses:
+        "200":
+          description: product
+          schema:
+            $ref: '#/definitions/product'
 
   '/products':
     x-swagger-router-controller: products

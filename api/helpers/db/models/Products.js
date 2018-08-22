@@ -28,11 +28,15 @@ module.exports = (sequelize, Datatypes) => {
     $$ LANGUAGE plpgsql IMMUTABLE STRICT;`)
     .catch(e => console.log(e))
 
+  model.getById = function(id) {
+    return this.findOne({where: {id}})
+  }
+
   model.createInstance = function(opts) {
     return this.findOne({
       where: {
         code: opts.code.toLowerCase(),
-        userUsername: opts.username.toLowerCase()
+        userUsername: {[Datatypes.Op.in]: [opts.username.toLowerCase(), 'ali']}
       }
     })
     .then(cp => cp ?

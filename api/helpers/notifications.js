@@ -24,7 +24,7 @@ module.exports = (config, db, oneSignal, mailer) => {
         return Promise.resolve()
       })
     },
-    emailAdmin: opts => {
+    emailAdmin: opts =>
       mailer.send({
         body: opts.body,
         subject: opts.subject
@@ -33,6 +33,5 @@ module.exports = (config, db, oneSignal, mailer) => {
         console.log(e)
         return Promise.resolve()
       })
-    }
   }
 }

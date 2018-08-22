@@ -18,5 +18,15 @@ module.exports = (sequelize, Datatypes) => {
     })
   }
 
+  model.addColorCodes = function(code, name) {
+    return this.findOne({
+      where: {code}
+    })
+    .then(cp => cp ?
+      cp.update({code, name}) :
+      this.create({code, name})
+    )
+  }
+
   return model
 }

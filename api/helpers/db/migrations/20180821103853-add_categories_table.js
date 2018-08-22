@@ -13,6 +13,8 @@ module.exports = {
       address: Datatypes.STRING,
       lable: Datatypes.STRING,
       active: Datatypes.BOOLEAN,
+      createdAt: Datatypes.DATE,
+      updatedAt: Datatypes.DATE
     })
     .then(() =>
       queryInterface.sequelize.query(

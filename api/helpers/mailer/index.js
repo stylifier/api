@@ -17,6 +17,7 @@ module.exports = (config, db) => {
             Html: {
               Charset: 'UTF-8',
               Data: templates.formatBody(opts.body)
+                .replace(/__SWB__/g, config.websiteURL)
             }
           },
           Subject: {
