@@ -34,10 +34,10 @@ module.exports = (sequelize, Datatypes) => {
 
   model.createInstance = function(opts) {
     return this.findOne({
-      where: {
-        code: opts.code.toLowerCase(),
-        userUsername: {[Datatypes.Op.in]: [opts.username.toLowerCase(), 'ali']}
-      }
+      where: Object.assign(
+        {code: opts.code.toLowerCase()},
+        opts.username.toLowerCase() === 'ali' ?
+          {} : {userUsername: opts.username.toLowerCase()})
     })
     .then(cp => cp ?
       cp.update({
