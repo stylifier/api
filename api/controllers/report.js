@@ -23,7 +23,7 @@ Users chosen color:
 Recognized as <strong> ${body.subColor} </strong>. Change it to: <br>
 <div style="width: 100%;float: left;">
 ${['WHITE', 'PURPLE', 'BLUE', 'RED', 'GRAY', 'ORANGE', 'BLACK', 'GREEN', 'YELLOW'].map(c => `
-  <a style="text-shadow: 0px 0px 5px black, 0px 0px 8px black;box-shadow: 0px 0px 5px black;margin: 10px; background-color: ${c.toLowerCase()};color: white;padding: 10px; text-align: center;text-decoration: none;display: inline-block;font-size: 16px;border-radius: 10;" href="__SWB__/add_color_code?code=${body.hex}&name=${c}">${c}</a>`).join('\n')}
+  <a style="text-shadow: 0px 0px 5px black, 0px 0px 8px black;box-shadow: 0px 0px 5px black;margin: 10px; background-color: ${c.toLowerCase()};color: white;padding: 10px; text-align: center;text-decoration: none;display: inline-block;font-size: 16px;border-radius: 10;" href="__SWB__/color_code?action=add_color_code&code=${body.hex.replace('#', '%23')}&name=${c}">${c}</a>`).join('\n')}
 <div/>
 <p style="float: none;">User product collection:</p>
 ${body.products.map(p => `<table style="width: 100%;">
@@ -39,7 +39,7 @@ ${body.products.map(p => `<table style="width: 100%;">
         Name: ${p.name}<br>
         <div style="width: 100%; float: left; margin-top: 20px;">
           ${p.colorPallet.match(/.{1,6}/g).map((t, i) => `
-            <a href="__SWB__/change_product_color?id=${p.id}&color_pallet=${t + p.colorPallet.replace(t, '')}" style="margin-left: auto;margin-right: auto;width:50px;height:50px;border-radius: 10px;border:4px solid ${i === 0 ? 'darkgreen' : '#000'};background-color: #${t};padding: 5px;display: inline-block;margin-right: 5px;">`).join('\n')}
+            <a href="__SWB__/product/${p.id}?action=change_product_color&color_pallet=${t + p.colorPallet.replace(t, '')}" style="margin-left: auto;margin-right: auto;width:50px;height:50px;border-radius: 10px;border:4px solid ${i === 0 ? 'darkgreen' : '#000'};background-color: #${t};padding: 5px;display: inline-block;margin-right: 5px;">`).join('\n')}
           </a>
         </div>
       </span>
