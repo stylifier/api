@@ -80,8 +80,8 @@ module.exports = (sequelize, Datatypes) => {
           {brand: {[Datatypes.Op.like]: `%${query.brand}%`}} : {},
         query && query.color ?
           {color: {[Datatypes.Op.like]: `%${query.color}%`}} : {},
-        query && query.subColor ?
-          {subColor: {[Datatypes.Op.like]: `%${query.subColor}%`}} : {},
+        // query && query.subColor ?
+        //   {subColor: {[Datatypes.Op.like]: `%${query.subColor}%`}} : {},
         query && query.category ?
           {category: {[Datatypes.Op.like]: `%${query.category}%`}} : {}),
       limit: 20,
@@ -98,7 +98,7 @@ module.exports = (sequelize, Datatypes) => {
     }, query.hex ? {
       order: sequelize.literal(
 `((pow(from_hex(SUBSTRING("colorPallet", 1, 2)) - from_hex('${query.hex.slice(1, 3)}'), 2)) + (pow(from_hex(SUBSTRING("colorPallet", 3, 2)) - from_hex('${query.hex.slice(3, 5)}'), 2)) + (pow(from_hex(SUBSTRING("colorPallet", 5, 2)) - from_hex('${query.hex.slice(5, 7)}'), 2)))`)
-    } : {}))
+    } : {order: [['updatedAt', 'DESC']]}))
   }
 
   return model
