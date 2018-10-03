@@ -23,16 +23,28 @@ module.exports = function(dependencies) {
 
       Threads.getThreadById(threadId)
       .then(t => {
-        if (typeof t.dataValues === undefined ||
-          t.dataValues.status !== 'REQUESTED' ||
-          t.dataValues.toUsername !== username)
-          return t
+        if (typeof t.dataValues !== undefined &&
+          t.dataValues.status === 'REQUESTED' &&
+          t.dataValues.toUsername === username)
+          t.update({status: 'OPENED'})
 
-        t.update({status: 'OPENED'})
+        if (t.dataValues.status === 'REQUESTED' &&
+          t.dataValues.fromUsername === username)
+          return {}
+
+        let message = `${username}: ${body.text}`
+
+        if (body.product && body.product.length > 0)
+          message = `${username} has shared product(s) with you.`
+        else if (body.media && body.media.length > 0)
+          message = `${username} has shared image(s) with you.`
 
         return notifications.send({
-          username: t.dataValues.fromUsername,
-          subject: `${username} accepted your advice request.`,
+          username:
+            t.dataValues.fromUsername === username ?
+            t.dataValues.toUsername :
+            t.dataValues.fromUsername,
+          subject: message,
           url: `messages/${t.dataValues.id}`
         })
       })

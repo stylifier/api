@@ -27,15 +27,14 @@ module.exports = (sequelize, Datatypes) => {
   model.getUsersSubscriptions = function(username) {
     return this.findAll({
       where: {userUsername: username.toLowerCase()},
-      attributes: ['id']
-    }).then(r => r.map(t => t.id))
+      attributes: ['id', 'name']
+    }).then(r => r.map(t => ({id: t.id, name: t.name})))
   }
 
   model.deleteInstance = function(username, subscriptionId) {
     return this.findOne({
       where: {
         id: subscriptionId,
-        name: 'OneSignal',
         userUsername: username.toLowerCase()
       }
     })
