@@ -33,6 +33,8 @@ module.exports = config => {
             Authorization: `Basic ${config.token}`
           },
           body: {
+            ios_badgeType: 'Increase',
+            ios_badgeCount: 1,
             app_id: config.app_id,
             contents: {en: message},
             data: url ? {url: 'https://www.stylifier.com/' + url} : {},
