@@ -12,13 +12,13 @@ module.exports = (sequelize, Datatypes) => {
     }
   })
 
-  model.createInstance = function(username, subscriptionId) {
+  model.createInstance = function(username, subscriptionId, name) {
     return this.findOne({where: {id: subscriptionId}})
     .then(subscription => subscription ?
       subscription.update({userUsername: username}) :
       this.create({
         id: subscriptionId,
-        name: 'OneSignal',
+        name: name,
         userUsername: username.toLowerCase()
       })
     )

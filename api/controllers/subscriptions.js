@@ -7,8 +7,9 @@ module.exports = function(dependencies) {
     createSubscription: function(req, res, next) {
       const username = req.headers['x-consumer-username']
       const subscriptionId = req.swagger.params.subscription_id.value
+      const name = req.swagger.params.name.value
 
-      Subscriptions.createInstance(username, subscriptionId)
+      Subscriptions.createInstance(username, subscriptionId, name)
       .then(r => {
         res.json({success: true})
         next()

@@ -1139,6 +1139,13 @@ paths:
           in: path
           required: true
           type: string
+        - name: name
+          in: query
+          required: true
+          type: string
+          enum:
+            - WEB_NOTIFICATION
+            - IOS_NOTIFICATION
 
       responses:
         "200":
