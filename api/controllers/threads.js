@@ -37,7 +37,7 @@ module.exports = function(dependencies) {
       .then(r =>
         r.isNotCreated ? r : notifications.send({
           username: toUsername,
-          subject: `${fromUsername} asked for your advice.`,
+          subject: `${fromUsername} sent you a message.`,
           url: `messages/${r.dataValues.id}`
         })
         .then(() => r))
@@ -85,7 +85,7 @@ module.exports = function(dependencies) {
           case 'RATING':
             return notifications.send({
               username: username === d.toUsername ? d.fromUsername : username,
-              subject: `${username} asked for your rating on his advice.`,
+              subject: `${username} asked you for rating.`,
               url: `messages/${r.dataValues.id}`
             })
           default:
