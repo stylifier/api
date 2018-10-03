@@ -34,7 +34,7 @@ module.exports = function(dependencies) {
 
         let message = `${username}: ${body.text}`
 
-        if (body.product && body.product.length > 0)
+        if (body.products && body.products.length > 0)
           message = `${username} has shared product(s) with you.`
         else if (body.media && body.media.length > 0)
           message = `${username} has shared image(s) with you.`
