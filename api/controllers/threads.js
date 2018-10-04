@@ -78,7 +78,8 @@ module.exports = function(dependencies) {
         switch (r.dataValues.status) {
           case 'CLOSED':
             return notifications.send({
-              username: username === d.toUsername ? d.fromUsername : username,
+              username: username === d.toUsername ?
+                d.fromUsername : d.toUsername,
               subject: `${username} closed the advice request.`,
               url: `messages/${r.dataValues.id}`
             })
