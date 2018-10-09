@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use strict'
 const id = require('uniqid')
 
@@ -13,6 +14,10 @@ module.exports = (sequelize, Datatypes) => {
     toReview: Datatypes.TEXT,
     toRating: Datatypes.DOUBLE,
     is_public: Datatypes.BOOLEAN,
+    from_last_message_at: Datatypes.DATE,
+    to_last_message_at: Datatypes.DATE,
+    from_last_message_read_at: Datatypes.DATE,
+    to_last_message_read_at: Datatypes.DATE,
     createdAt: Datatypes.DATE,
     updatedAt: Datatypes.DATE
   })
@@ -49,6 +54,10 @@ module.exports = (sequelize, Datatypes) => {
         'id',
         'status',
         ['createdAt', 'created_time'],
+        'from_last_message_at',
+        'to_last_message_at',
+        'from_last_message_read_at',
+        'to_last_message_read_at',
         'toRating',
         'fromRating'
       ],
@@ -109,6 +118,7 @@ module.exports = (sequelize, Datatypes) => {
         status: 'REQUESTED',
         fromUsername: from.toLowerCase(),
         toUsername: to.toLowerCase(),
+        from_last_message_at: new Date(),
         is_public: false
       })
     })

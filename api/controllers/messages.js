@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use strict'
 
 module.exports = function(dependencies) {
@@ -6,10 +7,15 @@ module.exports = function(dependencies) {
 
   return {
     getMessages: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
       const offset = req.swagger.params.pagination.value || 0
       const threadId = req.swagger.params.thread_id.value
 
-      Messages.getThreadMessages(threadId, offset)
+      Threads.getThreadById(threadId)
+      .then(t => t.dataValues.toUsername === username ?
+          t.update({to_last_message_read_at: new Date()}) :
+          t.update({from_last_message_read_at: new Date()}))
+      .then(() => Messages.getThreadMessages(threadId, offset))
       .then(r => {
         res.json({data: r, pagination: offset + r.length})
         next()
@@ -22,6 +28,9 @@ module.exports = function(dependencies) {
       const threadId = req.swagger.params.thread_id.value
 
       Threads.getThreadById(threadId)
+      .then(t => t.dataValues.toUsername === username ?
+          t.update({to_last_message_at: new Date()}) :
+          t.update({from_last_message_at: new Date()}))
       .then(t => {
         if (typeof t.dataValues !== undefined &&
           t.dataValues.status === 'REQUESTED' &&

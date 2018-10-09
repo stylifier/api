@@ -47,7 +47,7 @@
     "supertest": "^1.0.0"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "./node_modules/.bin/sequelize db:migrate && node index.js",
     "test": "node ./node_modules/.bin/_mocha test/**/*_test.js",
     "watch": "./node_modules/.bin/_mocha -w */*.js test/**/*_test.js",
     "coverage": "node ./node_modules/.bin/gulp cover",
