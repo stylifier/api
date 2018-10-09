@@ -10,4 +10,4 @@ RUN apk add --no-cache make gcc g++ python git
 RUN npm install
 RUN npm rebuild --build-from-source
 
-CMD ["node","index.js"]
+CMD ["npm","start"]
