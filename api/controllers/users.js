@@ -8,6 +8,7 @@ module.exports = function(dependencies) {
   const register = (req, res, next) => {
     let inviteInstance
     const userInfo = req.swagger.params.userInfo.value
+    userInfo.username = userInfo.username.replace('m_g_i_o_s_', '')
     let pr
 
     if (userInfo.invite_code && userInfo.invite_code.startsWith('m_g_i_o_s')) {
@@ -151,7 +152,6 @@ module.exports = function(dependencies) {
         next()
       })
       .catch(e => {
-        console.log(e)
         return next(Object.assign(
           new Error('wrong username or password'),
           {statusCode: 401}))
