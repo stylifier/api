@@ -25,7 +25,7 @@ module.exports = function(dependencies) {
     },
     getUsersFollowers: function(req, res, next) {
       const offset = req.swagger.params.pagination.value || 0
-      const username = req.headers['x-consumer-username']
+      const username = req.swagger.params.username.value
       const query = req.swagger.params.q.value
 
       Followable.getUserFollowers(username, offset, query)
