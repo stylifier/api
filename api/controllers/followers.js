@@ -13,7 +13,7 @@ module.exports = function(dependencies) {
       .then(r =>
         notifications.send({
           username: usernameToFollow,
-          subject: `${username} started following you.`,
+          subject: `${username.replace('m_g_i_o_s_', '')} started following you.`,
           url: `profile/${username}`
         })
         .then(() => r))

@@ -37,7 +37,7 @@ module.exports = function(dependencies) {
       .then(r =>
         r.isNotCreated ? r : notifications.send({
           username: toUsername,
-          subject: `${fromUsername} sent you a message.`,
+          subject: `${fromUsername.replace('m_g_i_o_s_', '')} sent you a message.`,
           url: `messages/${r.dataValues.id}`
         })
         .then(() => r))
@@ -80,13 +80,13 @@ module.exports = function(dependencies) {
             return notifications.send({
               username: username === d.toUsername ?
                 d.fromUsername : d.toUsername,
-              subject: `${username} closed the advice request.`,
+              subject: `${username.replace('m_g_i_o_s_', '')} closed the advice request.`,
               url: `messages/${r.dataValues.id}`
             })
           case 'RATING':
             return notifications.send({
               username: username === d.toUsername ? d.fromUsername : username,
-              subject: `${username} asked you for rating.`,
+              subject: `${username.replace('m_g_i_o_s_', '')} asked you for rating.`,
               url: `messages/${r.dataValues.id}`
             })
           default:

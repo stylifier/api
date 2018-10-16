@@ -5,13 +5,13 @@ module.exports = {
   createOrderSubject: (orderedFromUsername, orderedByUsername, status) => {
     switch (status) {
       case 'READY_TO_PICK_UP':
-        return `${orderedFromUsername} has marked your order ready to dispatch`
+        return `${orderedFromUsername.replace('m_g_i_o_s_', '')} has marked your order ready to dispatch`
       case 'REJECTED':
-        return `${orderedFromUsername} has rejected your order`
+        return `${orderedFromUsername.replace('m_g_i_o_s_', '')} has rejected your order`
       case 'DELIVERED':
         break
       case 'ORDERED':
-        return `${orderedByUsername} has orders your products`
+        return `${orderedByUsername.replace('m_g_i_o_s_', '')} has orders your products`
       default:
         break
     }

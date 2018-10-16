@@ -12,7 +12,7 @@ module.exports = function(dependencies) {
       Campaigns.createInstance(username, media.id, description, shopAddress.id)
       .then(() => Media.getMediaById(media.id))
       .then(m => notifications.emailAdmin({
-        subject: `${username} has requested creating a campaign`,
+        subject: `${username.replace('m_g_i_o_s_', '')} has requested creating a campaign`,
         body: `<img src="${m.images.standard_resolution.url}">
         <h3>${description}</h3>
         <h4>${username}</h4>`
