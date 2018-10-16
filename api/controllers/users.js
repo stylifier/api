@@ -8,7 +8,10 @@ module.exports = function(dependencies) {
   const register = (req, res, next) => {
     let inviteInstance
     const userInfo = req.swagger.params.userInfo.value
-    userInfo.username = userInfo.username.replace('m_g_i_o_s_', '')
+
+    if (userInfo.username.length < 45) {
+      userInfo.username = userInfo.username.replace('m_g_i_o_s_', '')
+    }
     let pr
 
     if (userInfo.invite_code && userInfo.invite_code.startsWith('m_g_i_o_s')) {
