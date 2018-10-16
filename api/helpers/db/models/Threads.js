@@ -61,7 +61,11 @@ module.exports = (sequelize, Datatypes) => {
         'toRating',
         'fromRating'
       ],
-      order: [['createdAt', 'DESC']],
+      order: sequelize.literal(
+`CASE 'toUsername'
+    WHEN '${username}' THEN from_last_message_at
+    ELSE to_last_message_at END
+DESC`),
       include: [
         {
           model: sequelize.models.Users,
