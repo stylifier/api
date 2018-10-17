@@ -19,8 +19,9 @@ module.exports = function(dependencies) {
     addMediaThread: function(req, res, next) {
       const threadId = req.swagger.params.thread_id.value
       const body = req.swagger.params.body.value
+      const username = req.headers['x-consumer-username']
 
-      Threads.getThreadById(threadId)
+      Threads.getThreadById(threadId, username)
       .then(msg => body.media ?
         Promise.all(body.media.map(m => msg.addMedia(m.id))) : msg)
       .then(msg => {
@@ -52,7 +53,7 @@ module.exports = function(dependencies) {
       const body = req.swagger.params.body.value
       const threadId = req.swagger.params.thread_id.value
 
-      Threads.getThreadById(threadId)
+      Threads.getThreadById(threadId, username)
       .then(t => {
         if (t.dataValues.status === 'REQUESTED') {
           return t.update({status: 'CLOSED'})

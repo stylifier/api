@@ -90,10 +90,14 @@ DESC`),
     )
   }
 
-  model.getThreadById = function(id) {
+  model.getThreadById = function(id, username) {
     return this.findOne({
       where: {
-        id: id
+        id: id,
+        [Datatypes.Op.or]: [
+          {fromUsername: username.toLowerCase()},
+          {toUsername: username.toLowerCase()},
+        ]
       }
     })
   }

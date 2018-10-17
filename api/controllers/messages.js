@@ -11,7 +11,7 @@ module.exports = function(dependencies) {
       const offset = req.swagger.params.pagination.value || 0
       const threadId = req.swagger.params.thread_id.value
 
-      Threads.getThreadById(threadId)
+      Threads.getThreadById(threadId, username)
       .then(t => t.dataValues.toUsername === username ?
           t.update({to_last_message_read_at: new Date()}) :
           t.update({from_last_message_read_at: new Date()}))
@@ -27,7 +27,7 @@ module.exports = function(dependencies) {
       const body = req.swagger.params.body.value
       const threadId = req.swagger.params.thread_id.value
 
-      Threads.getThreadById(threadId)
+      Threads.getThreadById(threadId, username)
       .then(t => t.dataValues.toUsername === username ?
           t.update({to_last_message_at: new Date()}) :
           t.update({from_last_message_at: new Date()}))
