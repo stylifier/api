@@ -160,7 +160,7 @@ module.exports = function(dependencies) {
     },
     getMedia: function(req, res, next) {
       const offset = req.swagger.params.pagination.value || 0
-      const style = req.swagger.params.q.value || 0
+      const style = req.swagger.params.q.value || ''
 
       Media.getMediaByStyle(style, offset)
       .then(r => {
