@@ -91,7 +91,8 @@ module.exports = (sequelize, Datatypes) => {
       username: {
         [Datatypes.Op.or]: [
           username.toLowerCase(),
-          username.replace('m_g_i_o_s_', '').toLowerCase()
+          username.replace('m_g_i_o_s_', '').toLowerCase(),
+          'm_g_i_o_s_' + username.toLowerCase()
         ]}
     }})
     .then(user => user.get('password'))
