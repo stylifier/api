@@ -993,6 +993,26 @@ paths:
                 "success": true
               }
 
+  '/media/{media_id}/unshare':
+    x-swagger-router-controller: media
+    post:
+      description: unshare media on requester profile
+      operationId: unshareMedia
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: media unshared
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   '/media/{media_id}/description':
     x-swagger-router-controller: media
     post:

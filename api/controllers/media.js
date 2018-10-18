@@ -79,6 +79,18 @@ module.exports = function(dependencies) {
         next()
       })
     },
+    unshareMedia: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+      const id = req.swagger.params.media_id.value
+
+      Media.getMediaById(id)
+      .then(media =>
+        media.update({userUsername: username, threadId: null, is_public: false}))
+      .then(() => {
+        res.json({success: true})
+        next()
+      })
+    },
     getFeeds: function(req, res, next) {
       const offset = req.swagger.params.pagination.value || 0
       const username = req.headers['x-consumer-username']
