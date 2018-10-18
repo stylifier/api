@@ -1034,7 +1034,27 @@ paths:
 
       responses:
         "200":
-          description: media shared
+          description: updated media
+
+  '/media/{media_id}/products':
+    x-swagger-router-controller: media
+    put:
+      description: add product to media
+      operationId: addProductsToMedia
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/products'
+
+      responses:
+        "200":
+          description: mpdated media
 
   '/color_pallets/{palletId}':
     x-swagger-router-controller: colorPallets

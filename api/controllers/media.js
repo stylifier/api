@@ -114,6 +114,20 @@ module.exports = function(dependencies) {
         next()
       })
     },
+    addProductsToMedia: function(req, res, next) {
+      const id = req.swagger.params.media_id.value
+      const products = req.swagger.params.body.value
+
+      Media.getMediaById(id)
+      .then(media => products ?
+        Promise.all(
+          products.map(m => media.addProducts(m.id))).then(() => media) :
+        media)
+      .then(media => {
+        res.json(media)
+        next()
+      })
+    },
     setStyle: function(req, res, next) {
       const mediaId = req.swagger.params.media_id.value
       const style = req.swagger.params.style.value

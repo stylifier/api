@@ -45,6 +45,10 @@ module.exports = function(s, Datatypes) {
     as: 'usersInPhoto',
     through: 'tagable'
   })
+  s.models.Media.belongsToMany(s.models.Products, {
+    as: 'products',
+    through: 'media_product'
+  })
 
   s.models.Sponsorable.belongsTo(s.models.Users, {as: 'sponsor'})
   s.models.Sponsorable.belongsTo(s.models.Users, {as: 'sponsored_by'})

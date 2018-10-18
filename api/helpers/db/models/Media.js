@@ -48,6 +48,10 @@ module.exports = (sequelize, Datatypes) => {
         model: sequelize.models.Users,
         as: 'usersInPhoto',
         attributes: sequelize.models.Users.shortAttributes
+      },
+      {
+        model: sequelize.models.Products,
+        as: 'products'
       }]
     })
   }
@@ -83,6 +87,10 @@ module.exports = (sequelize, Datatypes) => {
         model: sequelize.models.Users,
         as: 'usersInPhoto',
         attributes: sequelize.models.Users.shortAttributes
+      },
+      {
+        model: sequelize.models.Products,
+        as: 'products'
       }]
     })
   }
