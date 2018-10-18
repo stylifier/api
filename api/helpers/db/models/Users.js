@@ -89,7 +89,8 @@ module.exports = (sequelize, Datatypes) => {
   model.checkLogin = function(username, password) {
     return this.findOne({where: {[Datatypes.Op.or]: [
       {username: username.toLowerCase()},
-      {username: username.replace('m_g_i_o_s_', '').toLowerCase()}
+      {username: username.replace('m_g_i_o_s_', '').toLowerCase()},
+      {username: 'm_g_i_o_s_' + username.toLowerCase()}
     ]}})
     .then(user => user.get('password'))
     .then(psw => bcrypt.compareSync(password, psw) ?
