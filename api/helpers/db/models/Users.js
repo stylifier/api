@@ -95,9 +95,8 @@ module.exports = (sequelize, Datatypes) => {
           'm_g_i_o_s_' + username.toLowerCase()
         ]}
     }})
-    .then(user => user.get('password'))
-    .then(psw => bcrypt.compareSync(password, psw) ?
-      Promise.resolve() :
+    .then(user => bcrypt.compareSync(password, user.get('password')) ?
+      Promise.resolve(user.get('username')) :
       Promise.reject('wrong username or password')
     )
   }

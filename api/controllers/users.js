@@ -149,7 +149,7 @@ module.exports = function(dependencies) {
     login: function(req, res, next) {
       const userToLogin = Object.assign({}, req.swagger.params.loginInfo.value)
       Users.checkLogin(userToLogin.username, userToLogin.password)
-      .then(r => kong.createJWT(userToLogin.username))
+      .then(u => kong.createJWT(u))
       .then(r => {
         res.json(r)
         next()
