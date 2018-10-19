@@ -105,13 +105,29 @@ DESC`),
   model.createInstance = function(from, to) {
     return this.findAll({
       where: {
-        [Datatypes.Op.and]: [
-          {fromUsername: from.toLowerCase()},
-          {toUsername: to.toLowerCase()},
+        [Datatypes.Op.or]: [
           {
-            [Datatypes.Op.or]: [
-              {status: 'REQUESTED'},
-              {status: 'OPENED'}
+            [Datatypes.Op.and]: [
+              {fromUsername: from.toLowerCase()},
+              {toUsername: to.toLowerCase()},
+              {
+                [Datatypes.Op.or]: [
+                  {status: 'REQUESTED'},
+                  {status: 'OPENED'}
+                ]
+              }
+            ]
+          },
+          {
+            [Datatypes.Op.and]: [
+              {toUsername: from.toLowerCase()},
+              {fromUsername: to.toLowerCase()},
+              {
+                [Datatypes.Op.or]: [
+                  {status: 'REQUESTED'},
+                  {status: 'OPENED'}
+                ]
+              }
             ]
           }
         ]
