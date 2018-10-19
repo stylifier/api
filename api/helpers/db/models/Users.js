@@ -71,7 +71,12 @@ module.exports = (sequelize, Datatypes) => {
           {username: {[Datatypes.Op.like]: `%${q.toLowerCase()}%`}},
           {full_name: {[Datatypes.Op.like]: `%${q.toLowerCase()}%`}}
         ]},
-        {is_brand: isBrand}
+        {is_brand: isBrand},
+        sequelize.where(
+          sequelize.fn('char_length',
+            sequelize.col('username')),
+          {[sequelize.Op.lte]: 45}
+        )
       ]},
       offset: offset,
       limit: 20,
