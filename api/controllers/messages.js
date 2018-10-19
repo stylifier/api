@@ -41,7 +41,7 @@ module.exports = function(dependencies) {
           t.dataValues.fromUsername === username)
           return {}
 
-        let message = `${username}: ${body.text}`
+        let message = `${username.replace('m_g_i_o_s_', '')}: ${body.text}`
 
         if (body.products && body.products.length > 0)
           message = `${username.replace('m_g_i_o_s_', '')} has shared product(s) with you.`

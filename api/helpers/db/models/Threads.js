@@ -143,6 +143,7 @@ DESC`),
         fromUsername: from.toLowerCase(),
         toUsername: to.toLowerCase(),
         from_last_message_at: new Date(),
+        to_last_message_at: new Date(),
         is_public: false
       })
     })
