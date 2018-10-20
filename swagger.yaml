@@ -457,6 +457,30 @@ paths:
                 "success": true
               }
 
+  '/media/{media_id}/color_code/{color_code}':
+    x-swagger-router-controller: media
+    post:
+      description: assign color code to media
+      operationId: setMediaColorCode
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          type: string
+        - name: color_code
+          in: path
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: thread created
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   '/styles':
     x-swagger-router-controller: media
     get:
