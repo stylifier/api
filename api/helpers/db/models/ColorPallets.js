@@ -28,7 +28,7 @@ module.exports = (sequelize, Datatypes) => {
         id: id(),
         code: colorPallet.code,
         likes: colorPallet.likes ? colorPallet.likes : 0,
-        popularity: colorPallet.popularity ? colorPallet.popularity : 2,
+        popularity: colorPallet.popularity ? colorPallet.popularity : 1,
       })
     )
   }
