@@ -9,7 +9,7 @@ module.exports = function(dependencies) {
 
       ColorPallets.createInstance(colorPallet)
       .then(r => {
-        res.json({success: true})
+        res.json(r)
         next()
       })
       .catch(e => next(e))
