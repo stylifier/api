@@ -5,13 +5,6 @@ module.exports = function(dependencies) {
 
   return {
     createColorPallet: function(req, res, next) {
-      const username = req.headers['x-consumer-username']
-
-      if (username !== 'ali')
-        return next(Object.assign(
-          new Error('only accessible by admin'),
-          {statusCode: 401}))
-
       const colorPallet = req.swagger.params.colorPallet.value
 
       ColorPallets.createInstance(colorPallet)
