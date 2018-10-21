@@ -43,7 +43,8 @@ module.exports = (sequelize, Datatypes) => {
   model.shortAttributes = [
     'id',
     'code',
-    'popularity'
+    'popularity',
+    'creator_username'
   ]
 
   model.getCollorPalletSuggestion = function(targetCode) {
