@@ -1479,6 +1479,65 @@ paths:
     x-swagger-router-controller: products
     get:
       description: get top 10 products
+      operationId: getProducts
+      parameters:
+        - name: pagination
+          in: query
+          type: number
+        - name: name
+          in: query
+          required: false
+          type: string
+        - name: brand
+          in: query
+          required: false
+          type: string
+        - name: color
+          in: query
+          required: false
+          type: string
+        - name: sub_color
+          in: query
+          required: false
+          type: string
+        - name: category
+          in: query
+          required: false
+          type: string
+        - name: hex
+          in: query
+          required: false
+          type: string
+          pattern: '^#[0-9a-f]{3,6}$'
+      responses:
+        "200":
+          description: array of products
+          schema:
+            $ref: '#/definitions/products'
+
+    post:
+      description: create a new products
+      operationId: createProduct
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/product'
+
+      responses:
+        "200":
+          description: product created
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+  '/self_products':
+    x-swagger-router-controller: products
+    get:
+      description: get top 10 products
       operationId: getSelfProducts
       parameters:
         - name: pagination

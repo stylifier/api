@@ -96,6 +96,32 @@ module.exports = function(dependencies) {
       })
       .catch(e => next(e))
     },
+    getProducts: function(req, res, next) {
+      const name = req.swagger.params.name.value
+      const brand = req.swagger.params.brand.value
+      const color = req.swagger.params.color.value
+      const subColor = req.swagger.params.sub_color.value
+      const offset = req.swagger.params.pagination.value || 0
+      const category = req.swagger.params.category.value
+      const hex = req.swagger.params.hex.value
+
+      Products.getProducts(undefined, {
+        name,
+        brand,
+        color,
+        subColor,
+        category,
+        hex
+      }, offset)
+      .then(r => {
+        res.json({
+          data: r,
+          pagination: offset + r.length
+        })
+        next()
+      })
+      .catch(e => next(e))
+    },
     createProductBookmart: function(req, res, next) {
       const username = req.headers['x-consumer-username']
       const palletId = req.swagger.params.pallet_id.value

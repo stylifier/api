@@ -73,7 +73,9 @@ module.exports = (sequelize, Datatypes) => {
 
   model.getProducts = function(username, query, offset) {
     return this.findAll(Object.assign({
-      where: Object.assign({userUsername: username.toLowerCase()},
+      where: Object.assign({},
+        username &&
+          {userUsername: username.toLowerCase()},
         query && query.name ?
           {name: {[Datatypes.Op.like]: `%${query.name}%`}} : {},
         query && query.brand ?
