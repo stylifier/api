@@ -6,8 +6,9 @@ module.exports = function(dependencies) {
   return {
     createColorPallet: function(req, res, next) {
       const colorPallet = req.swagger.params.colorPallet.value
+      const username = req.headers['x-consumer-username']
 
-      ColorPallets.createInstance(colorPallet)
+      ColorPallets.createInstance(colorPallet, username)
       .then(r => {
         res.json(r)
         next()
@@ -29,7 +30,13 @@ module.exports = function(dependencies) {
       const palletId = req.swagger.params.palletId.value
       const title = req.swagger.params.title.value
 
-      ColorPalletBookmarks.createInstance(username, palletId, title)
+      ColorPallets.getById(palletId)
+      .then(t => t.update({
+        likes: t.dataValues.likes + 1,
+        popularity: t.dataValues.popularity + .1
+      }))
+      .then(() =>
+        ColorPalletBookmarks.createInstance(username, palletId, title))
       .then(pallet => {
         res.json(pallet)
         next()
@@ -41,7 +48,13 @@ module.exports = function(dependencies) {
       const username = req.headers['x-consumer-username']
       const palletId = req.swagger.params.palletId.value
 
-      ColorPalletBookmarks.deleteInstance(username, palletId)
+      ColorPallets.getById(palletId)
+      .then(t => t.update({
+        likes: t.dataValues.likes - 1,
+        popularity: t.dataValues.popularity - .1
+      }))
+      .then(() =>
+        ColorPalletBookmarks.deleteInstance(username, palletId))
       .then(() => {
         res.json({success: true})
         next()

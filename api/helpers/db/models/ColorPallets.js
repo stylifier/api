@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use strict'
 const id = require('uniqid')
 const cd = require('color-difference')
@@ -9,13 +10,18 @@ module.exports = (sequelize, Datatypes) => {
       primaryKey: true
     },
     code: {type: Datatypes.STRING},
+    creator_username: {type: Datatypes.STRING},
     likes: {type: Datatypes.DECIMAL},
     popularity: {type: Datatypes.DOUBLE},
     createdAt: Datatypes.DATE,
     updatedAt: Datatypes.DATE
   })
 
-  model.createInstance = function(colorPallet) {
+  model.getById = function(id) {
+    return this.findOne({where: {id}})
+  }
+
+  model.createInstance = function(colorPallet, username) {
     return this.findOne({
       where: {code: colorPallet.code}
     })
@@ -26,9 +32,10 @@ module.exports = (sequelize, Datatypes) => {
       }) :
       this.create({
         id: id(),
+        creator_username: username,
         code: colorPallet.code,
         likes: colorPallet.likes ? colorPallet.likes : 0,
-        popularity: colorPallet.popularity ? colorPallet.popularity : 1,
+        popularity: colorPallet.popularity ? colorPallet.popularity : .9,
       })
     )
   }
