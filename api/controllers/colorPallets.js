@@ -32,7 +32,6 @@ module.exports = function(dependencies) {
 
       ColorPallets.getById(palletId)
       .then(t => t.update({
-        likes: t.dataValues.likes + 1,
         popularity: t.dataValues.popularity + .1
       }))
       .then(() =>
@@ -50,7 +49,6 @@ module.exports = function(dependencies) {
 
       ColorPallets.getById(palletId)
       .then(t => t.update({
-        likes: t.dataValues.likes - 1,
         popularity: t.dataValues.popularity - .1
       }))
       .then(() =>
