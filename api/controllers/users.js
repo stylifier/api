@@ -2,7 +2,14 @@
 'use strict'
 
 module.exports = function(dependencies) {
-  const {kong, instagram, pinterest, db, notifications, mailer} = dependencies
+  const {
+    kong,
+    location,
+    instagram,
+    pinterest,
+    db,
+    notifications,
+    mailer} = dependencies
   const {Users, Media, Invites} = db
 
   const register = (req, res, next) => {
@@ -189,7 +196,20 @@ module.exports = function(dependencies) {
     },
     getSelfUser: function(req, res, next) {
       const username = req.headers['x-consumer-username']
+      const remoteIps = (req.headers['x-forwarded-for'] || '')
+        .split(',').filter(a => a && a.length > 4).map(a => a.trim())
+
       Users.findUsername(username, true)
+      .then(r => remoteIps.length > 0 ?
+        location.getCountryCode(remoteIps[0])
+          .then(cc => {
+            console.log('getSelfUser:', cc, username)
+            return cc
+          })
+          .then(cc => Object.assign({}, r, {
+            is_guest: r.is_guest && cc !== 'DE'
+          })) :
+        r)
       .then(r => {
         res.json(r)
         next()

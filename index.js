@@ -20,6 +20,10 @@ const kong = config.mockKong ?
   require('./api/mocks/kong') :
   require('./api/helpers/kong')
 
+const location = config.mockLocation ?
+  require('./api/mocks/location') :
+  require('./api/helpers/location')
+
 const oneSignal = config.mockOneSignal ?
   require('./api/mocks/oneSignal')(config.oneSignal) :
   require('./api/helpers/oneSignal')(config.oneSignal)
@@ -54,6 +58,7 @@ const server = require('./app')(config, {
   s3,
   mailer,
   stripe,
+  location: location(),
   instagram: instagramAPI,
   pinterest: pinterestAPI,
   kong: kong(config),
