@@ -58,8 +58,10 @@ module.exports = (sequelize, Datatypes) => {
           '#' + c.code.slice(0, 6),
           '#' + c.code.slice(6, 12),
           '#' + c.code.slice(12, 18),
-          '#' + c.code.slice(18, 24)]
+          '#' + c.code.slice(18, 24)],
+        popularity: c.popularity > 5 ? 5 : c.popularity,
       }))
+      .filter(c => c.popularity >= 1)
       .map(c => Object.assign(c, {
         diff: c.pallet
           .map(p => cd.compare(p, targetCode))
