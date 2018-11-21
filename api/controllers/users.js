@@ -202,14 +202,10 @@ module.exports = function(dependencies) {
       Users.findUsername(username, true)
       .then(r => remoteIps.length > 0 ?
         location.getCountryCode(remoteIps[0])
-          .then(cc => {
-            console.log('getSelfUser:', cc, username)
-            return cc
-          })
-          .then(cc => Object.assign({}, r, {
+          .then(cc => r.update({
+            country_code: cc,
             is_guest: r.is_guest && cc !== 'DE'
-          })) :
-        r)
+          })) : r)
       .then(r => {
         res.json(r)
         next()
