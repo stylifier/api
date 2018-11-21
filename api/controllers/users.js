@@ -10,7 +10,7 @@ module.exports = function(dependencies) {
     db,
     notifications,
     mailer} = dependencies
-  const {Users, Media, Invites} = db
+  const {Users, Media, Invites, Threads} = db
 
   const register = (req, res, next) => {
     let inviteInstance
@@ -199,13 +199,25 @@ module.exports = function(dependencies) {
       const remoteIps = (req.headers['x-forwarded-for'] || '')
         .split(',').filter(a => a && a.length > 4).map(a => a.trim())
 
-      Users.findUsername(username, true)
+      Users.findUserByUsername(username, true)
       .then(r => remoteIps.length > 0 ?
         location.getCountryCode(remoteIps[0])
           .then(cc => r.update({
             country_code: cc,
             is_guest: r.is_guest && cc !== 'DE'
           })) : r)
+      .then(res =>
+        Threads.getUserRating(username)
+        .then(({count, rating}) =>
+          Object.assign({}, res ? res.dataValues : {}, {
+            rating: rating,
+            responded_request_count: count
+          }))
+      )
+      .then(res =>
+        Threads.getUserRequestRating(username)
+        .then(rating => Object.assign({}, res, {request_rating: rating}))
+      )
       .then(r => {
         res.json(r)
         next()
@@ -254,7 +266,7 @@ module.exports = function(dependencies) {
       const username = req.headers['x-consumer-username']
       const body = req.swagger.params.body.value
 
-      Users.findUsername(username, true)
+      Users.findUserByUsername(username, true)
       .then(m => notifications.emailAdmin({
         subject: `${username.replace('m_g_i_o_s_', '')} wants to be approved for beta testing`,
         body: `
