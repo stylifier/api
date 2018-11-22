@@ -122,6 +122,7 @@ module.exports = (sequelize, Datatypes) => {
     'is_instagram_user',
     'is_pinterest_user',
     'is_brand',
+    'country_code',
     'is_guest',
     'email',
     ...model.shortAttributes

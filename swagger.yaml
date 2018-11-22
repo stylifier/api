@@ -1794,6 +1794,61 @@ paths:
                 "success": true
               }
 
+  '/outfits':
+    x-swagger-router-controller: outfits
+    get:
+      description: get all outfits
+      operationId: getUserOutfits
+      responses:
+        "200":
+          description: array of outfits
+          schema:
+            $ref: '#/definitions/outfits'
+
+    post:
+      description: add an outfit
+      operationId: createOutfit
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/outfit'
+
+      responses:
+        "200":
+          description: outfit created
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
+  '/outfits/{id}':
+    x-swagger-router-controller: outfits
+    post:
+      description: update an outfit
+      operationId: updateOutfit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/outfit'
+
+      responses:
+        "200":
+          description: outfit updated
+          examples:
+            application/json; charset=utf-8:
+              {
+                "success": true
+              }
+
   /swagger:
     x-swagger-pipe: swagger_raw
 
@@ -2103,10 +2158,46 @@ definitions:
       items:
         $ref: '#/definitions/items'
 
+  outfitItem:
+    type: object
+    properties:
+      id:
+        type: string
+      query:
+        type: object
+      product:
+        $ref: '#/definitions/product'
+
+  outfitItems:
+    type: array
+    items:
+      $ref: '#/definitions/outfitItem'
+
   orders:
     type: array
     items:
       $ref: '#/definitions/order'
+
+  outfit:
+    type: object
+    properties:
+      title:
+        type: string
+      palletId:
+        type: string
+      country_code:
+        type: string
+      id:
+        type: string
+      user:
+        $ref: '#/definitions/user'
+      items:
+        $ref: '#/definitions/outfitItems'
+
+  outfits:
+    type: array
+    items:
+      $ref: '#/definitions/outfit'
 
   image:
     type: object

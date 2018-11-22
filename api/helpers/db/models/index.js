@@ -16,10 +16,13 @@ module.exports = function(s, Datatypes) {
   s.models.Orders = require('./Orders')(s, Datatypes)
   s.models.Orderable = require('./Orderable')(s, Datatypes)
   s.models.Addresses = require('./Addresses')(s, Datatypes)
-  s.models.ColorPalletBookmarks = require('./ColorPalletBookmarks')(s, Datatypes)
+  s.models.Outfits = require('./Outfits')(s, Datatypes)
+  s.models.OutfitItems = require('./OutfitItems')(s, Datatypes)
   s.models.ProductBookmarks = require('./ProductBookmarks')(s, Datatypes)
   s.models.Categories = require('./Categories')(s, Datatypes)
   s.models.ColorCodes = require('./ColorCodes')(s, Datatypes)
+  s.models.ColorPalletBookmarks =
+    require('./ColorPalletBookmarks')(s, Datatypes)
 
   s.models.Users.belongsToMany(s.models.Styles, {
     as: 'styles',
@@ -81,6 +84,13 @@ module.exports = function(s, Datatypes) {
   s.models.ProductBookmarks.belongsTo(s.models.ColorPallets, {as: 'pallet'})
   s.models.ProductBookmarks.belongsTo(s.models.Products, {as: 'product'})
 
+  s.models.Outfits.belongsTo(s.models.Users, {as: 'user'})
+  s.models.Outfits.belongsTo(s.models.ColorPallets, {as: 'pallet'})
+  s.models.Outfits.hasMany(s.models.OutfitItems, {as: 'items'})
+
+  s.models.OutfitItems.belongsTo(s.models.Outfits, {as: 'outfit'})
+  s.models.OutfitItems.belongsTo(s.models.Products, {as: 'product'})
+
   return {
     Users: s.models.Users,
     Styles: s.models.Styles,
@@ -95,6 +105,8 @@ module.exports = function(s, Datatypes) {
     Products: s.models.Products,
     Orders: s.models.Orders,
     Orderable: s.models.Orderable,
+    Outfits: s.models.Outfits,
+    OutfitItems: s.models.OutfitItems,
     Invites: s.models.Invites,
     Addresses: s.models.Addresses,
     ColorPalletBookmarks: s.models.ColorPalletBookmarks,
