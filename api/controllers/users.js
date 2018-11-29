@@ -218,7 +218,7 @@ module.exports = function(dependencies) {
         Threads.getUserRequestRating(username)
         .then(rating => Object.assign({}, res, {
           request_rating: rating,
-          is_guest: true, // SHOULD BE EVENTUALLY REMOVED
+          is_guest: false, // SHOULD BE EVENTUALLY REMOVED
         }))
       )
       .then(r => {
