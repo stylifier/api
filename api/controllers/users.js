@@ -216,7 +216,10 @@ module.exports = function(dependencies) {
       )
       .then(res =>
         Threads.getUserRequestRating(username)
-        .then(rating => Object.assign({}, res, {request_rating: rating}))
+        .then(rating => Object.assign({}, res, {
+          request_rating: rating,
+          is_guest: true, // SHOULD BE EVENTUALLY REMOVED
+        }))
       )
       .then(r => {
         res.json(r)
