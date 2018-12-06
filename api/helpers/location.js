@@ -4,6 +4,6 @@ const geoip = require('geoip-lite')
 
 module.exports = () => ({
   getCountryCode: ip => new Promise(accept => {
-    accept(geoip(ip).country)
+    accept(geoip.lookup(ip).country)
   })
 })
