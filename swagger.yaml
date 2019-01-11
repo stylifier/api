@@ -1162,6 +1162,17 @@ paths:
           schema:
             $ref: '#/definitions/colorPallets'
 
+  '/all_color_pallets':
+    x-swagger-router-controller: colorPallets
+    get:
+      description: get color pallet suggestion
+      operationId: getAllCollorPallet
+
+      responses:
+        "200":
+          description: color pallet suggestions
+          schema:
+            $ref: '#/definitions/colorPallets'
 
   '/color_codes':
     x-swagger-router-controller: colorPallets

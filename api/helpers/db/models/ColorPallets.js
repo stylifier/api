@@ -47,6 +47,14 @@ module.exports = (sequelize, Datatypes) => {
     'creator_username'
   ]
 
+  model.getAllCollorPallet = function() {
+    return this.findAll({
+      limit: 20000,
+      attributes: this.shortAttributes,
+      order: [['createdAt', 'DESC']],
+    })
+  }
+
   model.getCollorPalletSuggestion = function(targetCode) {
     return this.findAll({
       limit: 20000,
@@ -67,7 +75,7 @@ module.exports = (sequelize, Datatypes) => {
           .map(p => cd.compare(p, targetCode))
           .sort((a, b) => a - b)[0]
       }))
-      .sort((a, b) => a.diff - b.diff).slice(0, 10)
+      .sort((a, b) => a.diff - b.diff).slice(0, 30)
       .map(r => Object.assign(r.dataValues, {diff: r.diff})))
   }
 

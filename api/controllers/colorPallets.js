@@ -106,6 +106,21 @@ module.exports = function(dependencies) {
         next()
       })
       .catch(e => next(e))
+    },
+    getAllCollorPallet: function(req, res, next) {
+      const username = req.headers['x-consumer-username']
+
+      if (username !== 'ali')
+        return next(Object.assign(
+          new Error('only accessible by admin'),
+          {statusCode: 401}))
+
+      ColorPallets.getAllCollorPallet()
+      .then(r => {
+        res.json(r)
+        next()
+      })
+      .catch(e => next(e))
     }
   }
 }
