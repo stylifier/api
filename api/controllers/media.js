@@ -130,7 +130,7 @@ module.exports = function(dependencies) {
     },
     setMediaColorCode: function(req, res, next) {
       const mediaId = req.swagger.params.media_id.value
-      const colorCode = req.swagger.params.colorCode.value
+      const colorCode = req.swagger.params.color_code.value
 
       Media.getMediaById(mediaId)
       .then(m => m.update({colorCode}))
