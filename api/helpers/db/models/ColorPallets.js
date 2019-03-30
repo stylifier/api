@@ -14,7 +14,7 @@ module.exports = (sequelize, Datatypes) => {
     likes: {type: Datatypes.DECIMAL},
     popularity: {type: Datatypes.DOUBLE},
     createdAt: Datatypes.DATE,
-    updatedAt: Datatypes.DATE
+    updatedAt: Datatypes.DATE,
   })
 
   model.getById = function(id) {
@@ -44,7 +44,8 @@ module.exports = (sequelize, Datatypes) => {
     'id',
     'code',
     'popularity',
-    'creator_username'
+    'creator_username',
+    'createdAt'
   ]
 
   model.getAllCollorPallet = function() {
