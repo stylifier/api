@@ -80,6 +80,8 @@ module.exports = function(s, Datatypes) {
   s.models.ColorPalletBookmarks.belongsTo(s.models.Users, {as: 'user'})
   s.models.ColorPalletBookmarks.belongsTo(s.models.ColorPallets, {as: 'pallet'})
 
+  s.models.ColorPallets.hasMany(s.models.Media, {as: 'media', foreignKey: 'colorCode', sourceKey: 'code'})
+
   s.models.ProductBookmarks.belongsTo(s.models.Users, {as: 'user'})
   s.models.ProductBookmarks.belongsTo(s.models.ColorPallets, {as: 'pallet'})
   s.models.ProductBookmarks.belongsTo(s.models.Products, {as: 'product'})

@@ -52,6 +52,10 @@ module.exports = (sequelize, Datatypes) => {
       limit: 20000,
       attributes: this.shortAttributes,
       order: [['createdAt', 'DESC']],
+      include: [{
+        model: sequelize.models.Media,
+        as: 'media',
+      }],
     })
   }
 
