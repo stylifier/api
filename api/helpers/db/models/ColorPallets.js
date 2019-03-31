@@ -48,11 +48,19 @@ module.exports = (sequelize, Datatypes) => {
     'createdAt'
   ]
 
-  model.getAllCollorPallet = function() {
+  model.getAllCollorPallet = function(minPopularity, maxPopularity) {
     return this.findAll({
       limit: 20000,
       attributes: this.shortAttributes,
       order: [['createdAt', 'DESC']],
+      where: {
+        popularity: {
+          [Datatypes.Op.and]: [
+            {[Datatypes.Op.gte]: minPopularity},
+            {[Datatypes.Op.lte]: maxPopularity},
+          ]
+        }
+      },
       include: [{
         model: sequelize.models.Media,
         as: 'media',
@@ -63,7 +71,12 @@ module.exports = (sequelize, Datatypes) => {
   model.getCollorPalletSuggestion = function(targetCode) {
     return this.findAll({
       limit: 20000,
-      attributes: this.shortAttributes
+      attributes: this.shortAttributes,
+      where: {
+        popularity: {
+          [Datatypes.Op.gte]: 1.1
+        }
+      }
     })
     .then(r =>
       r.map(c => Object.assign(c, {
@@ -74,7 +87,6 @@ module.exports = (sequelize, Datatypes) => {
           '#' + c.code.slice(18, 24)],
         popularity: c.popularity > 5 ? 5 : c.popularity,
       }))
-      .filter(c => c.popularity >= 1.1)
       .map(c => Object.assign(c, {
         diff: c.pallet
           .map(p => cd.compare(p, targetCode))

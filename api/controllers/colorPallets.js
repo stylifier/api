@@ -109,13 +109,15 @@ module.exports = function(dependencies) {
     },
     getAllCollorPallet: function(req, res, next) {
       const username = req.headers['x-consumer-username']
+      const minPopularity = req.swagger.params.min_popularity.value || 0
+      const maxPopularity = req.swagger.params.max_popularity.value || 10
 
       if (username !== 'ali')
         return next(Object.assign(
           new Error('only accessible by admin'),
           {statusCode: 401}))
 
-      ColorPallets.getAllCollorPallet()
+      ColorPallets.getAllCollorPallet(minPopularity, maxPopularity)
       .then(r => {
         res.json(r)
         next()

@@ -1167,7 +1167,13 @@ paths:
     get:
       description: get color pallet suggestion
       operationId: getAllCollorPallet
-
+      parameters:
+        - name: min_popularity
+          in: query
+          type: number
+        - name: max_popularity
+          in: query
+          type: number
       responses:
         "200":
           description: color pallet suggestions
