@@ -71,6 +71,24 @@ module.exports = (sequelize, Datatypes) => {
     )
   }
 
+  model.getBrands = function(username, query, offset) {
+    return sequelize.query(`
+      SELECT DISTINCT brand FROM products AS p
+      ${query && query.category ?
+        `WHERE category LIKE '%${query.category}%'` : ''}
+      ORDER BY brand
+    `, {raw: true}).then(t => t[0].map(t => t.brand))
+  }
+
+  model.getSizes = function(username, query, offset) {
+    return sequelize.query(`
+      SELECT DISTINCT unnest(string_to_array(sizes, '|||')) AS size FROM products
+      ${query && query.category ?
+        `WHERE category LIKE '%${query.category}%'` : ''}
+      ORDER BY size
+    `, {raw: true}).then(t => t[0].map(t => t.size))
+  }
+
   model.getProducts = function(username, query, offset) {
     return this.findAll(Object.assign({
       where: Object.assign({},
@@ -79,13 +97,20 @@ module.exports = (sequelize, Datatypes) => {
         query && query.name ?
           {name: {[Datatypes.Op.like]: `%${query.name}%`}} : {},
         query && query.brand ?
-          {brand: {[Datatypes.Op.like]: `%${query.brand}%`}} : {},
+          {brand: {[Datatypes.Op.in]: query.brand}} : {},
         query && query.color ?
           {color: {[Datatypes.Op.like]: `%${query.color}%`}} : {},
         // query && query.subColor ?
         //   {subColor: {[Datatypes.Op.like]: `%${query.subColor}%`}} : {},
         query && query.category ?
-          {category: {[Datatypes.Op.like]: `%${query.category}%`}} : {}),
+          {category: {[Datatypes.Op.like]: `%${query.category}%`}} : {},
+        query && query.size ? {
+          sizes: {
+            [Datatypes.Op.or]:
+              query.size.map(s => ({[Datatypes.Op.like]: `%${s}%`}))
+          }} : {},
+        query && query.code ?
+          {code: query.code} : {}),
       limit: 20,
       offset: offset,
       include: [{

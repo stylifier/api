@@ -44,54 +44,58 @@ module.exports = function(dependencies) {
     },
     getSelfProducts: function(req, res, next) {
       const username = req.headers['x-consumer-username']
-      const name = req.swagger.params.name.value
-      const brand = req.swagger.params.brand.value
-      const color = req.swagger.params.color.value
-      const subColor = req.swagger.params.sub_color.value
       const offset = req.swagger.params.pagination.value || 0
-      const category = req.swagger.params.category.value
-      const hex = req.swagger.params.hex.value
+      const query = {
+        name: req.swagger.params.name.value,
+        brand: req.swagger.params.brand.value ? req.swagger.params.brand.value.split(',') : undefined,
+        color: req.swagger.params.color.value,
+        subColor: req.swagger.params.sub_color.value,
+        category: req.swagger.params.category.value,
+        hex: req.swagger.params.hex.value,
+        code: req.swagger.params.code.value,
+        size: req.swagger.params.size.value ? req.swagger.params.size.value.split(',') : undefined,
+      }
 
-      Products.getProducts(username, {
-        name,
-        brand,
-        color,
-        subColor,
-        category,
-        hex
-      }, offset)
+      const attachSizesAndBrands = async products => ({
+        data: products,
+        pagination: offset + products.length,
+        sizes: await Products.getSizes(username, query),
+        brands: await Products.getBrands(username, query),
+      })
+
+      Products.getProducts(username, query, offset)
+      .then(products => attachSizesAndBrands(products))
       .then(r => {
-        res.json({
-          data: r,
-          pagination: offset + r.length
-        })
+        res.json(r)
         next()
       })
       .catch(e => next(e))
     },
     getUserProducts: function(req, res, next) {
       const username = req.swagger.params.username.value
-      const name = req.swagger.params.name.value
-      const brand = req.swagger.params.brand.value
-      const color = req.swagger.params.color.value
-      const subColor = req.swagger.params.sub_color.value
       const offset = req.swagger.params.pagination.value || 0
-      const category = req.swagger.params.category.value
-      const hex = req.swagger.params.hex.value
+      const query = {
+        name: req.swagger.params.name.value,
+        brand: req.swagger.params.brand.value ? req.swagger.params.brand.value.split(',') : undefined,
+        color: req.swagger.params.color.value,
+        subColor: req.swagger.params.sub_color.value,
+        category: req.swagger.params.category.value,
+        hex: req.swagger.params.hex.value,
+        code: req.swagger.params.code.value,
+        size: req.swagger.params.size.value ? req.swagger.params.size.value.split(',') : undefined,
+      }
 
-      Products.getProducts(username, {
-        name,
-        brand,
-        color,
-        subColor,
-        category,
-        hex
-      }, offset)
+      const attachSizesAndBrands = async products => ({
+        data: products,
+        pagination: offset + products.length,
+        sizes: await Products.getSizes(username, query),
+        brands: await Products.getBrands(username, query),
+      })
+
+      Products.getProducts(username, query, offset)
+      .then(products => attachSizesAndBrands(products))
       .then(r => {
-        res.json({
-          data: r,
-          pagination: offset + r.length
-        })
+        res.json(r)
         next()
       })
       .catch(e => next(e))

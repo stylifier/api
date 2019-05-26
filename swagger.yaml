@@ -1457,11 +1457,19 @@ paths:
           in: query
           required: false
           type: string
+        - name: code
+          in: query
+          required: false
+          type: string
         - name: sub_color
           in: query
           required: false
           type: string
         - name: category
+          in: query
+          required: false
+          type: string
+        - name: size
           in: query
           required: false
           type: string
@@ -1577,6 +1585,14 @@ paths:
           required: false
           type: string
         - name: category
+          in: query
+          required: false
+          type: string
+        - name: code
+          in: query
+          required: false
+          type: string
+        - name: size
           in: query
           required: false
           type: string
