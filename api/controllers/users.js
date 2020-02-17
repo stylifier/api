@@ -35,10 +35,7 @@ module.exports = function(dependencies) {
         invite.is_brand,
         invite.is_guest === true)
     })
-    .then(r =>
-      kong.createUser(r.username, r.id)
-      .then(() => r))
-    .then(r => kong.createJWT(r.username))
+    .then(r => kong.createJWT(r.username, r.id))
     .then(r => {
       if (inviteInstance) inviteInstance.update({is_used: true})
       res.json(r)
@@ -66,8 +63,7 @@ module.exports = function(dependencies) {
           Promise.resolve(user, isCreated)
       )
       .then((user, isCreated) => {
-        return kong.createUser(user.username, user.id)
-        .then(() => user.update({
+        return user.update({
           profile_picture: instRes.user.profile_picture,
           full_name: instRes.user.full_name.toLowerCase(),
           bio: instRes.user.bio,
@@ -76,17 +72,16 @@ module.exports = function(dependencies) {
           username: instRes.user.username.toLowerCase(),
           is_brand: instRes.user.is_business,
           is_instagram_user: true,
-        }))
-        .then(() => Promise.resolve(user, isCreated))
-      })
+        })
+      .then(() => Promise.resolve(user, isCreated))
       .then((user, isCreated) => {
         return instagram.getRecentMedia(instRes.access_token)
-        .then(media => ({username: user.username, media}))
+        .then(media => ({username: user.username, media, user}))
       })
-      .then(({username, media}) =>
+      .then(({username, media, user}) =>
         Media.createOrUpdateInstances(media, username)
-        .then(() => ({username, media})))
-      .then(({username, media}) => kong.createJWT(username))
+        .then(() => ({username, media, user})))
+      .then(({username, media, user}) => kong.createJWT(user.username, user.id))
       .then(r => {
         res.json(r)
         next()
@@ -114,8 +109,7 @@ module.exports = function(dependencies) {
           Promise.resolve(user, isCreated)
       )
       .then((user, isCreated) => {
-        return kong.createUser(user.username, user.id)
-        .then(() => user.update({
+        return user.update({
           profile_picture:
            pinterestUser.image[Object.keys(pinterestUser.image)[0]].url,
           full_name:
@@ -125,17 +119,16 @@ module.exports = function(dependencies) {
           website: pinterestUser.url,
           username: pinterestUser.username,
           is_pinterest_user: true
-        }))
-        .then(() => Promise.resolve(user, isCreated))
-      })
+        })
+      .then(() => Promise.resolve(user, isCreated))
       .then((user, isCreated) => {
         return pinterest.getMedia(pinterestUser.access_token)
-        .then(media => ({username: user.username, media}))
+        .then(media => ({username: user.username, media, user}))
       })
-      .then(({username, media}) =>
+      .then(({username, media, user}) =>
         Media.createOrUpdateInstances(media, username)
-        .then(() => ({username, media})))
-      .then(({username, media}) => kong.createJWT(username))
+        .then(() => ({username, media, user})))
+      .then(({username, media, user}) => kong.createJWT(user.username, user.id))
       .then(r => {
         res.json(r)
         next()
@@ -156,7 +149,7 @@ module.exports = function(dependencies) {
     login: function(req, res, next) {
       const userToLogin = Object.assign({}, req.swagger.params.loginInfo.value)
       Users.checkLogin(userToLogin.username, userToLogin.password)
-      .then(u => kong.createJWT(u))
+      .then(u => kong.createJWT(u.username, u.id))
       .then(r => {
         res.json(r)
         next()
