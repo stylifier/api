@@ -1,4 +1,5 @@
 'use strict'
+const id = require('uniqid')
 
 module.exports = function(dependencies) {
   const {Outfits, Users} = dependencies.db
@@ -14,7 +15,7 @@ module.exports = function(dependencies) {
 
       Users.findUserByUsername(username, true)
       .then(u =>
-        Outfits.findOutfit(username, body.id)
+        Outfits.findOutfit(username, body.id || 'INVALID' + id)
         .then(o => o ?
           Outfits.updateInstance(
             username, items, o.id, title, u.country_code, o.gender, palletId) :
