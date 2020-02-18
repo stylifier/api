@@ -62,17 +62,16 @@ module.exports = function(dependencies) {
           }) :
           Promise.resolve(user, isCreated)
       )
-      .then((user, isCreated) => {
-        return user.update({
-          profile_picture: instRes.user.profile_picture,
-          full_name: instRes.user.full_name.toLowerCase(),
-          bio: instRes.user.bio,
-          website: instRes.user.website ?
-            instRes.user.website.toLowerCase() : '',
-          username: instRes.user.username.toLowerCase(),
-          is_brand: instRes.user.is_business,
-          is_instagram_user: true,
-        })
+      .then((user, isCreated) => user.update({
+        profile_picture: instRes.user.profile_picture,
+        full_name: instRes.user.full_name.toLowerCase(),
+        bio: instRes.user.bio,
+        website: instRes.user.website ?
+          instRes.user.website.toLowerCase() : '',
+        username: instRes.user.username.toLowerCase(),
+        is_brand: instRes.user.is_business,
+        is_instagram_user: true,
+      })
       .then(() => Promise.resolve(user, isCreated))
       .then((user, isCreated) => {
         return instagram.getRecentMedia(instRes.access_token)
@@ -86,7 +85,7 @@ module.exports = function(dependencies) {
         res.json(r)
         next()
       })
-      .catch(e => next(e))
+      .catch(e => next(e)))
     })
     .catch(e => next(e))
 
@@ -108,18 +107,17 @@ module.exports = function(dependencies) {
           }) :
           Promise.resolve(user, isCreated)
       )
-      .then((user, isCreated) => {
-        return user.update({
-          profile_picture:
-           pinterestUser.image[Object.keys(pinterestUser.image)[0]].url,
-          full_name:
-            pinterestUser.first_name.toLowerCase() +
-            pinterestUser.last_name.toLowerCase(),
-          bio: pinterestUser.bio,
-          website: pinterestUser.url,
-          username: pinterestUser.username,
-          is_pinterest_user: true
-        })
+      .then((user, isCreated) => user.update({
+        profile_picture:
+         pinterestUser.image[Object.keys(pinterestUser.image)[0]].url,
+        full_name:
+          pinterestUser.first_name.toLowerCase() +
+          pinterestUser.last_name.toLowerCase(),
+        bio: pinterestUser.bio,
+        website: pinterestUser.url,
+        username: pinterestUser.username,
+        is_pinterest_user: true
+      })
       .then(() => Promise.resolve(user, isCreated))
       .then((user, isCreated) => {
         return pinterest.getMedia(pinterestUser.access_token)
@@ -133,7 +131,7 @@ module.exports = function(dependencies) {
         res.json(r)
         next()
       })
-      .catch(e => next(e))
+      .catch(e => next(e)))
     })
     .catch(e => next(e))
 
