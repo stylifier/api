@@ -76,7 +76,7 @@ module.exports = (sequelize, Datatypes) => {
         sequelize.where(
           sequelize.fn('char_length',
             sequelize.col('username')),
-          {[sequelize.Op.lte]: 45}
+          {$lte: 45}
         )
       ]},
       offset: offset,
