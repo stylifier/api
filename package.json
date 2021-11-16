@@ -11,7 +11,7 @@
   "readme": "README.md",
   "dependencies": {
     "async": "^2.1.4",
-    "aws-sdk": "^2.360.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^2.0.1",
     "color-difference": "^0.3.4",
     "cookiejar": "^2.1.1",
