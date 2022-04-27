@@ -10,7 +10,7 @@
   "repository": "https://github.com/stylifier/api",
   "readme": "README.md",
   "dependencies": {
-    "async": "^2.1.4",
+    "async": "^2.6.4",
     "aws-sdk": "^2.360.0",
     "bcrypt": "^2.0.1",
     "color-difference": "^0.3.4",
